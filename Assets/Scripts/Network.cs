@@ -4,94 +4,78 @@ using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Collections.Generic;
+using UnityEditor;
+using System.IO;
 
 public class Network : MonoBehaviour
 {
-	// Buffer for reading data
-	Byte[] bytes = new Byte[256];
-	String data = null;
-	TcpListener tcpListener = null;
-	TcpClient client;
-	NetworkStream stream;
-
-	// Use this for initialization
-    void Start()
+	void Start()
 	{
-		// TcpListener tcpListener = new TcpListener(port);
-		tcpListener = new TcpListener(IPAddress.Loopback, 9876);
+		Application.runInBackground = true;
 		
-		// Start listening for client requests.
-		tcpListener.Start();
-		
-		// Perform a blocking call to accept requests.
-		// You could also user tcpListener.AcceptSocket() here.
-		client = tcpListener.AcceptTcpClient(); 
-
-		Debug.Log ("The client is succesfully connected.");
-		Console.WriteLine("Connected!");
-
-		string responseString = "You have successfully connected to me";
-
-		// Get a stream object for reading and writing
-		stream = client.GetStream();
-		
-		//Forms and sends a response string to the connected client.
-		Byte[] sendBytes = Encoding.ASCII.GetBytes(responseString);
-		stream.Write(sendBytes, 0, sendBytes.Length);
-		Debug.Log("Message Sent /> : " + responseString);
-	} 
-	
-	// Update is called once per frame
-	void Update()
-	{ 
-		if (stream.CanRead)
-		{
-			// Reads NetworkStream into a byte buffer.
-			byte[] bytes = new byte[client.ReceiveBufferSize];
-			
-			// Read can return anything from 0 to numBytesToRead. 
-			// This method blocks until at least one byte is read.
-			stream.Read (bytes, 0, (int)client.ReceiveBufferSize);
-			
-			// Returns the data received from the host to the console.
-			string returndata = Encoding.UTF8.GetString (bytes);
-			
-			Debug.Log ("This is what the host returned to you: " + returndata);
-		}
-		else
-		{
-			Debug.Log ("You cannot read data from this stream.");
-			client.Close ();
-			
-			// Closing the tcpClient instance does not close the network stream.
-			stream.Close ();
-			return;
-		}
-		/*
-
-		data = null;
-		
-		int i;
-		
-		// Loop to receive all the data sent by the client.
-		while((i = stream.Read(bytes, 0, bytes.Length))!=0) 
-		{   
-			// Translate data bytes to a ASCII string.
-			data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-			Console.WriteLine("Received: {0}", data);
-			
-			// Process the data sent by the client.
-			data = data.ToUpper();
-			
-			byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-			
-			// Send back a response.
-			stream.Write(msg, 0, msg.Length);
-			Console.WriteLine("Sent: {0}", data);            
-		} 
-		
-		// Shutdown and end connection
-		//client.Close(); */
-		tcpListener.Stop(); 
+		int port = 9876;
+		IPAddress localhost = IPAddress.Parse("127.0.0.1");
+		_server = new TcpListener(localhost, port);
+		_server.Start();
+		_server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
 	}
+	
+	void Update()
+	{
+		if (_client != null && _client.Available > 0)
+		{
+			string message = ReceiveMessage();
+            if (message != "")
+            {
+                Debug.Log(string.Format("Message received:\n{0}", message));
+            }
+			//_server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
+
+		}
+	}
+	
+	private string ReceiveMessage()
+	{
+		Debug.Assert(_client != null, "The client is empty.");
+		Debug.Assert(_client.Available > 0, "The client is not available.");
+		
+		NetworkStream stream = null;
+		
+		stream = _client.GetStream();
+			
+		while (stream.DataAvailable) 
+		{
+            //Bytes een voor een uitlezen om te izen of de byte een enter is.
+			//Byte[] bytes = new Byte[256];
+			int i = stream.ReadByte();
+            if (i == 10)
+            {
+                string msg = message.ToString();
+                message = new StringBuilder();
+                return msg.ToString();
+            }
+            else if (i == 13) { }
+            else
+            {
+                message.Append((char) i);
+            }
+		}
+
+        //byte[] response = Encoding.ASCII.GetBytes("HTTP/1.1 204 No Content\r\n\r\n");
+        //stream.Write(response, 0, response.Length);
+
+        return String.Empty;
+	}
+	
+	private void OnAcceptTcpClient(IAsyncResult result)
+	{
+		TcpListener _server = (TcpListener) result.AsyncState;
+		_client = _server.EndAcceptTcpClient(result);
+		Debug.Log("Client connected.");
+	}
+
+    private TcpListener _server;
+	private TcpClient _client;
+    private StringBuilder message = new StringBuilder();
 }

@@ -29,7 +29,6 @@ public class Network : MonoBehaviour
             {
                 text.text = message;
                 Debug.Log(string.Format("Message received:\n{0}", message));
-
             }
 		}
 	}
@@ -40,8 +39,8 @@ public class Network : MonoBehaviour
 		Debug.Assert(_client.Available > 0, "The client is not available.");
 		
 		NetworkStream stream = null;
-		
-		stream = _client.GetStream();
+
+        stream = _client.GetStream();
 			
 		while (stream.DataAvailable) 
 		{

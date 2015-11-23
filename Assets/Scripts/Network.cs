@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System;
-using System.Collections;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Collections.Generic;
-using UnityEditor;
-using System.IO;
 
 public class Network : MonoBehaviour
 {
+    public Text text;
+
 	void Start()
 	{
 		Application.runInBackground = true;
@@ -28,10 +27,10 @@ public class Network : MonoBehaviour
 			string message = ReceiveMessage();
             if (message != "")
             {
+                text.text = message;
                 Debug.Log(string.Format("Message received:\n{0}", message));
-            }
-			//_server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
 
+            }
 		}
 	}
 	
@@ -46,8 +45,6 @@ public class Network : MonoBehaviour
 			
 		while (stream.DataAvailable) 
 		{
-            //Bytes een voor een uitlezen om te izen of de byte een enter is.
-			//Byte[] bytes = new Byte[256];
 			int i = stream.ReadByte();
             if (i == 10)
             {
@@ -61,9 +58,6 @@ public class Network : MonoBehaviour
                 message.Append((char) i);
             }
 		}
-
-        //byte[] response = Encoding.ASCII.GetBytes("HTTP/1.1 204 No Content\r\n\r\n");
-        //stream.Write(response, 0, response.Length);
 
         return String.Empty;
 	}

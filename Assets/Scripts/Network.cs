@@ -24,7 +24,7 @@ public class Network : MonoBehaviour
 	{
 		if (_client != null && _client.Available > 0)
 		{
-			string message = ReceiveMessage();
+			string message = FilterDataIntoMessage();
             if (message != "")
             {
                 text.text = message;
@@ -33,7 +33,7 @@ public class Network : MonoBehaviour
 		}
 	}
 	
-	private string ReceiveMessage()
+	private string FilterDataIntoMessage()
 	{
 		Debug.Assert(_client != null, "The client is empty.");
 		Debug.Assert(_client.Available > 0, "The client is not available.");

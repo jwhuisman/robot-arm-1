@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-public class Network : MonoBehaviour
+public class NetworkListener : MonoBehaviour
 {
     public Text text;
 
@@ -35,6 +35,9 @@ public class Network : MonoBehaviour
 
     private string FilterDataIntoMessage()
     {
+        const char NEW_LINE = (char)10;
+        const char CARRIAGE_RETURN = (char)13;
+
         Debug.Assert(_client != null, "The client is empty.");
         Debug.Assert(_client.Available > 0, "The client is not available.");
 
@@ -45,13 +48,16 @@ public class Network : MonoBehaviour
         while (stream.DataAvailable) 
         {
             int i = stream.ReadByte();
-            if (i == 10)
+            if (i == NEW_LINE)
             {
                 string msg = message.ToString();
                 message = new StringBuilder();
                 return msg.ToString();
             }
-            else if (i == 13) { }
+            else if (i == CARRIAGE_RETURN) {
+                // In some OS'es the byte 13 has the same fucntion as the byte 10.
+                // byte 10 the mostly used, thats why it gets the functionality.
+            }
             else
             {
                 message.Append((char) i);

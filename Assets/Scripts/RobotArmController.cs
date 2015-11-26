@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class RobotArmController : MonoBehaviour {
-    
+
+    public GameObject arm;
     public float timeTakenDuringLerp = 2f;
     private bool hold = false;
     private string holding = null;
@@ -15,7 +16,6 @@ public class RobotArmController : MonoBehaviour {
     /// Called to begin the linear interpolation
     void StartLerping(Vector3 direction, float spaces)
     {
-        var arm = GameObject.Find("Robot Arm");
         if (!_isLerping || percentageComplete >= 1.0f)
         {
             _isLerping = true;
@@ -43,7 +43,6 @@ public class RobotArmController : MonoBehaviour {
     {
         if (_isLerping)
         {
-            var arm = GameObject.Find("Robot Arm");
             float timeSinceStarted = Time.time - _timeStartedLerping;
             percentageComplete = timeSinceStarted / timeTakenDuringLerp;
 

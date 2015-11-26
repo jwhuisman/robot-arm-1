@@ -37,6 +37,8 @@ public class RobotArmController : MonoBehaviour {
 	
 	}
 
+
+    // Updates per millisecond
     void FixedUpdate()
     {
         if (_isLerping)

@@ -63,6 +63,10 @@ public class RobotArmController : MonoBehaviour {
                 StartLerping(Vector3.right, 1);
                 break;
 
+            case ("move left"):
+                StartLerping(Vector3.left, 1);
+                break;
+
             default:
                 break;
         }

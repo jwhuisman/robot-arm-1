@@ -29,6 +29,7 @@ public class RobotArmController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
 	
 	}
 	
@@ -36,6 +37,7 @@ public class RobotArmController : MonoBehaviour {
 	void Update () {
 	
 	}
+
 
 
     // Updates per millisecond

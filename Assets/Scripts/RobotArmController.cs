@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
+using System;
+using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 public class RobotArmController : MonoBehaviour {
 
     public GameObject arm;
-    public float timeTakenDuringLerp = 2f;
+    private float timeTakenDuringLerp = 1f;
     private bool hold = false;
     private string holding = null;
     private bool _isLerping;
@@ -57,15 +60,30 @@ public class RobotArmController : MonoBehaviour {
 
     public void Actions (string message)
     {
-        switch (message)
+        string[] command = message.Split(' ');
+
+        switch (command[0])
         {
-            case ("move right"):
-                Debug.Log("Move Right!");
-                StartLerping(Vector3.right, 1);
+            case ("move"):
+                if (command[1] == "right")
+                {
+                    StartLerping(Vector3.right, 1);
+                }
+                else if (command[1] == "left")
+                {
+                    StartLerping(Vector3.left, 1);
+                }
                 break;
 
-            case ("move left"):
-                StartLerping(Vector3.left, 1);
+            case ("speed"):
+                int number;
+                bool isInt = Int32.TryParse(command[1], out number);
+                if (isInt)
+                {
+                    float time = (100 - Int32.Parse(command[1])) / 50;
+                    Debug.Log(time);
+                    float timeTakenDuringLerp = (100 - Int32.Parse(command[1])) / 50;
+                }
                 break;
 
             default:

@@ -405,8 +405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb172336abd5354e88c8518826058fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _RobotArmController: {fileID: 1658030861}
   text: {fileID: 1674608685}
+  _RobotArmController: {fileID: 1658030861}
 --- !u!4 &296191840
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,6 +1145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a036519219eef46b8be3c6f441423f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arm: {fileID: 1441470083}
   timeTakenDuringLerp: 1
 --- !u!4 &1658030862
 Transform:

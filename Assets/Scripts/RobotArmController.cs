@@ -80,9 +80,9 @@ public class RobotArmController : MonoBehaviour {
                 bool isInt = Int32.TryParse(command[1], out number);
                 if (isInt)
                 {
-                    float time = (100 - Int32.Parse(command[1])) / 50;
+                    float time = (100f - (float)Int32.Parse(command[1])) / 100f;
                     Debug.Log(time);
-                    float timeTakenDuringLerp = (100 - Int32.Parse(command[1])) / 50;
+                    timeTakenDuringLerp = time;
                 }
                 break;
 

@@ -411,8 +411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdb172336abd5354e88c8518826058fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _RobotArmController: {fileID: 1658030861}
   text: {fileID: 1674608685}
+  _RobotArmController: {fileID: 1658030861}
 --- !u!4 &296191840
 Transform:
   m_ObjectHideFlags: 0
@@ -1191,6 +1191,7 @@ MonoBehaviour:
   robotArm: {fileID: 1441470083}
   cubes: {fileID: 325562630}
   plane: {fileID: 866338071}
+  timeTakenDuringLerp: 1
 --- !u!4 &1658030862
 Transform:
   m_ObjectHideFlags: 0

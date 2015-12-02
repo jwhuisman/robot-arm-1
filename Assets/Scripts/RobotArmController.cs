@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class RobotArmController : MonoBehaviour {
 
@@ -156,29 +157,48 @@ public class RobotArmController : MonoBehaviour {
 
     public void Actions(string message)
     {
-        switch (message)
+        string[] command = message.Split(' ');
+
+        switch (command[0])
         {
-            case ("move right"):
-                Debug.Log("Move Right!");
-                StartLerping(Vector3.right, 1);
+            case ("move"):
+                if (command[1] == "right")
+                {
+                    StartLerping(Vector3.right, 1);
+                }
+                else if (command[1] == "left")
+                {
+                    StartLerping(Vector3.left, 1);
+                }
                 break;
 
-            case ("move left"):
-                Debug.Log("Move Left!");
-                StartLerping(Vector3.left, 1);
+
+            case ("speed"):
+                int number;
+                bool isInt = Int32.TryParse(command[1], out number);
+                if (isInt)
+                {
+                    float time = (100f - (float)Int32.Parse(command[1])) / 100f;
+                    Debug.Log(time);
+                    timeTakenDuringLerp = time;
+                }
                 break;
 
-            case ("pick up"):
-                Debug.Log("Pick Up!");
-                StartPickUpPutDown(true);
+            case ("pick"):
+                if (command[1] == "up")
+                {
+                    StartPickUpPutDown(true);
+                }
                 break;
 
-            case ("put down"):
-                Debug.Log("Put Down!");
-                StartPickUpPutDown(false);
+            case ("put"):
+                if (command[1] == "down")
+                {
+                    StartPickUpPutDown(false);
+                }
                 break;
 
-            default:
+                default:
                 break;
         }
     }

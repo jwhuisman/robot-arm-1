@@ -8,6 +8,7 @@ using System.Text;
 public class NetworkListener : MonoBehaviour
 {
     public Text text;
+    public RobotArmController _RobotArmController;
 
     void Start()
     {
@@ -27,6 +28,7 @@ public class NetworkListener : MonoBehaviour
             string message = FilterDataIntoMessage();
             if (message != "")
             {
+                _RobotArmController.Actions(message);
                 text.text = message;
                 Debug.Log(string.Format("Message received:\n{0}", message));
             }

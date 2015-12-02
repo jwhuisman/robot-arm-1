@@ -10,6 +10,7 @@ public class RobotArmController : MonoBehaviour {
 
     // for the testers
     public Text text;
+    public Text speedText;
 
     // lerping related
     private bool _isLerping;
@@ -44,6 +45,7 @@ public class RobotArmController : MonoBehaviour {
     {
         mapBoundaryTop = 5f;
         timeTakenDuringLerp = 0.5f;
+        speedText.text = "Speed: " + timeTakenDuringLerp;
         goPickUpBlock = false;
         goPutDownBlock = false;
         goUpFromPlane = false;
@@ -163,10 +165,21 @@ public class RobotArmController : MonoBehaviour {
     {
         string[] command = message.Split(' ');
 
+        //Checks if the commands are single commands or are followed up by another action, e.g. move right
+        bool commandCheck = true;
+        if (command.Length < 2)
+        {
+            commandCheck = false;
+        }
+
         switch (command[0])
         {
             case ("move"):
-                if (command[1] == "right")
+                if (!commandCheck)
+                {
+                    goto default;
+                }
+                else if (command[1] == "right")
                 {
                     StartLerping(Vector3.right, 1);
                     text.text = "Moving to the right.";
@@ -180,12 +193,17 @@ public class RobotArmController : MonoBehaviour {
 
 
             case ("speed"):
+                if (!commandCheck)
+                {
+                    goto default;
+                }
                 int number;
                 bool isInt = Int32.TryParse(command[1], out number);
                 if (isInt && number <= 100 && number >= 0)
                 {
                     float time = (100f - (float)Int32.Parse(command[1])) / 100f;
                     text.text = "Speed of the robot arm has been changed to: " + time;
+                    speedText.text = "Speed: " + time;
                     timeTakenDuringLerp = time;
                 }
                 else
@@ -195,20 +213,31 @@ public class RobotArmController : MonoBehaviour {
                 break;
 
             case ("pick"):
+                if (!commandCheck)
+                {
+                    goto default;
+                }
                 if (command[1] == "up")
                 {
                     StartPickUpPutDown(true);
+                    text.text = "Going to pick up a block.";
                 }
                 break;
 
             case ("put"):
+                if (!commandCheck)
+                {
+                    goto default;
+                }
                 if (command[1] == "down")
                 {
                     StartPickUpPutDown(false);
+                    text.text = "Putting down a block.";
                 }
                 break;
 
-                default:
+            default:
+                text.text = "Error 418, I'm a teapot, I don't know how to do this.";
                 break;
         }
     }

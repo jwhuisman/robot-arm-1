@@ -1245,7 +1245,7 @@ MonoBehaviour:
   cubes: {fileID: 325562630}
   plane: {fileID: 866338071}
   text: {fileID: 1674608685}
-  speedText: {fileID: 0}
+  speedText: {fileID: 290888396}
 --- !u!4 &1658030862
 Transform:
   m_ObjectHideFlags: 0

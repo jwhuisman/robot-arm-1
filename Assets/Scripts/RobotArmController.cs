@@ -182,11 +182,11 @@ public class RobotArmController : MonoBehaviour {
 
 
             case ("speed"):
-                int number;
-                bool isInt = Int32.TryParse(command[1], out number);
+                float number;
+                bool isInt = float.TryParse(command[1], out number);
                 if (isInt && number <= 100 && number >= 0)
                 {
-                    float time = (100f - (float)Int32.Parse(command[1])) / 100f;
+                    float time = (100f - float.Parse(command[1])) / 100f;
                     text.text = "Speed of the robot arm has been changed to: " + time;
                     speedText.text = "Speed: " + time;
                     timeTakenDuringLerp = time;

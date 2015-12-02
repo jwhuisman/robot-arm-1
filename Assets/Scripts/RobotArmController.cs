@@ -10,6 +10,7 @@ public class RobotArmController : MonoBehaviour {
 
     // for the testers
     public Text text;
+    public Text speedText;
 
     // lerping related
     private bool _isLerping;
@@ -44,6 +45,7 @@ public class RobotArmController : MonoBehaviour {
     {
         mapBoundaryTop = 5f;
         timeTakenDuringLerp = 0.5f;
+        speedText.text = "Speed: " + timeTakenDuringLerp;
         goPickUpBlock = false;
         goPutDownBlock = false;
         goUpFromPlane = false;
@@ -186,6 +188,7 @@ public class RobotArmController : MonoBehaviour {
                 {
                     float time = (100f - (float)Int32.Parse(command[1])) / 100f;
                     text.text = "Speed of the robot arm has been changed to: " + time;
+                    speedText.text = "Speed: " + time;
                     timeTakenDuringLerp = time;
                 }
                 else
@@ -198,6 +201,7 @@ public class RobotArmController : MonoBehaviour {
                 if (command[1] == "up")
                 {
                     StartPickUpPutDown(true);
+                    text.text = "Going to pick up a block.";
                 }
                 break;
 
@@ -205,10 +209,12 @@ public class RobotArmController : MonoBehaviour {
                 if (command[1] == "down")
                 {
                     StartPickUpPutDown(false);
+                    text.text = "Putting down a block.";
                 }
                 break;
 
-                default:
+            default:
+                text.text = "Error 418, I'm a teapot, I don't know how to do this.";
                 break;
         }
     }

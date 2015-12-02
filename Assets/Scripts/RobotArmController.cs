@@ -198,10 +198,14 @@ public class RobotArmController : MonoBehaviour {
                 break;
 
             case ("pick"):
-                if (command[1] == "up")
+                if (command[1] == "up" && !currentlyHolding)
                 {
                     StartPickUpPutDown(true);
                     text.text = "Going to pick up a block.";
+                }
+                else if (currentlyHolding)
+                {
+                    text.text = "Already holding a block.";
                 }
                 break;
 

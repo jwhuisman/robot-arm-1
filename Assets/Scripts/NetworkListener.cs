@@ -54,7 +54,7 @@ public class NetworkListener : MonoBehaviour
             {
                 string msg = message.ToString();
                 message = new StringBuilder();
-                return msg.ToString();
+                return msg.ToString().ToLower();
             }
             else if (i == CARRIAGE_RETURN) {
                 // In some OS'es the byte 13 has the same fucntion as the byte 10.

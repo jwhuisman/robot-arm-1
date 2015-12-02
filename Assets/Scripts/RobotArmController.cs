@@ -167,7 +167,7 @@ public class RobotArmController : MonoBehaviour {
 
         //Checks if the commands are single commands or are followed up by another action, e.g. move right
         bool commandCheck = true;
-        if (command.Length < 2)
+        if (command.Length < 2 || command.Length > 2)
         {
             commandCheck = false;
         }
@@ -188,6 +188,10 @@ public class RobotArmController : MonoBehaviour {
                 {
                     StartLerping(Vector3.left, 1);
                     text.text = "Moving to the left.";
+                }
+                else
+                {
+                    goto default;
                 }
                 break;
 
@@ -217,10 +221,14 @@ public class RobotArmController : MonoBehaviour {
                 {
                     goto default;
                 }
-                if (command[1] == "up")
+                else if (command[1] == "up")
                 {
                     StartPickUpPutDown(true);
                     text.text = "Going to pick up a block.";
+                }
+                else
+                {
+                    goto default;
                 }
                 break;
 
@@ -233,6 +241,10 @@ public class RobotArmController : MonoBehaviour {
                 {
                     StartPickUpPutDown(false);
                     text.text = "Putting down a block.";
+                }
+                else
+                {
+                    goto default;
                 }
                 break;
 

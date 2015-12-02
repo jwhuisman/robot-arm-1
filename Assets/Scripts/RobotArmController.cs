@@ -1,11 +1,15 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RobotArmController : MonoBehaviour {
 
     public GameObject robotArm;
     public GameObject cubes;
     public GameObject plane;
+
+    // for the testers
+    public Text text;
 
     // lerping related
     private bool _isLerping;
@@ -39,7 +43,7 @@ public class RobotArmController : MonoBehaviour {
     void Start ()
     {
         mapBoundaryTop = 5f;
-        timeTakenDuringLerp = 2f;
+        timeTakenDuringLerp = 0.5f;
         goPickUpBlock = false;
         goPutDownBlock = false;
         goUpFromPlane = false;
@@ -165,10 +169,12 @@ public class RobotArmController : MonoBehaviour {
                 if (command[1] == "right")
                 {
                     StartLerping(Vector3.right, 1);
+                    text.text = "Moving to the right.";
                 }
                 else if (command[1] == "left")
                 {
                     StartLerping(Vector3.left, 1);
+                    text.text = "Moving to the left.";
                 }
                 break;
 
@@ -176,11 +182,15 @@ public class RobotArmController : MonoBehaviour {
             case ("speed"):
                 int number;
                 bool isInt = Int32.TryParse(command[1], out number);
-                if (isInt)
+                if (isInt && number <= 100 && number >= 0)
                 {
                     float time = (100f - (float)Int32.Parse(command[1])) / 100f;
-                    Debug.Log(time);
+                    text.text = "Speed of the robot arm has been changed to: " + time;
                     timeTakenDuringLerp = time;
+                }
+                else
+                {
+                    text.text = "You can't go lower than 0, or higher than 100.";
                 }
                 break;
 

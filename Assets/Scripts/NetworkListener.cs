@@ -29,7 +29,6 @@ public class NetworkListener : MonoBehaviour
             if (message != "")
             {
                 _RobotArmController.Actions(message);
-                text.text = message;
                 Debug.Log(string.Format("Message received:\n{0}", message));
             }
         }

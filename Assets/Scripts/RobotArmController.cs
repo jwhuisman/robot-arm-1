@@ -45,7 +45,7 @@ public class RobotArmController : MonoBehaviour {
     {
         mapBoundaryTop = 5f;
         timeTakenDuringLerp = 0.5f;
-        speedText.text = "Speed: " + timeTakenDuringLerp;
+        speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
         goPickUpBlock = false;
         goPutDownBlock = false;
         goUpFromPlane = false;
@@ -187,8 +187,8 @@ public class RobotArmController : MonoBehaviour {
                 if (isInt && number <= 100 && number >= 0)
                 {
                     float time = (100f - (float)Int32.Parse(command[1])) / 100f;
-                    text.text = "Speed of the robot arm has been changed to: " + time;
-                    speedText.text = "Speed: " + time;
+                    text.text = "Speed of the robot arm has been changed to: " + time + " seconds.";
+                    speedText.text = "Speed: " + time + " seconds";
                     timeTakenDuringLerp = time;
                 }
                 else

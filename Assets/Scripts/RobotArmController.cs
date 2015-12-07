@@ -165,10 +165,21 @@ public class RobotArmController : MonoBehaviour {
     {
         string[] command = message.Split(' ');
 
+        //Checks if the commands are single commands or are followed up by another action, e.g. move right
+        bool commandCheck = true;
+        if (command.Length < 2 || command.Length > 2)
+        {
+            commandCheck = false;
+        }
+
         switch (command[0])
         {
             case ("move"):
-                if (command[1] == "right")
+                if (!commandCheck)
+                {
+                    goto default;
+                }
+                else if (command[1] == "right")
                 {
                     StartLerping(Vector3.right, 1);
                     text.text = "Moving to the right.";
@@ -178,10 +189,18 @@ public class RobotArmController : MonoBehaviour {
                     StartLerping(Vector3.left, 1);
                     text.text = "Moving to the left.";
                 }
+                else
+                {
+                    goto default;
+                }
                 break;
 
 
             case ("speed"):
+                if (!commandCheck)
+                {
+                    goto default;
+                }
                 int number;
                 bool isInt = Int32.TryParse(command[1], out number);
                 if (isInt && number <= 100 && number >= 0)
@@ -198,18 +217,34 @@ public class RobotArmController : MonoBehaviour {
                 break;
 
             case ("pick"):
-                if (command[1] == "up")
+                if (!commandCheck)
+                {
+                    goto default;
+                }
+                else if (command[1] == "up")
                 {
                     StartPickUpPutDown(true);
                     text.text = "Going to pick up a block.";
                 }
+                else
+                {
+                    goto default;
+                }
                 break;
 
             case ("put"):
+                if (!commandCheck)
+                {
+                    goto default;
+                }
                 if (command[1] == "down")
                 {
                     StartPickUpPutDown(false);
                     text.text = "Putting down a block.";
+                }
+                else
+                {
+                    goto default;
                 }
                 break;
 

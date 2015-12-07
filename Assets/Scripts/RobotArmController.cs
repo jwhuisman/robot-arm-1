@@ -217,14 +217,15 @@ public class RobotArmController : MonoBehaviour {
                 break;
 
             case ("pick"):
-                if (!commandCheck)
-                {
-                    goto default;
-                }
-                else if (command[1] == "up")
+
+                if (command[1] == "up" && !currentlyHolding)
                 {
                     StartPickUpPutDown(true);
                     text.text = "Going to pick up a block.";
+                }
+                else if (currentlyHolding)
+                {
+                    text.text = "Already holding a block.";
                 }
                 else
                 {

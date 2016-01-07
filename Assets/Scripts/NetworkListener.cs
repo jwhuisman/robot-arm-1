@@ -10,7 +10,7 @@ public class NetworkListener : MonoBehaviour
     public Text text;
     public RobotArmController _RobotArmController;
 
-    public bool connected = false;
+    private bool connected = false;
 
     void Start()
     {

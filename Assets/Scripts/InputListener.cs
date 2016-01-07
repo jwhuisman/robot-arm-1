@@ -3,6 +3,7 @@
 public class InputListener : MonoBehaviour
 {
     public RobotArmController _RobotArmController;
+    public bool holding = false;
 
     void Start()
     {
@@ -14,11 +15,17 @@ public class InputListener : MonoBehaviour
         string msg = "";
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            msg = "put down";
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            msg = "pick up";
+            if (holding)
+            {
+                holding = false;
+                msg = "put down";
+
+            }
+            else
+            {
+                holding = true;
+                msg = "pick up";
+            }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {

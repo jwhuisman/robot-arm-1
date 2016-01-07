@@ -10,29 +10,68 @@ public class NetworkListener : MonoBehaviour
     public Text text;
     public RobotArmController _RobotArmController;
 
+    public bool connected = false;
+
     void Start()
     {
         Debug.Log("NetworkListener.cs is used!");
         Application.runInBackground = true;
 
-        int port = 9876;
         IPAddress localhost = IPAddress.Parse("127.0.0.1");
+        int port = 9876;
+
         _server = new TcpListener(localhost, port);
-        _server.Start();
-        _server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
+
+        StartListening();
     }
 
     void Update()
     {
-        if (_client != null && _client.Available > 0)
+        if (connected)
         {
-            string message = FilterDataIntoMessage();
-            if (message != "")
+            if (_client != null && _client.Available > 0)
             {
-                _RobotArmController.Actions(message);
-                Debug.Log(string.Format("Message received:\n{0}", message));
+                string message = FilterDataIntoMessage();
+                if (message != "")
+                {
+                    _RobotArmController.Actions(message);
+                    Debug.Log(string.Format("Message received:\n{0}", message));
+                }
             }
         }
+    }
+
+
+    private void StartListening()
+    {
+        _server.Start();
+        _server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
+
+        Debug.Log("Started listening..");
+    }
+
+    private void OnAcceptTcpClient(IAsyncResult result)
+    {
+        if (connected)
+        {
+            CloseTcpConnection();
+        }
+
+        _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
+
+        connected = true;
+        Debug.Log("Client connected.");
+
+        // start listening for a new client
+        StartListening();
+    }
+
+    private void CloseTcpConnection()
+    {
+        _client.Close();
+
+        connected = false;
+        Debug.Log("Client disconnected!");
     }
 
     private string FilterDataIntoMessage()
@@ -47,7 +86,7 @@ public class NetworkListener : MonoBehaviour
 
         stream = _client.GetStream();
 
-        while (stream.DataAvailable) 
+        while (stream.DataAvailable)
         {
             int i = stream.ReadByte();
             if (i == NEW_LINE)
@@ -56,25 +95,20 @@ public class NetworkListener : MonoBehaviour
                 message = new StringBuilder();
                 return msg.ToString().ToLower();
             }
-            else if (i == CARRIAGE_RETURN) {
+            else if (i == CARRIAGE_RETURN)
+            {
                 // In some OS'es the byte 13 has the same fucntion as the byte 10.
                 // byte 10 the mostly used, thats why it gets the functionality.
             }
             else
             {
-                message.Append((char) i);
+                message.Append((char)i);
             }
+        }
+
+        return string.Empty;
     }
 
-        return String.Empty;
-    }
-
-    private void OnAcceptTcpClient(IAsyncResult result)
-    {
-        TcpListener _server = (TcpListener) result.AsyncState;
-        _client = _server.EndAcceptTcpClient(result);
-        Debug.Log("Client connected.");
-    }
 
     private TcpListener _server;
     private TcpClient _client;

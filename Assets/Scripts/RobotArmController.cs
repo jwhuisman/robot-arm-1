@@ -248,7 +248,6 @@ public class RobotArmController : MonoBehaviour {
                     goto default;
                 }
                 break;
-
             default:
                 text.text = "Error 418, I'm a teapot, I don't know how to do this.";
                 break;

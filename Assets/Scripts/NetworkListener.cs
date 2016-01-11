@@ -34,7 +34,7 @@ public class NetworkListener : MonoBehaviour
                 string message = FilterDataIntoMessage();
                 if (message != "")
                 {
-                    _RobotArmController.Actions(message);
+                    //_RobotArmController.Actions(message);
                     Debug.Log(string.Format("Message received:\n{0}", message));
                 }
             }

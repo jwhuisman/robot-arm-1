@@ -13,15 +13,15 @@ public class RobotArmController : MonoBehaviour {
     public Text speedText;
 
     // lerping related
+    public float timeTakenDuringLerp;
     private bool _isLerping;
     private Vector3 _startPosition;
     private Vector3 _endPosition;
     private float percentageComplete;
     private float _timeStartedLerping;
-    private float timeTakenDuringLerp;
 
     // pick up, put down a block related.
-    private bool currentlyHolding;
+    public bool currentlyHolding;
     private bool goPickUpBlock;
     private bool goPutDownBlock;
     private bool goUpFromPlane;
@@ -29,7 +29,7 @@ public class RobotArmController : MonoBehaviour {
     private float mapBoundaryTop;
 
     /// Called to begin the linear interpolation
-    void StartLerping(Vector3 direction, float spaces)
+    public void StartLerping(Vector3 direction, float spaces)
     {
         if (!_isLerping || percentageComplete >= 1.0f)
         {
@@ -158,99 +158,6 @@ public class RobotArmController : MonoBehaviour {
             // after grabbing or releasing a block, go up to the mapBoundaryTop.
             float distanceMapBoundary = mapBoundaryTop - robotArm.transform.position.y;
             StartLerping(Vector3.up, distanceMapBoundary);
-        }
-    }
-
-    public void Actions(string message)
-    {
-        string[] command = message.Split(' ');
-
-        //Checks if the commands are single commands or are followed up by another action, e.g. move right
-        bool commandCheck = true;
-        if (command.Length < 2 || command.Length > 2)
-        {
-            commandCheck = false;
-        }
-
-        switch (command[0])
-        {
-            case ("move"):
-                if (!commandCheck)
-                {
-                    goto default;
-                }
-                else if (command[1] == "right")
-                {
-                    StartLerping(Vector3.right, 1);
-                    text.text = "Moving to the right.";
-                }
-                else if (command[1] == "left")
-                {
-                    StartLerping(Vector3.left, 1);
-                    text.text = "Moving to the left.";
-                }
-                else
-                {
-                    goto default;
-                }
-                break;
-
-
-            case ("speed"):
-                if (!commandCheck)
-                {
-                    goto default;
-                }
-                int number;
-                bool isInt = Int32.TryParse(command[1], out number);
-                if (isInt && number <= 100 && number >= 0)
-                {
-                    float time = (100f - (float)Int32.Parse(command[1])) / 100f;
-                    text.text = "Speed of the robot arm has been changed to: " + time + " seconds.";
-                    speedText.text = "Speed: " + time + " seconds";
-                    timeTakenDuringLerp = time;
-                }
-                else
-                {
-                    text.text = "You can't go lower than 0, or higher than 100.";
-                }
-                break;
-
-            case ("pick"):
-
-                if (command[1] == "up" && !currentlyHolding)
-                {
-                    StartPickUpPutDown(true);
-                    text.text = "Going to pick up a block.";
-                }
-                else if (currentlyHolding)
-                {
-                    text.text = "Already holding a block.";
-                }
-                else
-                {
-                    goto default;
-                }
-                break;
-
-            case ("put"):
-                if (!commandCheck)
-                {
-                    goto default;
-                }
-                if (command[1] == "down")
-                {
-                    StartPickUpPutDown(false);
-                    text.text = "Putting down a block.";
-                }
-                else
-                {
-                    goto default;
-                }
-                break;
-            default:
-                text.text = "Error 418, I'm a teapot, I don't know how to do this.";
-                break;
         }
     }
 }

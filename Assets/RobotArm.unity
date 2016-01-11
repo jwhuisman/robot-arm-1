@@ -413,7 +413,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 1674608685}
   _RobotArmController: {fileID: 1658030861}
-  connected: 0
 --- !u!4 &296191840
 Transform:
   m_ObjectHideFlags: 0
@@ -781,6 +780,46 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &632050961
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 632050963}
+  - 114: {fileID: 632050962}
+  m_Layer: 0
+  m_Name: CommandRunner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &632050962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 632050961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7102362c4b5b1904ba3d2b0d7aaef891, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotArmController: {fileID: 1658030861}
+--- !u!4 &632050963
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 632050961}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
 --- !u!1 &657857605
 GameObject:
   m_ObjectHideFlags: 0
@@ -809,7 +848,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _RobotArmController: {fileID: 1658030861}
-  holding: 0
+  commandRunner: {fileID: 632050962}
 --- !u!4 &657857607
 Transform:
   m_ObjectHideFlags: 0
@@ -1312,6 +1351,8 @@ MonoBehaviour:
   plane: {fileID: 866338071}
   text: {fileID: 1674608685}
   speedText: {fileID: 1469959202}
+  timeTakenDuringLerp: 0
+  currentlyHolding: 0
 --- !u!4 &1658030862
 Transform:
   m_ObjectHideFlags: 0

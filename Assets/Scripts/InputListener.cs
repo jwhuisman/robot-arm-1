@@ -1,10 +1,9 @@
-﻿using UnityEngine;
+﻿using Assets.Models;
+using Assets.Models.Commands;
+using UnityEngine;
 
 public class InputListener : MonoBehaviour
 {
-    public RobotArmController _RobotArmController;
-    public bool holding = false;
-
     void Start()
     {
         Debug.Log("InputListener.cs is used!");
@@ -12,34 +11,29 @@ public class InputListener : MonoBehaviour
 
     void Update()
     {
-        string msg = "";
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             if (holding)
             {
                 holding = false;
-                msg = "put down";
-
+                commandRunner.Add(new GrabCommand("put"));
             }
             else
             {
                 holding = true;
-                msg = "pick up";
+                commandRunner.Add(new GrabCommand("grab"));
             }
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            msg = "move left";
+            commandRunner.Add(new MoveCommand("left"));
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            msg = "move right";
-        }
-
-        if (msg != "")
-        {
-            _RobotArmController.Actions(msg);
-            Debug.Log(string.Format("Message received: {0}", msg));
+            commandRunner.Add(new MoveCommand("right"));
         }
     }
+
+    private bool holding = false;
+    public CommandRunner commandRunner;
 }

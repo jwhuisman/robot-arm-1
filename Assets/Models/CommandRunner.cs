@@ -1,6 +1,4 @@
-﻿using Assets.Models.Commands;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Models
@@ -20,14 +18,14 @@ namespace Assets.Models
             {
                 commandFinished = false;
 
-                NextCommand();
+                Next();
             }
 
-            if (Queue.Count != 0 && firstCommand && !commandFinished)
+            if (firstCommand && Queue.Count != 0 && !commandFinished)
             {
                 firstCommand = false;
 
-                NextCommand();
+                Next();
             }
         }
 
@@ -35,13 +33,15 @@ namespace Assets.Models
         {
             Queue.Enqueue(cmd);
         }
-        public void NextCommand()
+        public void Next()
         {
             Command cmd = Queue.Dequeue();
 
-            cmd.Do(robotArmController);
-
-            commandFinished = true;
+            if (cmd.Do(robotArmController))
+            {
+                // command finished -> ready for next command
+                commandFinished = true;
+            }
         }
 
         private bool firstCommand = true;

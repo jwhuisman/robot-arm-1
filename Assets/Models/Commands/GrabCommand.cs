@@ -6,17 +6,26 @@
         {
             Action = action;
         }
-        public override void Do(RobotArmController robotArm)
+        public override bool Do(RobotArmController robotArm)
         {
+            bool result = false;
             if (Action == "grab")
             {
                 robotArm.StartPickUpPutDown(true);
                 robotArm.text.text = "Going to pick up a block.";
+
+                result = true;
+                nListener.ReturnMessage("Picked up a block");
             } else if (Action == "put")
             {
                 robotArm.StartPickUpPutDown(false);
                 robotArm.text.text = "Putting down a block.";
+
+                result = true;
+                nListener.ReturnMessage("Put down a block");
             }
+
+            return result;
         }
 
         public string Action { get; set; }

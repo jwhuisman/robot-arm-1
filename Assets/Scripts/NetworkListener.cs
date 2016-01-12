@@ -41,6 +41,21 @@ public class NetworkListener : MonoBehaviour
         }
     }
 
+    void OnApplicationQuit()
+    {
+        ReturnMessage("Unity has shut down");
+    }
+
+    public void ReturnMessage(string message)
+    {
+        // sends a message to the telnet client.
+        if (connected)
+        {
+            message += Environment.NewLine;
+            _client.GetStream().Write(Encoding.ASCII.GetBytes(message), 0, message.Length);
+            _client.GetStream().Flush();
+        }
+    }
 
     private void StartListening()
     {
@@ -60,6 +75,7 @@ public class NetworkListener : MonoBehaviour
         _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
 
         connected = true;
+        ReturnMessage("Connected to the Robot Arm");
         Debug.Log("Client connected.");
 
         // start listening for a new client
@@ -82,10 +98,9 @@ public class NetworkListener : MonoBehaviour
         Debug.Assert(_client != null, "The client is empty.");
         Debug.Assert(_client.Available > 0, "The client is not available.");
 
-        NetworkStream stream = null;
+        NetworkStream stream = _client.GetStream();
 
-        stream = _client.GetStream();
-
+        int c = 0;
         while (stream.DataAvailable)
         {
             int i = stream.ReadByte();
@@ -95,20 +110,24 @@ public class NetworkListener : MonoBehaviour
                 message = new StringBuilder();
                 return msg.ToString().ToLower();
             }
-            else if (i == CARRIAGE_RETURN)
+            else if (i == CARRIAGE_RETURN && c > 0)
             {
                 // In some OS'es the byte 13 has the same fucntion as the byte 10.
                 // byte 10 the mostly used, thats why it gets the functionality.
+
+                // for some reason this doesnt work...
+                message.Remove(c, 1);
             }
             else
             {
                 message.Append((char)i);
             }
+
+            c = c + 1;
         }
 
         return string.Empty;
     }
-
 
     private TcpListener _server;
     private TcpClient _client;

@@ -6,7 +6,6 @@ public class InputListener : MonoBehaviour
 {
     public CommandRunner commandRunner;
 
-
     void Start()
     {
         Debug.Log("InputListener.cs is used!");

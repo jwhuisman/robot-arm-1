@@ -72,7 +72,6 @@ public class RobotArmController : MonoBehaviour {
             StartLerping(Vector3.up, mapBoundaryTop);
         }
 
-        UpdateArmHeight();
     }
 
     // Updates per millisecond
@@ -87,6 +86,8 @@ public class RobotArmController : MonoBehaviour {
 
             if (percentageComplete >= 1.0f)
             {
+                UpdateArmHeight();
+
                 percentageComplete = 1.0f;
                 _isLerping = false;
             }
@@ -95,14 +96,15 @@ public class RobotArmController : MonoBehaviour {
 
     public void UpdateArmHeight()
     {
-        mapBoundaryTop = GetHighestCubeY() + 1f;
+        // call this function while animating/lerping/etc.
+        mapBoundaryTop = GetHighestCubeY();
     }
     public float GetHighestCubeY()
     {
         float y = GameObject.FindGameObjectsWithTag("Cube").Max(c => c.transform.position.y);
-        float size = 1f;
+        float size = 2f; // now the arm is 2 blocks above the highest block
    
-        return y + size + (robotArm.transform.localScale.y / 2);
+        return y + size + .6f;
     }
 
     public void StartPickUpPutDown(bool instruction)

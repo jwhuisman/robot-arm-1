@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class InputListener : MonoBehaviour
 {
+    public CommandRunner commandRunner;
+
+
     void Start()
     {
         Debug.Log("InputListener.cs is used!");
@@ -24,6 +27,10 @@ public class InputListener : MonoBehaviour
                 commandRunner.Add(new GrabCommand("grab"));
             }
         }
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            commandRunner.Add(new MoveCommand("up"));
+        }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             commandRunner.Add(new MoveCommand("left"));
@@ -35,5 +42,4 @@ public class InputListener : MonoBehaviour
     }
 
     private bool holding = false;
-    public CommandRunner commandRunner;
 }

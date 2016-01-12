@@ -6,6 +6,8 @@ TagManager:
   tags:
   - RobotArm
   - Floor
+  - NetworkListener
+  - Cube
   layers:
   - Default
   - TransparentFX

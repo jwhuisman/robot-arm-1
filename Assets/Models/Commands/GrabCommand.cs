@@ -15,14 +15,14 @@
                 robotArm.text.text = "Going to pick up a block.";
 
                 result = true;
-                nListener.ReturnMessage("Picked up a block");
+                networkListener.ReturnMessage("Picked up a block");
             } else if (Action == "put")
             {
                 robotArm.StartPickUpPutDown(false);
                 robotArm.text.text = "Putting down a block.";
 
                 result = true;
-                nListener.ReturnMessage("Put down a block");
+                networkListener.ReturnMessage("Put down a block");
             }
 
             return result;

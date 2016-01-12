@@ -17,14 +17,14 @@
                 robotArm.timeTakenDuringLerp = time;
 
                 result = true;
-                nListener.ReturnMessage(string.Format("Speed set to: {0} seconds (per animation)", time));
+                networkListener.ReturnMessage(string.Format("Speed set to: {0} seconds (per animation)", time));
             }
             else
             {
                 robotArm.text.text = "Speed can't go lower than 0 or higher than 100.";
 
                 result = true;
-                nListener.ReturnMessage("Speed can't go lower than 0 or higher than 100");
+                networkListener.ReturnMessage("Speed can't go lower than 0 or higher than 100");
             }
 
             return result;

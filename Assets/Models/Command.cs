@@ -4,13 +4,12 @@ namespace Assets.Models
 {
     public class Command
     {
-        public NetworkListener nListener;
-
         public Command()
         {
-            nListener = GameObject.FindGameObjectWithTag("NetworkListener").GetComponent<NetworkListener>();
+            networkListener = GameObject.FindGameObjectWithTag("NetworkListener").GetComponent<NetworkListener>();
         }
 
+        protected NetworkListener networkListener; // should this be protected? or just public?
         public virtual bool Do(RobotArmController robotArm) { return false; }
     }
 }

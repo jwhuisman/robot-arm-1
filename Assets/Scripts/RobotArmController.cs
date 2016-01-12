@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class RobotArmController : MonoBehaviour {
@@ -42,7 +43,7 @@ public class RobotArmController : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        mapBoundaryTop = 5f;
+        mapBoundaryTop = robotArm.transform.position.y;
         timeTakenDuringLerp = 0.5f;
         speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
         goPickUpBlock = false;
@@ -53,7 +54,7 @@ public class RobotArmController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update ()
-    {
+    {   
         // Actions after the animation "going down" is completed.
         if (percentageComplete == 1f && goPickUpBlock)
         {
@@ -68,9 +69,10 @@ public class RobotArmController : MonoBehaviour {
         if (percentageComplete == 1f && goUpFromPlane)
         {
             goUpFromPlane = false;
-            float distanceMapBoundary = mapBoundaryTop - robotArm.transform.position.y;
-            StartLerping(Vector3.up, distanceMapBoundary);
+            StartLerping(Vector3.up, mapBoundaryTop);
         }
+
+        UpdateArmHeight();
     }
 
     // Updates per millisecond
@@ -90,7 +92,19 @@ public class RobotArmController : MonoBehaviour {
             }
         }
     }
-    
+
+    public void UpdateArmHeight()
+    {
+        mapBoundaryTop = GetHighestCubeY() + 1f;
+    }
+    public float GetHighestCubeY()
+    {
+        float y = GameObject.FindGameObjectsWithTag("Cube").Max(c => c.transform.position.y);
+        float size = 1f;
+   
+        return y + size + (robotArm.transform.localScale.y / 2);
+    }
+
     public void StartPickUpPutDown(bool instruction)
     {
         RaycastHit raycastNearestDownwardObject;

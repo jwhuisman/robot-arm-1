@@ -17,7 +17,7 @@ namespace Assets.Models.Commands
                 robotArm.text.text = "Moving to the right.";
 
                 result = true;
-                nListener.ReturnMessage("Robot arm moved right");
+                networkListener.ReturnMessage("Robot arm moved right");
             }
             else if (Direction == "left")
             {
@@ -25,7 +25,15 @@ namespace Assets.Models.Commands
                 robotArm.text.text = "Moving to the left.";
 
                 result = true;
-                nListener.ReturnMessage("Robot arm moved left");
+                networkListener.ReturnMessage("Robot arm moved left");
+            }
+            else if (Direction == "up")
+            {
+                robotArm.StartLerping(Vector3.up, 1);
+                robotArm.text.text = "Moving up.";
+
+                result = true;
+                networkListener.ReturnMessage("Robot arm moved up");
             }
 
             return result;

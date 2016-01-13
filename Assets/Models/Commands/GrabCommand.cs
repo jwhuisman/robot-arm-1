@@ -8,23 +8,27 @@
         }
         public override bool Do(RobotArmController robotArm)
         {
-            bool result = false;
+            bool result = false, grab = false;
+            string s = "";
             if (Action == "grab")
             {
-                robotArm.StartPickUpPutDown(true);
-                robotArm.text.text = "Going to pick up a block.";
-
-                result = true;
-                networkListener.ReturnMessage("Picked up a block");
+                grab = true;
+                s = "Grab a block";
             } else if (Action == "put")
             {
-                robotArm.StartPickUpPutDown(false);
-                robotArm.text.text = "Putting down a block.";
-
-                result = true;
-                networkListener.ReturnMessage("Put down a block");
+                grab = false;
+                s = "Put a block down";
             }
 
+            robotArm.StartPickUpPutDown(grab);
+
+            robotArm.text.text = s;
+            networkListener.ReturnMessage(s);
+
+
+            // should return true after the robotArm animation is finished 
+            // (result = await robotArm.StartPickUpPutDown(grab);)
+            result = true;
             return result;
         }
 

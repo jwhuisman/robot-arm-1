@@ -10,32 +10,33 @@ namespace Assets.Models.Commands
         }
         public override bool Do(RobotArmController robotArm)
         {
+            Vector3 vec = new Vector3();
             bool result = false;
+            string s = "";
             if (Direction == "right")
             {
-                robotArm.StartLerping(Vector3.right, 1);
-                robotArm.text.text = "Moving to the right.";
-
-                result = true;
-                networkListener.ReturnMessage("Robot arm moved right");
+                vec = Vector3.right;
+                s = "Moved right";
             }
             else if (Direction == "left")
             {
-                robotArm.StartLerping(Vector3.left, 1);
-                robotArm.text.text = "Moving to the left.";
-
-                result = true;
-                networkListener.ReturnMessage("Robot arm moved left");
+                vec = Vector3.left;
+                s = "Moved left";
             }
             else if (Direction == "up")
             {
-                robotArm.StartLerping(Vector3.up, 1);
-                robotArm.text.text = "Moving up.";
-
-                result = true;
-                networkListener.ReturnMessage("Robot arm moved up");
+                vec = Vector3.up;
+                s = "Moved up";
             }
 
+            robotArm.StartLerping(vec, 1);
+
+            robotArm.text.text = s;
+            networkListener.ReturnMessage(s);
+
+            // should return true after the robotArm animation is finished 
+            // (result = await robotArm.StartLerping(vec, 1);)
+            result = true;
             return result;
         }
 

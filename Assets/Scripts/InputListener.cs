@@ -21,10 +21,6 @@ public class InputListener : MonoBehaviour
         {
             commandRunner.Add(new GrabCommand());
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow)) // up = for testing purposes
-        { 
-            commandRunner.Add(new MoveCommand("up"));
-        }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             commandRunner.Add(new MoveCommand("left"));
@@ -32,6 +28,25 @@ public class InputListener : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             commandRunner.Add(new MoveCommand("right"));
+        }
+
+
+        // for testing purposes
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) 
+        {
+            commandRunner.Add(new MoveCommand("up"));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            commandRunner.Add(new SpeedCommand(0));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            commandRunner.Add(new SpeedCommand(50));
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            commandRunner.Add(new SpeedCommand(100));
         }
     }
 }

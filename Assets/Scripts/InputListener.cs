@@ -17,16 +17,13 @@ public class InputListener : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (robotArm.currentlyHolding)
-            {
-                commandRunner.Add(new GrabCommand("put"));
-            }
-            else
-            {
-                commandRunner.Add(new GrabCommand("grab"));
-            }
+            commandRunner.Add(new DropCommand());
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow)) // up = for testing purposes
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            commandRunner.Add(new GrabCommand());
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow)) // up = for testing purposes
         { 
             commandRunner.Add(new MoveCommand("up"));
         }

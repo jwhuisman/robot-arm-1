@@ -14,17 +14,17 @@ namespace Assets.Models
 
         public void Update()
         {
-            if (Queue.Count != 0 && commandFinished)
+            if (currentCmd != null && currentCmd.IsDone)
             {
-                commandFinished = false;
-
-                Next();
+                if (Queue.Count != 0)
+                {
+                    Next();
+                }
             }
 
-            if (firstCommand && Queue.Count != 0 && !commandFinished)
+            if (firstCommand && Queue.Count != 0)
             {
                 firstCommand = false;
-
                 Next();
             }
         }
@@ -35,17 +35,12 @@ namespace Assets.Models
         }
         public void Next()
         {
-            Command cmd = Queue.Dequeue();
-
-            if (cmd.Do(robotArmController))
-            {
-                // command/animation finished -> ready for next command
-                commandFinished = true;
-            }
+            currentCmd = Queue.Dequeue();
+            currentCmd.Do(robotArmController);
         }
 
         private bool firstCommand = true;
-        private bool commandFinished = false;
+        private Command currentCmd;
         private Queue<Command> Queue;
     }
 }

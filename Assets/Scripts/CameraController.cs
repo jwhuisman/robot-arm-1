@@ -4,7 +4,7 @@ public class CameraController : MonoBehaviour
 {
     private GameObject robotArm;
 
-    private float smooth = 1.5f;
+    private float smooth = .5f;
 
     private float armStartY;
     private float camStartY;

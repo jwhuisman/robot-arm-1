@@ -7,9 +7,12 @@ namespace Assets.Models
         public Command()
         {
             networkListener = GameObject.FindGameObjectWithTag("NetworkListener").GetComponent<NetworkListener>();
+            IsDone = false;
         }
 
-        protected NetworkListener networkListener; // should this be protected? or just public?
-        public virtual bool Do(RobotArmController robotArm) { return false; }
+        public virtual void Do(RobotArmController robotArm) { }
+        public bool IsDone { get; set; }
+
+        protected NetworkListener networkListener;
     }
 }

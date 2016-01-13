@@ -8,10 +8,9 @@ namespace Assets.Models.Commands
         {
             Direction = dir;
         }
-        public override bool Do(RobotArmController robotArm)
+        public override void Do(RobotArmController robotArm)
         {
             Vector3 vec = new Vector3();
-            bool result = false;
             string s = "";
             if (Direction == "right")
             {
@@ -31,13 +30,13 @@ namespace Assets.Models.Commands
 
             robotArm.StartLerping(vec, 1);
 
+            
+
+            // should set 'command.IsDone = true' after the robotArm transform/animation is finished 
+            // and networkListener.ReturnMessage(s) should be after the 'command.IsDone'
+            IsDone = true;
             robotArm.text.text = s;
             networkListener.ReturnMessage(s);
-
-            // should return true after the robotArm animation is finished 
-            // (result = await robotArm.StartLerping(vec, 1);)
-            result = true;
-            return result;
         }
 
         public string Direction { get; set; }

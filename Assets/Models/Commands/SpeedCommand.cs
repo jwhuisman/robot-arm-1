@@ -6,9 +6,8 @@
         {
             Speed = speed;
         }
-        public override bool Do(RobotArmController robotArm)
+        public override void Do(RobotArmController robotArm)
         {
-            bool result = false;
             if (Speed <= 100 && Speed >= 0)
             {
                 float time = (100f - Speed) / 100f;
@@ -16,18 +15,17 @@
                 robotArm.speedText.text = "Speed: " + time + " seconds";
                 robotArm.timeTakenDuringLerp = time;
 
-                result = true;
                 networkListener.ReturnMessage(string.Format("Speed set to: {0} seconds (per animation)", time));
             }
             else
             {
                 robotArm.text.text = "Speed can't go lower than 0 or higher than 100.";
 
-                result = true;
                 networkListener.ReturnMessage("Speed can't go lower than 0 or higher than 100");
             }
 
-            return result;
+            // can set IsDone immedeately because setting speed doesnt have an animation
+            IsDone = true;
         }
 
         public float Speed { get; set; }

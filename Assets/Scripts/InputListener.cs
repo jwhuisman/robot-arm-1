@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class InputListener : MonoBehaviour
 {
-    public RobotArmController robotArm;
     public CommandRunner commandRunner;
-
 
     void Start()
     {

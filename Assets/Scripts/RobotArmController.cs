@@ -96,7 +96,7 @@ public class RobotArmController : MonoBehaviour {
 
     public void UpdateArmHeight()
     {
-        // call this function while animating/lerping/etc.
+        // call this function after animating/lerping/etc.
         mapBoundaryTop = GetHighestCubeY();
     }
     public float GetHighestCubeY()

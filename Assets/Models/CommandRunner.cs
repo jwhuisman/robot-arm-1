@@ -39,7 +39,7 @@ namespace Assets.Models
 
             if (cmd.Do(robotArmController))
             {
-                // command finished -> ready for next command
+                // command/animation finished -> ready for next command
                 commandFinished = true;
             }
         }

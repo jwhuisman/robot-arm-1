@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class InputListener : MonoBehaviour
 {
+    public RobotArmController robotArm;
     public CommandRunner commandRunner;
+
 
     void Start()
     {
@@ -15,19 +17,17 @@ public class InputListener : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (holding)
+            if (robotArm.currentlyHolding)
             {
-                holding = false;
                 commandRunner.Add(new GrabCommand("put"));
             }
             else
             {
-                holding = true;
                 commandRunner.Add(new GrabCommand("grab"));
             }
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // up = for testing purposes
+        { 
             commandRunner.Add(new MoveCommand("up"));
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -39,6 +39,4 @@ public class InputListener : MonoBehaviour
             commandRunner.Add(new MoveCommand("right"));
         }
     }
-
-    private bool holding = false;
 }

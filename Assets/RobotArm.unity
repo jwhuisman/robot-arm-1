@@ -158,7 +158,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
 --- !u!1 &147186361
 GameObject:
   m_ObjectHideFlags: 0
@@ -413,6 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 1674608685}
   _RobotArmController: {fileID: 1658030861}
+  commandRunner: {fileID: 632050962}
 --- !u!4 &296191840
 Transform:
   m_ObjectHideFlags: 0
@@ -851,7 +852,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38754fb5e099d24bbe3d78e76ec8b2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotArm: {fileID: 1658030861}
   commandRunner: {fileID: 632050962}
 --- !u!4 &657857607
 Transform:
@@ -864,7 +864,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 6
 --- !u!1 &806339653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,7 +1033,7 @@ RectTransform:
   m_LocalScale: {x: 1.9, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -0.5}
@@ -1593,7 +1593,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!1 &1674608684
 GameObject:
   m_ObjectHideFlags: 0

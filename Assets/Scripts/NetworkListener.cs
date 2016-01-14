@@ -4,13 +4,14 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Assets.Models;
 
 public class NetworkListener : MonoBehaviour
 {
     public Text text;
     public RobotArmController _RobotArmController;
+    public CommandRunner commandRunner;
 
-    private bool connected = false;
 
     void Start()
     {
@@ -31,11 +32,10 @@ public class NetworkListener : MonoBehaviour
         {
             if (_client != null && _client.Available > 0)
             {
-                string message = FilterDataIntoMessage();
-                if (message != "")
+                string data = FilterDataIntoMessage();
+                if (data != "")
                 {
-                    //_RobotArmController.Actions(message);
-                    Debug.Log(string.Format("Message received:\n{0}", message));
+                    Debug.Log(string.Format("Message received:\n{0}", data));
                 }
             }
         }
@@ -44,6 +44,15 @@ public class NetworkListener : MonoBehaviour
     void OnApplicationQuit()
     {
         ReturnMessage("Unity has shut down");
+    }
+
+    public void AddCommand(string data)
+    {
+        var cmd = commandBuilder.BuildCommand(data.ToLower());
+        if (cmd != null)
+        {
+            commandRunner.Add(cmd);
+        }
     }
 
     public void ReturnMessage(string message)
@@ -106,8 +115,11 @@ public class NetworkListener : MonoBehaviour
             int i = stream.ReadByte();
             if (i == NEW_LINE)
             {
-                string msg = message.ToString();
+                string msg = message.ToString().ToLower().Replace("\r", "").Replace("\n", "");
                 message = new StringBuilder();
+
+                AddCommand(msg);
+
                 return msg.ToString().ToLower();
             }
             else if (i == CARRIAGE_RETURN && c > 0)
@@ -123,13 +135,17 @@ public class NetworkListener : MonoBehaviour
                 message.Append((char)i);
             }
 
-            c = c + 1;
+            c++;
         }
 
-        return string.Empty;
+        return message.ToString().ToLower();
     }
+
+
+    private bool connected = false;
 
     private TcpListener _server;
     private TcpClient _client;
     private StringBuilder message = new StringBuilder();
+    private CommandBuilder commandBuilder = new CommandBuilder();
 }

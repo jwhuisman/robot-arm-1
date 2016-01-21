@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RobotArmController : MonoBehaviour {
-
+public class RobotArmController : MonoBehaviour
+{
     public GameObject robotArm;
     public GameObject cubes;
     public GameObject plane;
@@ -14,24 +15,36 @@ public class RobotArmController : MonoBehaviour {
     public Text speedText;
 
     // lerping related
+    public float timeTakenDuringLerp;
     private bool _isLerping;
     private Vector3 _startPosition;
     private Vector3 _endPosition;
     private float percentageComplete;
     private float _timeStartedLerping;
-    private float timeTakenDuringLerp;
     private ArrayList messageArray = new ArrayList();
 
     // pick up, put down a block related.
-    private bool currentlyHolding;
-    private bool goPickUpBlock;
-    private bool goPutDownBlock;
-    private bool goUpFromPlane;
+    public bool currentlyHolding = false;
+    private bool goPickUpBlock = false;
+    private bool goPutDownBlock = false;
+    private bool goUpFromPlane = false;
     
     private float mapBoundaryTop;
 
-    /// Called to begin the linear interpolation
-    void StartLerping(Vector3 direction, float spaces)
+    // speed meter stuff
+    public GameObject meterPointer;
+    public float angleY;
+    public float angleZ;
+    public float startAngle;
+    public float currentAngle;
+    public float targetAngle;
+    public float minAngle = 0;
+    public float maxAngle = 240;
+    public float rotSpeed = 3f;
+    public bool rotateNeedle = false;
+
+    // Called to begin the linear interpolation
+    public void StartLerping(Vector3 direction, float spaces)
     {
         if (!_isLerping || percentageComplete >= 1.0f)
         {
@@ -45,18 +58,19 @@ public class RobotArmController : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        mapBoundaryTop = 5f;
+        mapBoundaryTop = robotArm.transform.position.y;
         timeTakenDuringLerp = 0.5f;
-        speedText.text = "Speed: " + timeTakenDuringLerp;
-        goPickUpBlock = false;
-        goPutDownBlock = false;
-        goUpFromPlane = false;
-        currentlyHolding = false;
+        speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
+
+        meterPointer = GameObject.FindGameObjectWithTag("SpeedMeterPointer");
+        angleY = meterPointer.transform.rotation.eulerAngles.y;
+        angleZ = meterPointer.transform.rotation.eulerAngles.z;
+
+        SetSpeedMeter(timeTakenDuringLerp);
     }
 	
-	// Update is called once per frame
 	void Update ()
-    {
+    {   
         // Actions after the animation "going down" is completed.
         if (percentageComplete == 1f && goPickUpBlock)
         {
@@ -71,12 +85,14 @@ public class RobotArmController : MonoBehaviour {
         if (percentageComplete == 1f && goUpFromPlane)
         {
             goUpFromPlane = false;
-            float distanceMapBoundary = mapBoundaryTop - robotArm.transform.position.y;
-            StartLerping(Vector3.up, distanceMapBoundary);
+            StartLerping(Vector3.up, mapBoundaryTop);
+        }
+
+        if (rotateNeedle)
+        {
+            RotateNeedleTowards();
         }
     }
-
-    // Updates per millisecond
     void FixedUpdate()
     {
         if (_isLerping)
@@ -84,16 +100,82 @@ public class RobotArmController : MonoBehaviour {
             float timeSinceStarted = Time.time - _timeStartedLerping;
             percentageComplete = timeSinceStarted / timeTakenDuringLerp;
 
-            robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
+            if (_endPosition.x >= -9 && _endPosition.x <= 9)
+            {
+                robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
+            }
 
             if (percentageComplete >= 1.0f)
             {
+                UpdateArmHeight();
+
                 percentageComplete = 1.0f;
                 _isLerping = false;
             }
         }
     }
-    
+
+    public void UpdateArmHeight()
+    {
+        // call this function after animating/lerping/etc.
+        mapBoundaryTop = GetHighestCubeY();
+    }
+    public float GetHighestCubeY()
+    {
+        float y = GameObject.FindGameObjectsWithTag("Cube").Max(c => c.transform.position.y);
+        float size = 2f; // now the arm is 2 blocks above the highest block
+   
+        return y + size + .6f;
+    }
+
+    public float UpdateSpeed(float speed)
+    {
+        float time = timeTakenDuringLerp;
+
+        if (speed <= 100 && speed >= 0)
+        {
+            time = (100f - speed) / 100f;
+            text.text = "Speed of the robot arm has been changed to: " + time + " seconds.";
+            speedText.text = "Speed: " + time + " seconds";
+
+            SetSpeedMeter(time);
+
+            timeTakenDuringLerp = time;
+        } else
+        {
+            text.text = "Speed can't go lower than 0 or higher than 100.";
+        }
+
+        return time;
+    }
+    public void SetSpeedMeter(float time)
+    {
+        startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : meterPointer.transform.eulerAngles.x;
+        currentAngle = startAngle;
+        targetAngle = -(maxAngle - (maxAngle * time));
+
+        if (targetAngle != startAngle)
+        {
+            rotateNeedle = true;
+        }
+    }
+    public void RotateNeedleTowards()
+    {
+        float speed = rotSpeed * (Math.Abs(targetAngle - startAngle) / 40);
+        bool left = (startAngle < targetAngle) ? true : false;
+
+        currentAngle = (left) ? currentAngle + speed : currentAngle - speed;
+
+        meterPointer.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+        if ((left && currentAngle >= targetAngle) || (!left && currentAngle <= targetAngle))
+        {
+            meterPointer.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+            rotateNeedle = false;
+        }
+    }
+
+
     public void StartPickUpPutDown(bool instruction)
     {
         RaycastHit raycastNearestDownwardObject;
@@ -160,70 +242,6 @@ public class RobotArmController : MonoBehaviour {
             // after grabbing or releasing a block, go up to the mapBoundaryTop.
             float distanceMapBoundary = mapBoundaryTop - robotArm.transform.position.y;
             StartLerping(Vector3.up, distanceMapBoundary);
-        }
-    }
-
-    public void Actions(string message)
-    {
-        messageArray.Add(message);
-
-        while(messageArray.Count >= 1)
-        {
-            string[] command = messageArray[0].ToString().Split(' ');
-
-            switch (command[0])
-            {
-                case ("move"):
-                    if (command[1] == "right")
-                    {
-                        StartLerping(Vector3.right, 1);
-                        text.text = "Moving to the right.";
-                    }
-                    else if (command[1] == "left")
-                    {
-                        StartLerping(Vector3.left, 1);
-                        text.text = "Moving to the left.";
-                    }
-                    break;
-
-
-                case ("speed"):
-                    float    number;
-                    bool isInt = float.TryParse(command[1], out number);
-                    if (isInt && number <= 100 && number >= 0)
-                    {
-                        float time = (100f - float.Parse(command[1])) / 100f;
-                        text.text = "Speed of the robot arm has been changed to: " + time;
-                        speedText.text = "Speed: " + time;
-                        timeTakenDuringLerp = time;
-                    }
-                    else
-                    {
-                        text.text = "You can't go lower than 0, or higher than 100.";
-                    }
-                    break;
-
-                case ("pick"):
-                    if (command[1] == "up")
-                    {
-                        StartPickUpPutDown(true);
-                        text.text = "Going to pick up a block.";
-                    }
-                    break;
-
-                case ("put"):
-                    if (command[1] == "down")
-                    {
-                        StartPickUpPutDown(false);
-                        text.text = "Putting down a block.";
-                    }
-                    break;
-
-                default:
-                    text.text = "Error 418, I'm a teapot, I don't know how to do this.";
-                    break;
-            }
-            messageArray.RemoveAt(0);
         }
     }
 }

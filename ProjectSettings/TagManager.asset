@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - RobotArm
+  - Floor
+  - NetworkListener
+  - Cube
+  - SpeedMeter
+  - SpeedMeterPointer
   layers:
   - Default
   - TransparentFX

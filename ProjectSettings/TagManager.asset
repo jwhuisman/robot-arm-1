@@ -8,6 +8,8 @@ TagManager:
   - Floor
   - NetworkListener
   - Cube
+  - SpeedMeter
+  - SpeedMeterPointer
   layers:
   - Default
   - TransparentFX

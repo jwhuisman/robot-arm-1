@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RobotArmController : MonoBehaviour {
-
+public class RobotArmController : MonoBehaviour
+{
     public GameObject robotArm;
     public GameObject cubes;
     public GameObject plane;
@@ -21,14 +22,26 @@ public class RobotArmController : MonoBehaviour {
     private float _timeStartedLerping;
 
     // pick up, put down a block related.
-    public bool currentlyHolding;
-    private bool goPickUpBlock;
-    private bool goPutDownBlock;
-    private bool goUpFromPlane;
+    public bool currentlyHolding = false;
+    private bool goPickUpBlock = false;
+    private bool goPutDownBlock = false;
+    private bool goUpFromPlane = false;
     
     private float mapBoundaryTop;
 
-    /// Called to begin the linear interpolation
+    // speed meter stuff
+    public GameObject meterPointer;
+    public float angleY;
+    public float angleZ;
+    public float startAngle;
+    public float currentAngle;
+    public float targetAngle;
+    public float minAngle = 0;
+    public float maxAngle = 240;
+    public float rotSpeed = 3f;
+    public bool rotateNeedle = false;
+
+    // Called to begin the linear interpolation
     public void StartLerping(Vector3 direction, float spaces)
     {
         if (!_isLerping || percentageComplete >= 1.0f)
@@ -46,13 +59,14 @@ public class RobotArmController : MonoBehaviour {
         mapBoundaryTop = robotArm.transform.position.y;
         timeTakenDuringLerp = 0.5f;
         speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
-        goPickUpBlock = false;
-        goPutDownBlock = false;
-        goUpFromPlane = false;
-        currentlyHolding = false;
+
+        meterPointer = GameObject.FindGameObjectWithTag("SpeedMeterPointer");
+        angleY = meterPointer.transform.rotation.eulerAngles.y;
+        angleZ = meterPointer.transform.rotation.eulerAngles.z;
+
+        SetSpeedMeter(timeTakenDuringLerp);
     }
 	
-	// Update is called once per frame
 	void Update ()
     {   
         // Actions after the animation "going down" is completed.
@@ -72,9 +86,11 @@ public class RobotArmController : MonoBehaviour {
             StartLerping(Vector3.up, mapBoundaryTop);
         }
 
+        if (rotateNeedle)
+        {
+            RotateNeedleTowards();
+        }
     }
-
-    // Updates per millisecond
     void FixedUpdate()
     {
         if (_isLerping)
@@ -109,6 +125,54 @@ public class RobotArmController : MonoBehaviour {
    
         return y + size + .6f;
     }
+
+    public float UpdateSpeed(float speed)
+    {
+        float time = timeTakenDuringLerp;
+
+        if (speed <= 100 && speed >= 0)
+        {
+            time = (100f - speed) / 100f;
+            text.text = "Speed of the robot arm has been changed to: " + time + " seconds.";
+            speedText.text = "Speed: " + time + " seconds";
+
+            SetSpeedMeter(time);
+
+            timeTakenDuringLerp = time;
+        } else
+        {
+            text.text = "Speed can't go lower than 0 or higher than 100.";
+        }
+
+        return time;
+    }
+    public void SetSpeedMeter(float time)
+    {
+        startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : meterPointer.transform.eulerAngles.x;
+        currentAngle = startAngle;
+        targetAngle = -(maxAngle - (maxAngle * time));
+
+        if (targetAngle != startAngle)
+        {
+            rotateNeedle = true;
+        }
+    }
+    public void RotateNeedleTowards()
+    {
+        float speed = rotSpeed * (Math.Abs(targetAngle - startAngle) / 40);
+        bool left = (startAngle < targetAngle) ? true : false;
+
+        currentAngle = (left) ? currentAngle + speed : currentAngle - speed;
+
+        meterPointer.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+        if ((left && currentAngle >= targetAngle) || (!left && currentAngle <= targetAngle))
+        {
+            meterPointer.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+            rotateNeedle = false;
+        }
+    }
+
 
     public void StartPickUpPutDown(bool instruction)
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class RobotArmController : MonoBehaviour {
     private float percentageComplete;
     private float _timeStartedLerping;
     private float timeTakenDuringLerp;
+    private ArrayList messageArray = new ArrayList();
 
     // pick up, put down a block related.
     private bool currentlyHolding;
@@ -163,59 +165,65 @@ public class RobotArmController : MonoBehaviour {
 
     public void Actions(string message)
     {
-        string[] command = message.Split(' ');
+        messageArray.Add(message);
 
-        switch (command[0])
+        while(messageArray.Count >= 1)
         {
-            case ("move"):
-                if (command[1] == "right")
-                {
-                    StartLerping(Vector3.right, 1);
-                    text.text = "Moving to the right.";
-                }
-                else if (command[1] == "left")
-                {
-                    StartLerping(Vector3.left, 1);
-                    text.text = "Moving to the left.";
-                }
-                break;
+            string[] command = messageArray[0].ToString().Split(' ');
+
+            switch (command[0])
+            {
+                case ("move"):
+                    if (command[1] == "right")
+                    {
+                        StartLerping(Vector3.right, 1);
+                        text.text = "Moving to the right.";
+                    }
+                    else if (command[1] == "left")
+                    {
+                        StartLerping(Vector3.left, 1);
+                        text.text = "Moving to the left.";
+                    }
+                    break;
 
 
-            case ("speed"):
-                float number;
-                bool isInt = float.TryParse(command[1], out number);
-                if (isInt && number <= 100 && number >= 0)
-                {
-                    float time = (100f - float.Parse(command[1])) / 100f;
-                    text.text = "Speed of the robot arm has been changed to: " + time;
-                    speedText.text = "Speed: " + time;
-                    timeTakenDuringLerp = time;
-                }
-                else
-                {
-                    text.text = "You can't go lower than 0, or higher than 100.";
-                }
-                break;
+                case ("speed"):
+                    float    number;
+                    bool isInt = float.TryParse(command[1], out number);
+                    if (isInt && number <= 100 && number >= 0)
+                    {
+                        float time = (100f - float.Parse(command[1])) / 100f;
+                        text.text = "Speed of the robot arm has been changed to: " + time;
+                        speedText.text = "Speed: " + time;
+                        timeTakenDuringLerp = time;
+                    }
+                    else
+                    {
+                        text.text = "You can't go lower than 0, or higher than 100.";
+                    }
+                    break;
 
-            case ("pick"):
-                if (command[1] == "up")
-                {
-                    StartPickUpPutDown(true);
-                    text.text = "Going to pick up a block.";
-                }
-                break;
+                case ("pick"):
+                    if (command[1] == "up")
+                    {
+                        StartPickUpPutDown(true);
+                        text.text = "Going to pick up a block.";
+                    }
+                    break;
 
-            case ("put"):
-                if (command[1] == "down")
-                {
-                    StartPickUpPutDown(false);
-                    text.text = "Putting down a block.";
-                }
-                break;
+                case ("put"):
+                    if (command[1] == "down")
+                    {
+                        StartPickUpPutDown(false);
+                        text.text = "Putting down a block.";
+                    }
+                    break;
 
-            default:
-                text.text = "Error 418, I'm a teapot, I don't know how to do this.";
-                break;
+                default:
+                    text.text = "Error 418, I'm a teapot, I don't know how to do this.";
+                    break;
+            }
+            messageArray.RemoveAt(0);
         }
     }
 }

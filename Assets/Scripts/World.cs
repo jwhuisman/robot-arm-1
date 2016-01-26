@@ -6,25 +6,41 @@ public class World : MonoBehaviour {
     
     public int size;
     public int cubes;
+    public RobotArmController _robotArmController;
 
-	public void Start()
+    public void Start()
     {
         float x = -(size / 2);
+        float midX = 0;
         
-        for (float i = -(size / 2); i < (size / +1); i += 1f)
+        for (float i = -(size / 2); i < (size /2 +1); i += 1f)
         {
             CubeStack cubeStack = new CubeStack();
             cubeStack.x = x;
             cubeStack.id = i;
-            x = x + 1.2f;
             _cubes.stack.Add(cubeStack);
+            if (i == 0)
+            {
+                midX = x;
+            }
+            
+            x = x + 1.2f;
         }
+        
+        GameObject Plane = GameObject.Find("Plane");
+        GameObject Cam = GameObject.Find("Main Camera");
+        GameObject RobotArm = GameObject.Find("Robot Arm");
+        RobotArm.transform.position = new Vector3(midX, RobotArm.transform.position.y, RobotArm.transform.position.z);
+        Plane.transform.position = new Vector3(midX, Plane.transform.position.y, Plane.transform.position.z);
+        Plane.transform.localScale = new Vector3((size / 10 + (size/50*1.2f)), Plane.transform.localScale.y, Plane.transform.localScale.z);
+        Cam.transform.position = new Vector3( RobotArm.transform.position.x, Cam.transform.position.y, Cam.transform.position.z);
 
         GenerateAssembly();
     }
 
     public void GenerateAssembly()
     {
+        GameObject CubeList = GameObject.Find("Cubes");
         System.Random rnd = new System.Random();
         for(float i = 0; i < cubes; i += 1f)
         {
@@ -36,6 +52,9 @@ public class World : MonoBehaviour {
             block.color = ((ColorEnum.Colors)colorNumber).ToString();
             stack.cubes.Push(block);
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            cube.tag = "Cube";
+            cube.name = "cube " + i.ToString();
+            cube.transform.parent = CubeList.transform;
             Renderer rend = cube.GetComponent<Renderer>();
             switch(block.color)
             {
@@ -58,6 +77,16 @@ public class World : MonoBehaviour {
             Vector3 xyz = new Vector3(stack.x, y, 0);
             cube.transform.position = xyz;
         }
+        int stackSize = 0;
+        foreach(var stack in _cubes.stack)
+        {
+           if(stack.cubes.Count > stackSize)
+            {
+                stackSize = stack.cubes.Count;
+            }
+        }
+        GameObject RobotArm = GameObject.Find("Robot Arm");
+        RobotArm.transform.position = new Vector3(RobotArm.transform.position.x, stackSize + 2f, RobotArm.transform.position.z);
     }
 
     private RobotArm _robotArm;

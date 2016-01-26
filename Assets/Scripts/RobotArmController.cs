@@ -99,11 +99,8 @@ public class RobotArmController : MonoBehaviour
         {
             float timeSinceStarted = Time.time - _timeStartedLerping;
             percentageComplete = timeSinceStarted / timeTakenDuringLerp;
-
-            if (_endPosition.x >= -9 && _endPosition.x <= 9)
-            {
+            
                 robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
-            }
 
             if (percentageComplete >= 1.0f)
             {

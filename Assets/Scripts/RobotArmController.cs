@@ -7,24 +7,25 @@ using UnityEngine.UI;
 public class RobotArmController : MonoBehaviour
 {
     public GameObject robotArm;
-    public GameObject cubes;
     public GameObject plane;
+    public GameObject cubes;
+
+    // world stuff
 
     // for the testers
     public Text text;
     public Text speedText;
 
     // lerping related
-    public float timeTakenDuringLerp;
-    private bool _isLerping;
     private Vector3 _startPosition;
     private Vector3 _endPosition;
+    private bool _isLerping;
     private float percentageComplete;
     private float _timeStartedLerping;
-    private ArrayList messageArray = new ArrayList();
+    public  float timeTakenDuringLerp;
 
     // pick up, put down a block related.
-    public bool currentlyHolding = false;
+    public  bool currentlyHolding = false;
     private bool goPickUpBlock = false;
     private bool goPutDownBlock = false;
     private bool goUpFromPlane = false;
@@ -43,22 +44,11 @@ public class RobotArmController : MonoBehaviour
     public float rotSpeed = 3f;
     public bool rotateNeedle = false;
 
-    // Called to begin the linear interpolation
-    public void StartLerping(Vector3 direction, float spaces)
-    {
-        if (!_isLerping || percentageComplete >= 1.0f)
-        {
-            _isLerping = true;
-            _timeStartedLerping = Time.time;
-            _startPosition = robotArm.transform.position;
-            _endPosition = robotArm.transform.position + direction * spaces;
-        }
-    }
 
-    // Use this for initialization
-    void Start ()
+    void Start()
     {
-        mapBoundaryTop = robotArm.transform.position.y;
+        UpdateArmHeight();
+
         timeTakenDuringLerp = 0.5f;
         speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
 
@@ -66,10 +56,12 @@ public class RobotArmController : MonoBehaviour
         angleY = meterPointer.transform.rotation.eulerAngles.y;
         angleZ = meterPointer.transform.rotation.eulerAngles.z;
 
+        cubes = GameObject.Find("Cubes");
+
         SetSpeedMeter(timeTakenDuringLerp);
     }
 	
-	void Update ()
+	void Update()
     {   
         // Actions after the animation "going down" is completed.
         if (percentageComplete == 1f && goPickUpBlock)
@@ -100,7 +92,7 @@ public class RobotArmController : MonoBehaviour
             float timeSinceStarted = Time.time - _timeStartedLerping;
             percentageComplete = timeSinceStarted / timeTakenDuringLerp;
             
-                robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
+            robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
 
             if (percentageComplete >= 1.0f)
             {
@@ -114,15 +106,14 @@ public class RobotArmController : MonoBehaviour
 
     public void UpdateArmHeight()
     {
-        // call this function after animating/lerping/etc.
         mapBoundaryTop = GetHighestCubeY();
     }
     public float GetHighestCubeY()
     {
         float y = GameObject.FindGameObjectsWithTag("Cube").Max(c => c.transform.position.y);
-        float size = 2f; // now the arm is 2 blocks above the highest block
+        float offsetY = 2f; // 2 blocks above the highest block
    
-        return y + size + .6f;
+        return y + offsetY + .6f;
     }
 
     public float UpdateSpeed(float speed)
@@ -172,7 +163,16 @@ public class RobotArmController : MonoBehaviour
         }
     }
 
-
+    public void StartLerping(Vector3 direction, float spaces)
+    {
+        if (!_isLerping || percentageComplete >= 1.0f)
+        {
+            _isLerping = true;
+            _timeStartedLerping = Time.time;
+            _startPosition = robotArm.transform.position;
+            _endPosition = robotArm.transform.position + direction * spaces;
+        }
+    }
     public void StartPickUpPutDown(bool instruction)
     {
         RaycastHit raycastNearestDownwardObject;
@@ -214,7 +214,6 @@ public class RobotArmController : MonoBehaviour
             }
         }
     }
-
     public void GrabRelease(bool instruction)
     {
         RaycastHit blockDirectlyUnderneath;

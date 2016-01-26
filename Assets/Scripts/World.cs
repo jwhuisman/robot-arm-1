@@ -7,6 +7,7 @@ public class World : MonoBehaviour {
     public int size;
     public int cubes;
     public RobotArmController _robotArmController;
+    public GameObject industrial_block;
 
     public void Start()
     {
@@ -51,7 +52,8 @@ public class World : MonoBehaviour {
             Cube block = new Cube();
             block.color = ((ColorEnum.Colors)colorNumber).ToString();
             stack.cubes.Push(block);
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject cube = Instantiate(industrial_block);
+            cube.AddComponent<BoxCollider>();
             cube.tag = "Cube";
             cube.name = "cube " + i.ToString();
             cube.transform.parent = CubeList.transform;

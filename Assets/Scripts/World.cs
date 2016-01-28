@@ -20,10 +20,10 @@ public class World : MonoBehaviour
 
         sectionWidth = (int)(sectionWidthStatic - (sectionWidthStatic * spacing));
 
-
-        GenerateSection(-1);
-        GenerateSection(0);
-        GenerateSection(1);
+        for (int i = -2; i <= 2; i++)
+        {
+            GenerateSection(i);
+        }
     }
 
     public void GenerateSection(int x)
@@ -38,7 +38,7 @@ public class World : MonoBehaviour
     {
         List<CubeStack> stacks = new List<CubeStack>();
 
-        for (int i = 0; i < sectionWidth; i++)
+        for (int i = 0; i <= sectionWidth; i++)
         {
             CubeStack stack = new CubeStack(i, i + (i * spacing));
             stacks.Add(stack);
@@ -51,7 +51,7 @@ public class World : MonoBehaviour
         System.Random rnd = new System.Random();
         for (int i = 0; i < cubes; i++)
         {
-            int stackId = rnd.Next(0, sectionWidth);
+            int stackId = rnd.Next(0, sectionWidth + 1);
 
             CubeStack stack = section.Stacks.Where(s => s.Id == stackId).SingleOrDefault();
             float x = (section.Id * sectionWidthStatic) + (stack.X);
@@ -59,20 +59,22 @@ public class World : MonoBehaviour
 
             int colorNumber = rnd.Next(0, 4);
             string color = ((ColorEnum.Colors)colorNumber).ToString();
+            string id = "(" + section.Id + "/" + i + ")";
 
-            GameObject cube = GenerateCube(i, color, x, y);
+            GameObject cube = GenerateCube(id, color, x, y);
             stack.Cubes.Push(cube);
         }
 
         return section;
     }
-    public GameObject GenerateCube(int id, string color, float x, float y)
+    public GameObject GenerateCube(string id, string color, float x, float y)
     {
         GameObject cube = Instantiate(blockModel);
 
         cube.AddComponent<BoxCollider>(); // dont need this in the future
+
         cube.tag = "Cube";
-        cube.name = "cube " + id.ToString();
+        cube.name = "cube-" + id;
         cube.transform.parent = _cubeList.transform;
         cube.transform.position = new Vector3(x, y, 0);
 

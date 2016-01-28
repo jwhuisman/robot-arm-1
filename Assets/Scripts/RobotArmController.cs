@@ -193,16 +193,16 @@ public class RobotArmController : MonoBehaviour
             // else : instruction = true : pick up a block. false : put down a block.
 
             // Note: By resetting the precentage we ensure everything goes consecutively and the robotArm will go up after completing the "going down" animation.
-            if (raycastNearestDownwardObject.transform.name == plane.name)
-            {
-                // Note: there is nothing to pick up because the robotArm raycasted the plane and the robotArm doesn't hold a block.
-                float distanceTillHitPlane = raycastNearestDownwardObject.distance - (robotArm.transform.localScale.y / 2 ) ;
-                StartLerping(Vector3.down, distanceTillHitPlane);
+            //if (raycastNearestDownwardObject.transform.name == plane.name)
+            //{
+            //    // Note: there is nothing to pick up because the robotArm raycasted the plane and the robotArm doesn't hold a block.
+            //    float distanceTillHitPlane = raycastNearestDownwardObject.distance - (robotArm.transform.localScale.y / 2 ) ;
+            //    StartLerping(Vector3.down, distanceTillHitPlane);
 
-                percentageComplete = 0f;
-                goUpFromPlane = true;
-            }
-            else if (instruction && !currentlyHolding)
+            //    percentageComplete = 0f;
+            //    goUpFromPlane = true;
+            //}
+            if (instruction && !currentlyHolding)
             {
                 float distanceTillHitBlock = raycastNearestDownwardObject.distance - (robotArm.transform.localScale.y / 2);
                 StartLerping(Vector3.down, distanceTillHitBlock);

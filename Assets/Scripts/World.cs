@@ -40,9 +40,7 @@ public class World : MonoBehaviour
 
         for (int i = 0; i < sectionWidth; i++)
         {
-            float offsetX = i * spacing;
-
-            CubeStack stack = new CubeStack(i, i + offsetX);
+            CubeStack stack = new CubeStack(i, i + (i * spacing));
             stacks.Add(stack);
         }
 
@@ -55,29 +53,34 @@ public class World : MonoBehaviour
         {
             int stackId = rnd.Next(0, sectionWidth);
 
-            CubeStack stack = _cubes.Stack.Where(s => s.Id == stackId).SingleOrDefault();
-            float y = stack.Cubes.Count();
+            CubeStack stack = section.Stacks.Where(s => s.Id == stackId).SingleOrDefault();
+            float x = (section.Id * sectionWidthStatic) + (stack.X);
+            float y = stack.Cubes.Count(); 
+
             int colorNumber = rnd.Next(0, 4);
+            string color = ((ColorEnum.Colors)colorNumber).ToString();
 
-            Cube block = new Cube();
-            block.Color = ((ColorEnum.Colors)colorNumber).ToString();
-            stack.Cubes.Push(block);
-
-            GameObject cube = Instantiate(blockModel);
-
-            cube.AddComponent<BoxCollider>(); // dont need this in the future
-            cube.tag = "Cube";
-            cube.name = "cube " + i.ToString();
-            cube.transform.parent = _cubeList.transform;
-            cube.transform.position = new Vector3(stack.X, y, 0);
-
-            Renderer renderer = cube.GetComponent<Renderer>();
-            renderer.materials = SetColors(renderer.materials, block.Color);
+            GameObject cube = GenerateCube(i, color, x, y);
+            stack.Cubes.Push(cube);
         }
 
         return section;
     }
+    public GameObject GenerateCube(int id, string color, float x, float y)
+    {
+        GameObject cube = Instantiate(blockModel);
 
+        cube.AddComponent<BoxCollider>(); // dont need this in the future
+        cube.tag = "Cube";
+        cube.name = "cube " + id.ToString();
+        cube.transform.parent = _cubeList.transform;
+        cube.transform.position = new Vector3(x, y, 0);
+
+        Renderer renderer = cube.GetComponent<Renderer>();
+        renderer.materials = SetColors(renderer.materials, color);
+
+        return cube;
+    }
 
     public Material[] SetColors(Material[] original, string color)
     {
@@ -120,5 +123,4 @@ public class World : MonoBehaviour
     private GameObject _world;
     private GameObject _robotArm;
     private GameObject _cubeList;
-    private Cubes _cubes = new Cubes();
 }

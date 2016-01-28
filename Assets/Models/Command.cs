@@ -11,6 +11,10 @@ namespace Assets.Models
         }
 
         public virtual void Do(RobotArmController robotArm) { }
+        public void Stop()
+        {
+            IsDone = true;
+        }
         public bool IsDone { get; set; }
 
         protected NetworkListener networkListener;

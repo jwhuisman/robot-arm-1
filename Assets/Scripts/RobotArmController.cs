@@ -58,7 +58,7 @@ public class RobotArmController : MonoBehaviour
 
         cubes = GameObject.Find("Cubes");
 
-        SetSpeedMeter(timeTakenDuringLerp);
+        SetNeedle(timeTakenDuringLerp);
     }
 	
 	void Update()
@@ -136,11 +136,15 @@ public class RobotArmController : MonoBehaviour
 
         return time;
     }
+    public float GetAngle(float time)
+    {
+        return -(maxAngle - (maxAngle * time));
+    }
     public void SetSpeedMeter(float time)
     {
         startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : meterPointer.transform.eulerAngles.x;
         currentAngle = startAngle;
-        targetAngle = -(maxAngle - (maxAngle * time));
+        targetAngle = GetAngle(time);
 
         if (targetAngle != startAngle)
         {
@@ -161,6 +165,11 @@ public class RobotArmController : MonoBehaviour
             meterPointer.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
             rotateNeedle = false;
         }
+    }
+    public void SetNeedle(float time)
+    {
+        float a = GetAngle(time);
+        meterPointer.transform.rotation = Quaternion.Euler(0, 0, a);
     }
 
     public void StartLerping(Vector3 direction, float spaces)

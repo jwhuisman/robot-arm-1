@@ -1,86 +1,89 @@
 ﻿using UnityEngine;
 using System.Linq;
+using Assets.Models;
+using System.Collections.Generic;
 
 public class World : MonoBehaviour
 {
+    // models
+    public GameObject blockModel;
+
+
     public RobotArmController _robotArmController;
-    public GameObject industrial_block;
-    public int size;
-    public int cubes;
+    public int cubes; // cubes each section?
 
     public void Start()
     {
-        float x = -(size / 2);
-        float midX = 0;
-        
-        for (float i = -(size / 2); i < (size /2 +1); i += 1f)
-        {
-            CubeStack cubeStack = new CubeStack();
-            cubeStack.x = x;
-            cubeStack.id = i;
-            _cubes.stack.Add(cubeStack);
-            if (i == 0)
-            {
-                midX = x;
-            }
-            
-            x = x + 1.2f;
-        }
-        
-        GameObject Plane = GameObject.Find("Plane");
-        GameObject Cam = GameObject.Find("Main Camera");
-        GameObject RobotArm = GameObject.Find("Robot Arm");
-        RobotArm.transform.position = new Vector3(midX, RobotArm.transform.position.y, RobotArm.transform.position.z);
-        Plane.transform.position = new Vector3(midX, Plane.transform.position.y, Plane.transform.position.z);
-        Plane.transform.localScale = new Vector3((size / 10 + (size/50*1.2f)), Plane.transform.localScale.y, Plane.transform.localScale.z);
-        Cam.transform.position = new Vector3( RobotArm.transform.position.x, Cam.transform.position.y, Cam.transform.position.z);
+        _world = GameObject.Find("World");
+        _cubeList = GameObject.Find("Cubes");
+        _robotArm = GameObject.Find("Robot Arm");
 
-        GenerateAssembly();
+        sectionWidth = (int)(sectionWidthStatic - (sectionWidthStatic * spacing));
+
+
+        GenerateSection(-1);
+        GenerateSection(0);
+        GenerateSection(1);
     }
 
-    public void GenerateAssembly()
+    public void GenerateSection(int x)
     {
-        GameObject CubeList = GameObject.Find("Cubes");
-        System.Random rnd = new System.Random();
-        for(float i = 0; i < cubes; i += 1f)
+        Section section = new Section(x);
+
+        section.Stacks = GenerateStacks(x);
+        section = GenerateBlocks(section);
+    }
+
+    public List<CubeStack> GenerateStacks(int x)
+    {
+        List<CubeStack> stacks = new List<CubeStack>();
+
+        for (int i = 0; i < sectionWidth; i++)
         {
-            int num = rnd.Next(-(size/2), (size/2+1));
-            CubeStack stack = _cubes.stack.Where(l => l.id == num).SingleOrDefault();
-            float y = stack.cubes.Count();
+            float offsetX = i * spacing;
+
+            CubeStack stack = new CubeStack(i, i + offsetX);
+            stacks.Add(stack);
+        }
+
+        return stacks;
+    }
+    public Section GenerateBlocks(Section section)
+    {
+        System.Random rnd = new System.Random();
+        for (int i = 0; i < cubes; i++)
+        {
+            int stackId = rnd.Next(0, sectionWidth);
+
+            CubeStack stack = _cubes.Stack.Where(s => s.Id == stackId).SingleOrDefault();
+            float y = stack.Cubes.Count();
             int colorNumber = rnd.Next(0, 4);
+
             Cube block = new Cube();
-            block.color = ((ColorEnum.Colors)colorNumber).ToString();
-            stack.cubes.Push(block);
-            GameObject cube = Instantiate(industrial_block);
+            block.Color = ((ColorEnum.Colors)colorNumber).ToString();
+            stack.Cubes.Push(block);
 
-            cube.AddComponent<BoxCollider>();
+            GameObject cube = Instantiate(blockModel);
 
+            cube.AddComponent<BoxCollider>(); // dont need this in the future
             cube.tag = "Cube";
             cube.name = "cube " + i.ToString();
-            cube.transform.parent = CubeList.transform;
+            cube.transform.parent = _cubeList.transform;
+            cube.transform.position = new Vector3(stack.X, y, 0);
+
             Renderer renderer = cube.GetComponent<Renderer>();
-
-            renderer.materials = SetColors(renderer.materials, block.color);
-
-            cube.transform.position = new Vector3(stack.x, y, 0);
+            renderer.materials = SetColors(renderer.materials, block.Color);
         }
-        int stackSize = 0;
-        foreach(var stack in _cubes.stack)
-        {
-           if(stack.cubes.Count > stackSize)
-            {
-                stackSize = stack.cubes.Count;
-            }
-        }
-        GameObject RobotArm = GameObject.Find("Robot Arm");
-        RobotArm.transform.position = new Vector3(RobotArm.transform.position.x, stackSize + 2f, RobotArm.transform.position.z);
+
+        return section;
     }
 
-    public Material[] SetColors(Material[] originals, string color)
+
+    public Material[] SetColors(Material[] original, string color)
     {
         Material[] m = new Material[2];
-        m[0] = new Material(originals[0]);
-        m[1] = new Material(originals[1]);
+        m[0] = new Material(original[0]);
+        m[1] = new Material(original[1]);
 
         switch (color)
         {
@@ -109,8 +112,13 @@ public class World : MonoBehaviour
         return m;
     }
 
-    private RobotArm _robotArm;
-    private CubeStack _cubeStack;
-    private Cube _cube;
+
+    private float sectionWidthStatic = 15; // always the same
+    private float spacing = .2f; // space between stacks (keep under 1f)
+    private int sectionWidth; // changes depending on the spacing (width - (width * spacing))
+
+    private GameObject _world;
+    private GameObject _robotArm;
+    private GameObject _cubeList;
     private Cubes _cubes = new Cubes();
 }

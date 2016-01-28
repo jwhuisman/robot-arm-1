@@ -4,8 +4,8 @@ public class Cubes
 {
     public Cubes()
     {
-        stack = new List<CubeStack>();
+        Stack = new List<CubeStack>();
     }
 
-    public List<CubeStack> stack { get; set; }
+    public List<CubeStack> Stack { get; set; }
 }

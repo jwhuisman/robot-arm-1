@@ -11,8 +11,6 @@ public class RobotArmController : MonoBehaviour
     public GameObject cubes;
 
     // world stuff
-
-    // for the testers
     public Text text;
     public Text speedText;
 
@@ -110,13 +108,19 @@ public class RobotArmController : MonoBehaviour
     }
     public float GetHighestCubeY()
     {
-        float y = GameObject.FindGameObjectsWithTag("Cube").Max(c => c.transform.position.y);
-        float offsetY = 2f; // 2 blocks above the highest block
-   
+        GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube");
+        float offsetY = 2f;
+        float y = 0;
+
+        if (cubes.Length > 0)
+        {
+            y = cubes.Max(c => c.transform.position.y);
+        }
+
         return y + offsetY + .6f;
     }
 
-    public float UpdateSpeed(float speed)
+    public void UpdateSpeed(float speed)
     {
         float time = timeTakenDuringLerp;
 
@@ -133,12 +137,6 @@ public class RobotArmController : MonoBehaviour
         {
             text.text = "Speed can't go lower than 0 or higher than 100.";
         }
-
-        return time;
-    }
-    public float GetAngle(float time)
-    {
-        return -(maxAngle - (maxAngle * time));
     }
     public void SetSpeedMeter(float time)
     {
@@ -170,6 +168,10 @@ public class RobotArmController : MonoBehaviour
     {
         float a = GetAngle(time);
         meterPointer.transform.rotation = Quaternion.Euler(0, 0, a);
+    }
+    public float GetAngle(float time)
+    {
+        return -(maxAngle - (maxAngle * time));
     }
 
     public void StartLerping(Vector3 direction, float spaces)

@@ -8,7 +8,7 @@
         }
         public override void Do(RobotArmController robotArm)
         {
-            float time = robotArm.UpdateSpeed(Speed);
+            robotArm.UpdateSpeed(Speed);
 
             IsDone = true;
             networkListener.ReturnMessage("ok");

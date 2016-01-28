@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
 
-public class World : MonoBehaviour {
-    
-    public int size;
-    public int cubes;
+public class World : MonoBehaviour
+{
     public RobotArmController _robotArmController;
     public GameObject industrial_block;
+    public int size;
+    public int cubes;
 
     public void Start()
     {
@@ -53,31 +52,17 @@ public class World : MonoBehaviour {
             block.color = ((ColorEnum.Colors)colorNumber).ToString();
             stack.cubes.Push(block);
             GameObject cube = Instantiate(industrial_block);
+
             cube.AddComponent<BoxCollider>();
+
             cube.tag = "Cube";
             cube.name = "cube " + i.ToString();
             cube.transform.parent = CubeList.transform;
-            Renderer rend = cube.GetComponent<Renderer>();
-            switch(block.color)
-            {
-                case "Red":
-                    rend.material.color = Color.red;
-                    break;
-                case "Green":
-                    rend.material.color = Color.green;
-                    break;
-                case "Blue":
-                    rend.material.color = Color.blue;
-                    break;
-                case "White":
-                    rend.material.color = Color.white;
-                    break;
-                default:
-                    rend.material.color = Color.white;
-                    break;
-            }
-            Vector3 xyz = new Vector3(stack.x, y, 0);
-            cube.transform.position = xyz;
+            Renderer renderer = cube.GetComponent<Renderer>();
+
+            renderer.materials = SetColors(renderer.materials, block.color);
+
+            cube.transform.position = new Vector3(stack.x, y, 0);
         }
         int stackSize = 0;
         foreach(var stack in _cubes.stack)
@@ -91,8 +76,41 @@ public class World : MonoBehaviour {
         RobotArm.transform.position = new Vector3(RobotArm.transform.position.x, stackSize + 2f, RobotArm.transform.position.z);
     }
 
+    public Material[] SetColors(Material[] originals, string color)
+    {
+        Material[] m = new Material[2];
+        m[0] = new Material(originals[0]);
+        m[1] = new Material(originals[1]);
+
+        switch (color)
+        {
+            case "Red":
+                m[0].color = Color.red;
+                m[1].color = Color.red;
+                break;
+            case "Green":
+                m[0].color = Color.green;
+                m[1].color = Color.green;
+                break;
+            case "Blue":
+                m[0].color = Color.blue;
+                m[1].color = Color.blue;
+                break;
+            case "White":
+                m[0].color = Color.white;
+                m[1].color = Color.white;
+                break;
+            default:
+                m[0].color = Color.white;
+                m[1].color = Color.white;
+                break;
+        }
+
+        return m;
+    }
+
     private RobotArm _robotArm;
     private CubeStack _cubeStack;
     private Cube _cube;
-    public Cubes _cubes = new Cubes();
+    private Cubes _cubes = new Cubes();
 }

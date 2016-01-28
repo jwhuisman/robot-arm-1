@@ -43,7 +43,7 @@ public class NetworkListener : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        ReturnMessage("Unity has shut down");
+        ReturnMessage("bye");
     }
 
     public void AddCommand(string data)

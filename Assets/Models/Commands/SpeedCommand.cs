@@ -11,7 +11,7 @@
             float time = robotArm.UpdateSpeed(Speed);
 
             IsDone = true;
-            networkListener.ReturnMessage(string.Format("Speed set to: {0} seconds (per animation)", time));
+            networkListener.ReturnMessage("ok");
         }
 
         public float Speed { get; set; }

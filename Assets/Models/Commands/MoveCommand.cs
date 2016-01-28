@@ -36,7 +36,7 @@ namespace Assets.Models.Commands
             // and networkListener.ReturnMessage(s) should be after the 'command.IsDone'
             IsDone = true;
             robotArm.text.text = s;
-            networkListener.ReturnMessage(s);
+            networkListener.ReturnMessage("ok");
         }
 
         public string Direction { get; set; }

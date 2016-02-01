@@ -16,23 +16,29 @@ namespace Assets.Scripts
         }
 
 
-        public void GenerateFactorySection(float x)
+        public void GenerateFactorySection(float sectionId)
         {
-            GameObject floor = Instantiate(floorModel);
-            GameObject wall = Instantiate(wallModel);
-
-            floor.transform.parent = GameObject.Find("Factory").transform;
-            wall.transform.parent = GameObject.Find("Factory").transform;
-
-            floor.name = "floor-(" + x + ")";
-            wall.name = "wall-(" + x + ")";
-
-            float width = floor.GetComponentInChildren<Renderer>().bounds.size.x;
-            float posX = (width / 2) + (x * width) - .5f;
+            float width = 15f;
+            float posX = (width / 2) + (sectionId * width) - .5f;
             float posZ = (width / 2) - .5f;
 
-            floor.transform.position = new Vector3(posX, -.5f);
-            wall.transform.position = new Vector3(posX, -.5f, posZ);
+            GenerateFloor(sectionId, posX);
+            GenerateWall(sectionId, posX, posZ);
+        }
+
+        public void GenerateFloor(float id, float x)
+        {
+            GameObject floor = Instantiate(floorModel);
+            floor.transform.parent = GameObject.Find("Factory").transform;
+            floor.name = "floor-(" + id + ")";
+            floor.transform.position = new Vector3(x, -.5f);
+        }
+        public void GenerateWall(float id, float x, float z)
+        {
+            GameObject wall = Instantiate(wallModel);
+            wall.transform.parent = GameObject.Find("Factory").transform;
+            wall.name = "wall-(" + id + ")";
+            wall.transform.position = new Vector3(x, -.5f, z);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Assets.Models.Commands
                 s = "Moved up";
             }
 
-            robotArm.StartLerping(vec, 1.2f);
+            robotArm.StartLerping(vec, 1.15384615f);
 
             
 

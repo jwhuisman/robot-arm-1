@@ -167,6 +167,7 @@ public class RobotArmController : MonoBehaviour
     public void SetNeedle(float time)
     {
         float a = GetAngle(time);
+        currentAngle = a;
         meterPointer.transform.rotation = Quaternion.Euler(0, 0, a);
     }
     public float GetAngle(float time)

@@ -2,15 +2,16 @@
 using System.Linq;
 using Assets.Models;
 using System.Collections.Generic;
+using Assets.Models.Commands;
 
 public class World : MonoBehaviour
 {
     // models
     public GameObject blockModel;
 
-
     public RobotArmController _robotArmController;
     public int cubes; // cubes each section?
+
 
     public void Start()
     {
@@ -18,7 +19,8 @@ public class World : MonoBehaviour
         _cubeList = GameObject.Find("Cubes");
         _robotArm = GameObject.Find("Robot Arm");
 
-        sectionWidth = (int)(sectionWidthStatic - (sectionWidthStatic * spacing));
+        spacing = 15f / 13f;
+        //_world.GetComponent<MoveCommand>().MoveLength = spacing; ???
 
         for (int i = -2; i <= 2; i++)
         {
@@ -30,17 +32,17 @@ public class World : MonoBehaviour
     {
         Section section = new Section(x);
 
-        section.Stacks = GenerateStacks(x);
+        section.Stacks = GenerateStacks();
         section = GenerateBlocks(section);
     }
 
-    public List<CubeStack> GenerateStacks(int x)
+    public List<CubeStack> GenerateStacks()
     {
         List<CubeStack> stacks = new List<CubeStack>();
 
-        for (int i = 0; i <= sectionWidth; i++)
+        for (int i = 0; i < sectionWidth; i++)
         {
-            CubeStack stack = new CubeStack(i, i + (i * spacing));
+            CubeStack stack = new CubeStack(i, (i * spacing));
             stacks.Add(stack);
         }
 
@@ -51,23 +53,23 @@ public class World : MonoBehaviour
         System.Random rnd = new System.Random();
         for (int i = 0; i < cubes; i++)
         {
-            int stackId = rnd.Next(0, sectionWidth + 1);
+            int stackId = rnd.Next(0, sectionWidth);
 
             CubeStack stack = section.Stacks.Where(s => s.Id == stackId).SingleOrDefault();
-            float x = (section.Id * sectionWidthStatic) + (stack.X);
+            float x = (section.Id * sectionWidthTotal) + (stack.X);
             float y = stack.Cubes.Count(); 
 
             int colorNumber = rnd.Next(0, 4);
             string color = ((ColorEnum.Colors)colorNumber).ToString();
             string id = "(" + section.Id + "/" + i + ")";
 
-            GameObject cube = GenerateCube(id, color, x, y);
+            GameObject cube = GenerateBlock(id, color, x, y);
             stack.Cubes.Push(cube);
         }
 
         return section;
     }
-    public GameObject GenerateCube(string id, string color, float x, float y)
+    public GameObject GenerateBlock(string id, string color, float x, float y)
     {
         GameObject cube = Instantiate(blockModel);
 
@@ -84,11 +86,11 @@ public class World : MonoBehaviour
         return cube;
     }
 
-    public Material[] SetColors(Material[] original, string color)
+    public Material[] SetColors(Material[] originals, string color)
     {
         Material[] m = new Material[2];
-        m[0] = new Material(original[0]);
-        m[1] = new Material(original[1]);
+        m[0] = new Material(originals[0]);
+        m[1] = new Material(originals[1]);
 
         switch (color)
         {
@@ -118,9 +120,9 @@ public class World : MonoBehaviour
     }
 
 
-    private float sectionWidthStatic = 15; // always the same
-    private float spacing = .2f; // space between stacks (keep under 1f)
-    private int sectionWidth; // changes depending on the spacing (width - (width * spacing))
+    private int sectionWidthTotal = 15; // amount stacks that can fit on a single section
+    private int sectionWidth = 13; // amount stacks you want on a single section
+    private float spacing;
 
     private GameObject _world;
     private GameObject _robotArm;

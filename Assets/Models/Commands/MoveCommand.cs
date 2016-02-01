@@ -28,6 +28,7 @@ namespace Assets.Models.Commands
                 s = "Moved up";
             }
 
+            // 1.15384615f = spacing when you want 13 blocks next to eachother from the possible 15 (15 / 13)
             robotArm.StartLerping(vec, 1.15384615f);
 
             

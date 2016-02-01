@@ -15,14 +15,14 @@ public class World : MonoBehaviour
 
     public void Start()
     {
-        _world = GameObject.Find("World");
+        _world    = GameObject.Find("World");
         _cubeList = GameObject.Find("Cubes");
         _robotArm = GameObject.Find("Robot Arm");
 
         spacing = 15f / 13f;
         //_world.GetComponent<MoveCommand>().MoveLength = spacing; ???
 
-        for (int i = -2; i <= 2; i++)
+        for (int i = -3; i <= 3; i++)
         {
             GenerateSection(i);
         }

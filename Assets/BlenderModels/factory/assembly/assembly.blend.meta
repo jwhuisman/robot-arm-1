@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 201d592786e590549921a1755abc1988
-timeCreated: 1454317863
+guid: 3a7c34c6ac835c94abd071a2359ebf54
+timeCreated: 1454317726
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: borders__remove_later_
-    100002: //RootNode
+    100000: //RootNode
+    100002: borders__remove_later_
     100004: Plane
-    400000: borders__remove_later_
-    400002: //RootNode
+    400000: //RootNode
+    400002: borders__remove_later_
     400004: Plane
     2300000: borders__remove_later_
     2300002: Plane
@@ -17,8 +17,8 @@ ModelImporter:
     3300000: borders__remove_later_
     3300002: Plane
     3300004: //RootNode
-    4300000: borders__remove_later_
-    4300002: Plane
+    4300000: Plane
+    4300002: borders__remove_later_
     7400000: Default Take
     9500000: //RootNode
   materials:

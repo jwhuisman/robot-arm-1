@@ -232,6 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78c99825fdfcb34ea9fb225a50f1ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
 --- !u!4 &159257697

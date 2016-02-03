@@ -4,13 +4,15 @@ public class CameraController : MonoBehaviour
 {
     private GameObject robotArm;
 
-    private float smooth = .5f;
+    private float smooth = 1.5f;
 
+    private float robStartY;
     private float camStartZ;
 
     void Start ()
     {
         robotArm = GameObject.FindGameObjectWithTag("RobotArm");
+        robStartY = robotArm.transform.position.y;
         camStartZ = transform.position.z;
     }
 	
@@ -21,7 +23,7 @@ public class CameraController : MonoBehaviour
         Vector3 newCamPos = camPos;
 
         newCamPos.x = robotArmPos.x;
-        newCamPos.z = camStartZ - (robotArmPos.y); 
+        newCamPos.z = camStartZ - ((robotArmPos.y - robStartY) * 2); 
 
         transform.position = Vector3.Lerp(camPos, newCamPos, smooth * Time.deltaTime);
     }

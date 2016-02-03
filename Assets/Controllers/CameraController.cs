@@ -23,7 +23,8 @@ public class CameraController : MonoBehaviour
         Vector3 newCamPos = camPos;
 
         newCamPos.x = robotArmPos.x;
-        newCamPos.z = camStartZ - ((robotArmPos.y - robStartY) * 2); 
+        float zDiff = (robotArmPos.y - robStartY) * 2;
+        newCamPos.z = (camStartZ - zDiff > camStartZ) ? camStartZ : camStartZ - zDiff; 
 
         transform.position = Vector3.Lerp(camPos, newCamPos, smooth * Time.deltaTime);
     }

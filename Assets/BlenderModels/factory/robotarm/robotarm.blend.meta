@@ -1,0 +1,167 @@
+fileFormatVersion: 2
+guid: b6978931988ac4e43855005d26691881
+timeCreated: 1454324841
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: base
+    100002: Cylinder
+    100004: //RootNode
+    100006: upper_arm
+    100008: arm_000
+    100010: arm_001
+    100012: Cone
+    100014: pivot_000
+    100016: pivot_001
+    100018: pivot_002
+    100020: arm_002
+    100022: arm_003
+    100024: claw1
+    100026: claw2
+    100028: claw_base
+    100030: Grid
+    100032: pivot_003
+    100034: pivot_004
+    100036: Sphere
+    400000: base
+    400002: Cylinder
+    400004: //RootNode
+    400006: upper_arm
+    400008: arm_000
+    400010: arm_001
+    400012: Cone
+    400014: pivot_000
+    400016: pivot_001
+    400018: pivot_002
+    400020: arm_002
+    400022: arm_003
+    400024: claw1
+    400026: claw2
+    400028: claw_base
+    400030: Grid
+    400032: pivot_003
+    400034: pivot_004
+    400036: Sphere
+    2300000: base
+    2300002: Cylinder
+    2300004: upper_arm
+    2300006: arm_000
+    2300008: arm_001
+    2300010: Cone
+    2300012: pivot_000
+    2300014: pivot_001
+    2300016: pivot_002
+    2300018: //RootNode
+    2300020: arm_002
+    2300022: arm_003
+    2300024: claw1
+    2300026: claw2
+    2300028: claw_base
+    2300030: Grid
+    2300032: pivot_003
+    2300034: pivot_004
+    2300036: Sphere
+    3300000: base
+    3300002: Cylinder
+    3300004: upper_arm
+    3300006: arm_000
+    3300008: arm_001
+    3300010: Cone
+    3300012: pivot_000
+    3300014: pivot_001
+    3300016: pivot_002
+    3300018: //RootNode
+    3300020: arm_002
+    3300022: arm_003
+    3300024: claw1
+    3300026: claw2
+    3300028: claw_base
+    3300030: Grid
+    3300032: pivot_003
+    3300034: pivot_004
+    3300036: Sphere
+    4300000: Cylinder
+    4300002: base
+    4300004: upper_arm
+    4300006: pivot_000
+    4300008: arm_000
+    4300010: pivot_001
+    4300012: arm_001
+    4300014: pivot_002
+    4300016: Cone
+    4300018: Grid
+    4300020: pivot_004
+    4300022: arm_003
+    4300024: pivot_003
+    4300026: arm_002
+    4300028: Sphere
+    4300030: claw_base
+    4300032: claw1
+    4300034: claw2
+    7400000: Default Take
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

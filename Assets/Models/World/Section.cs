@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Models
+namespace Assets.Models.World
 {
     public class Section
     {
         public Section(int id)
         {
+            Stacks = new List<CubeStack>();
             Id = id;
         }
 

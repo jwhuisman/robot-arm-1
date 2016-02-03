@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -85,52 +85,6 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &87448328
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 87448329}
-  - 114: {fileID: 87448330}
-  m_Layer: 0
-  m_Name: World
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &87448329
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 87448328}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1593805963}
-  - {fileID: 1441470087}
-  - {fileID: 325562631}
-  - {fileID: 1120064385}
-  m_Father: {fileID: 0}
-  m_RootOrder: 1
---- !u!114 &87448330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 87448328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b56c9d2f00e33244974a87a20454f80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
-  _robotArmController: {fileID: 1658030861}
-  cubes: 25
 --- !u!1 &133061030
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,7 +158,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
 --- !u!1 &159257695
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,6 +189,7 @@ MonoBehaviour:
   assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
+  blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
 --- !u!4 &159257697
 Transform:
   m_ObjectHideFlags: 0
@@ -244,7 +199,11 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 325562631}
+  - {fileID: 1120064385}
+  - {fileID: 1593805963}
+  - {fileID: 1441470087}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!1 &296191838
@@ -288,7 +247,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
 --- !u!1 &325562630
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,8 +273,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 87448329}
-  m_RootOrder: 2
+  m_Father: {fileID: 159257697}
+  m_RootOrder: 0
 --- !u!1001 &492799799
 Prefab:
   m_ObjectHideFlags: 0
@@ -329,7 +288,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.3
+      value: 10.300002
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalPosition.z
@@ -506,7 +465,7 @@ RectTransform:
   - {fileID: 1674608687}
   - {fileID: 1469959204}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -606,7 +565,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
 --- !u!1 &657857605
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +605,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!4 &924979541 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
@@ -676,8 +635,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 87448329}
-  m_RootOrder: 3
+  m_Father: {fileID: 159257697}
+  m_RootOrder: 1
 --- !u!1 &1441470083
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,8 +711,8 @@ Transform:
   m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_Children:
   - {fileID: 924979541}
-  m_Father: {fileID: 87448329}
-  m_RootOrder: 1
+  m_Father: {fileID: 159257697}
+  m_RootOrder: 3
 --- !u!1 &1469959201
 GameObject:
   m_ObjectHideFlags: 0
@@ -886,8 +845,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 25.74, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 87448329}
-  m_RootOrder: 0
+  m_Father: {fileID: 159257697}
+  m_RootOrder: 2
 --- !u!1 &1658030860
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +902,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
 --- !u!1 &1674608684
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,7 +1037,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -1121,9 +1080,9 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 5}
+  m_AnchoredPosition: {x: 0, y: 5.73}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}

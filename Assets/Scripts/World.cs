@@ -4,61 +4,42 @@ using Assets.Models.World;
 
 public class World
 {
-    public List<Section> Sections = new List<Section>();
+    public List<CubeStack> Stacks = new List<CubeStack>();
     public RobotArm RobotArm = new RobotArm();
-
-    public int sectionWidthTotal = 15; // amount stacks that can fit on a single section
-    public int sectionWidth = 13; // amount stacks you want on a single section
-    public int cubes = 25;
+   
 
     public World()
     {
-        for (int i = -3; i <= 3; i++)
+        for (int x = stackMin; x < stackMax; x++)
         {
-            Sections.Add(GenerateSection(i));
+            AddStack(x);
         }
     }
 
-    public Section GenerateSection(int sectionId)
+    public void AddStack(int x)
     {
-        Section section = new Section(sectionId);
-        section.Stacks = GenerateStacks(sectionId);
+        CubeStack stack = new CubeStack(x);
 
-        return section;
-    }
+        int cubesAmount = rnd.Next(minCubes, maxCubes + 1);
 
-    public List<CubeStack> GenerateStacks(int sectionId)
-    {
-        List<CubeStack> stacks = new List<CubeStack>();
-
-        for (int i = 0; i < sectionWidth; i++)
+        for (int i = 0; i < cubesAmount; i++)
         {
-            CubeStack stack = new CubeStack(i, i);
-            stacks.Add(stack);
-        }
-
-        stacks = FillStacks(sectionId, stacks);
-
-        return stacks;
-    }
-    public List<CubeStack> FillStacks(int sectionId, List<CubeStack> stacks)
-    {
-        System.Random rnd = new System.Random();
-
-        for (int i = 0; i < cubes; i++)
-        {
-            int stackId = rnd.Next(0, sectionWidth);
-
-            int x = stacks[stackId].X;
-            int y = stacks[stackId].Cubes.Count(); 
+            int y = stack.Cubes.Count(); 
 
             int colorNumber = rnd.Next(0, 4);
             string color = ((ColorEnum.Colors)colorNumber).ToString();
-            string id = "(" + sectionId + "/" + i + ")";
+            string id = "(" + x + "/" + i + ")";
 
-            stacks[stackId].Cubes.Push(new Cube(id, color, x, y));
+            stack.Cubes.Push(new Cube(id, color, x, y));
         }
 
-        return stacks;
+        Stacks.Add(stack);
     }
+
+
+    private System.Random rnd = new System.Random();
+    private int stackMin = -1000;
+    private int stackMax = 1000;
+    private int minCubes = 1;
+    private int maxCubes = 6;
 }

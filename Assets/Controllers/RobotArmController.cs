@@ -108,7 +108,7 @@ public class RobotArmController : MonoBehaviour
 
     public void UpdateArmHeight()
     {
-        mapBoundaryTop = GetHighestCubeY();
+        mapBoundaryTop = GetHighestCubeY() + .6f;
 
         _world.RobotArm.Y = GetHighestCubeY();
     }

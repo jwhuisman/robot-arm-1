@@ -1,4 +1,5 @@
 ﻿using Assets.Models.World;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -24,19 +25,41 @@ namespace Assets.Scripts
             _world    = _globals.world;
             _robotArmData = _world.RobotArm;
 
-            sectionWidthTotal = _world.sectionWidthTotal;
-            sectionWidth = _world.sectionWidth;
-            spacing = sectionWidthTotal / sectionWidth;
+            sectionWidthTotal = 15;
+            sectionWidth = 13;
+            spacing = (float)sectionWidthTotal / (float)sectionWidth;
 
             _robotArm = CreateRobotArm(_robotArmData);
             CreateSpeedMeter(_robotArm.transform);
-            CreateWorld(_world);
+
+            for (int i = -3; i < 3; i++)
+            {
+                CreateSection(i);
+            }
         }
 
         public void Update()
         {
+            UpdateWorld();
+
             _robotArm.transform.position = RobotArmToView(_robotArmData);
         }
+        public void UpdateWorld()
+        {
+            _world = _globals.world;
+        }
+
+        public void CreateSection(int sectionId)
+        {
+            GenerateFactory(sectionId);
+
+            int startX = sectionId * sectionWidth;
+            for (int x = startX; x < startX + sectionWidth; x++)
+            {
+                InstantiateBlocks(x);
+            }
+        }
+
 
         public Vector3 RobotArmToView(RobotArm arm)
         {
@@ -76,26 +99,6 @@ namespace Assets.Scripts
                 child.rotation = Quaternion.identity;
             }
         }
-        public void CreateWorld(World world)
-        {
-            foreach (Section section in world.Sections)
-            {
-                int id = section.Id;
-
-                GenerateFactory(id);
-                GenerateBlocks(id);
-            }
-        }
-
-        public void DrawWorld(World world)
-        {
-            foreach (Section section in world.Sections)
-            {
-                int id = section.Id;
-
-                //DrawBlocks(id);
-            }
-        }
 
         public void GenerateFactory(int sectionId)
         {
@@ -106,19 +109,19 @@ namespace Assets.Scripts
             float posFloorZ = -width;
             float posWallZ = halfW;
 
-            GenerateAssemblyLine(sectionId, posX);
-            GenerateFloor(sectionId, 2, posX, posFloorZ);
-            GenerateWall(sectionId, 2, posX, posY, posWallZ);
+            InstantiateAssemblyLine(sectionId, posX);
+            InstantiateFloor(sectionId, 2, posX, posFloorZ);
+            InstantiateWall(sectionId, 2, posX, posY, posWallZ);
         }
 
-        public void GenerateAssemblyLine(int sectionId, float x)
+        public void InstantiateAssemblyLine(int sectionId, float x)
         {
             GameObject assembly = Instantiate(assemblyLineModel);
             assembly.transform.parent = _factory.transform;
             assembly.name = "assembly-(" + sectionId + ")";
             assembly.transform.position = new Vector3(x - .5f, -.5f);
         }
-        public void GenerateFloor(int sectionId, int amount, float x, float z)
+        public void InstantiateFloor(int sectionId, int amount, float x, float z)
         {
             for (int i = 0; i < amount; i++)
             {
@@ -128,7 +131,7 @@ namespace Assets.Scripts
                 floor.transform.position = new Vector3(x - .5f, -.5f, z * (i + 1));
             }
         }
-        public void GenerateWall(int sectionId, int amount, float x, float y, float z)
+        public void InstantiateWall(int sectionId, int amount, float x, float y, float z)
         {
             for (int i = 0; i < amount; i++)
             {
@@ -139,22 +142,23 @@ namespace Assets.Scripts
             }
         }
 
-        public void GenerateBlocks(int sectionId)
+        public void InstantiateBlocks(int stackX)
         {
-            foreach (CubeStack cubeStack in _world.Sections.Where(s => s.Id == sectionId).SingleOrDefault().Stacks)
+            Stack<Cube> cubes = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Cubes;
+
+            foreach (Cube cube in cubes)
             {
-                foreach (Cube cube in cubeStack.Cubes)
-                {
-                    GenerateBlock(sectionId, cubeStack.X, cube);
-                }
+                InstantiateBlock(stackX, cube);
             }
+
+            instantiatedStacks.Add(stackX);
         }
 
-        public GameObject GenerateBlock(int sectionId, int stackX, Cube cube)
+        public GameObject InstantiateBlock(int stackX, Cube cube)
         {
             GameObject block = Instantiate(blockModel);
 
-            float x = (sectionId * sectionWidthTotal) + (spacing * stackX);
+            float x = (spacing * (float)stackX);
 
             block.AddComponent<BoxCollider>(); // dont need this in the future
 
@@ -202,9 +206,11 @@ namespace Assets.Scripts
         }
 
 
-        private float sectionWidthTotal = 15f; // stacks that fit on a section
-        private float sectionWidth; // stacks you want on a section
+        private int sectionWidthTotal = 15; // stacks that fit on a section
+        private int sectionWidth; // stacks you want on a section
         private float spacing;
+
+        private List<int> instantiatedStacks = new List<int>();
 
         private GameObject _view;
         private GameObject _cubes;

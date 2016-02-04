@@ -29,6 +29,7 @@ namespace Assets.Scripts
             spacing = sectionWidthTotal / sectionWidth;
 
             _robotArm = CreateRobotArm(_robotArmData);
+            CreateSpeedMeter(_robotArm.transform);
             CreateWorld(_world);
         }
 
@@ -53,6 +54,7 @@ namespace Assets.Scripts
             arm.tag  = "RobotArm";
             arm.transform.parent = _view.transform;
             arm.transform.position = new Vector3(robotArm.X, robotArm.Y, 0);
+            arm.transform.rotation = Quaternion.identity;
 
             arm.AddComponent<BoxCollider>(); // dont need this in the future
 
@@ -60,14 +62,19 @@ namespace Assets.Scripts
         }
         public void CreateSpeedMeter(Transform parent)
         {
-            GameObject arm = Instantiate(speedMeterModel);
+            GameObject meter = Instantiate(speedMeterModel);
+            meter.name = "SpeedMeter";
+            meter.tag = "SpeedMeter";
+            meter.transform.parent = parent;
 
-            arm.name = "SpeedMeter";
-            arm.tag = "SpeedMeter";
-            arm.transform.parent = parent;
-            arm.transform.position = new Vector3(parent.position.x, parent.position.y - 5f, 0);
 
-            arm.AddComponent<BoxCollider>(); // dont need this in the future
+            // is this considered as a 'hack'? because exporting from blender to unity is a b*tch
+            // and resetting all rotations is the only solution i found...
+            meter.transform.position = new Vector3(parent.position.x, parent.position.y + 1.5f, 0);
+            foreach (Transform child in meter.transform)
+            {
+                child.rotation = Quaternion.identity;
+            }
         }
         public void CreateWorld(World world)
         {

@@ -11,35 +11,82 @@ namespace Assets.Scripts
         public GameObject floorModel;
         public GameObject wallModel;
         public GameObject blockModel;
+        public GameObject speedMeterModel;
+        public GameObject robotArmModel;
+
 
         public void Start()
         {
-            _globals = GameObject.Find("Globals").GetComponent<Globals>();
-            _factory = GameObject.Find("Factory");
-            _cubes   = GameObject.Find("Cubes");
+            _globals  = GameObject.Find("Globals").GetComponent<Globals>();
+            _view     = GameObject.Find("View");
+            _factory  = GameObject.Find("Factory");
+            _cubes    = GameObject.Find("Cubes");
+            _world    = _globals.world;
+            _robotArmData = _world.RobotArm;
 
-            _world   = _globals.world;
-
-            sectionWidth = _world.Sections[0].Stacks.Count();
+            sectionWidthTotal = _world.sectionWidthTotal;
+            sectionWidth = _world.sectionWidth;
             spacing = sectionWidthTotal / sectionWidth;
 
-
-            DrawWorld(_world);
+            _robotArm = CreateRobotArm(_robotArmData);
+            CreateWorld(_world);
         }
 
         public void Update()
         {
-           
+            _robotArm.transform.position = RobotArmToView(_robotArmData);
         }
 
-        public void DrawWorld(World world)
+        public Vector3 RobotArmToView(RobotArm arm)
         {
-            foreach (Section section in _world.Sections)
+            float x = arm.X * spacing;
+            float y = arm.Y;
+
+            return new Vector3(x, y);
+        }
+
+        public GameObject CreateRobotArm(RobotArm robotArm)
+        {
+            GameObject arm = Instantiate(robotArmModel);
+
+            arm.name = "Robot Arm";
+            arm.tag  = "RobotArm";
+            arm.transform.parent = _view.transform;
+            arm.transform.position = new Vector3(robotArm.X, robotArm.Y, 0);
+
+            arm.AddComponent<BoxCollider>(); // dont need this in the future
+
+            return arm;
+        }
+        public void CreateSpeedMeter(Transform parent)
+        {
+            GameObject arm = Instantiate(speedMeterModel);
+
+            arm.name = "SpeedMeter";
+            arm.tag = "SpeedMeter";
+            arm.transform.parent = parent;
+            arm.transform.position = new Vector3(parent.position.x, parent.position.y - 5f, 0);
+
+            arm.AddComponent<BoxCollider>(); // dont need this in the future
+        }
+        public void CreateWorld(World world)
+        {
+            foreach (Section section in world.Sections)
             {
                 int id = section.Id;
 
                 GenerateFactory(id);
                 GenerateBlocks(id);
+            }
+        }
+
+        public void DrawWorld(World world)
+        {
+            foreach (Section section in world.Sections)
+            {
+                int id = section.Id;
+
+                //DrawBlocks(id);
             }
         }
 
@@ -148,13 +195,15 @@ namespace Assets.Scripts
         }
 
 
-
         private float sectionWidthTotal = 15f; // stacks that fit on a section
         private float sectionWidth; // stacks you want on a section
         private float spacing;
 
+        private GameObject _view;
         private GameObject _cubes;
         private GameObject _factory;
+        private GameObject _robotArm;
+        private RobotArm _robotArmData;
         private Globals _globals;
         private World _world;
     }

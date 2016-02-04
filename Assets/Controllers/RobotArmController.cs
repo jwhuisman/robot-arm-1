@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -11,6 +12,9 @@ public class RobotArmController : MonoBehaviour
     public GameObject cubes;
 
     // world stuff
+
+
+    // test text
     public Text text;
     public Text speedText;
 
@@ -31,7 +35,7 @@ public class RobotArmController : MonoBehaviour
     private float mapBoundaryTop;
 
     // speed meter stuff
-    public GameObject meterPointer;
+    public GameObject needle;
     public float angleY;
     public float angleZ;
     public float startAngle;
@@ -43,23 +47,23 @@ public class RobotArmController : MonoBehaviour
     public bool rotateNeedle = false;
 
 
-    void Start()
+    public void Start()
     {
+        _globals = GameObject.Find("Globals").GetComponent<Globals>();
+        _world = _globals.world;
+
         UpdateArmHeight();
 
         timeTakenDuringLerp = 0.5f;
         speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
-
-        meterPointer = GameObject.FindGameObjectWithTag("SpeedMeterPointer");
-        angleY = meterPointer.transform.rotation.eulerAngles.y;
-        angleZ = meterPointer.transform.rotation.eulerAngles.z;
-
+       
         cubes = GameObject.Find("Cubes");
 
-        SetNeedle(timeTakenDuringLerp);
+        InitNeedle();
     }
-	
-	void Update()
+
+
+    public void Update()
     {   
         // Actions after the animation "going down" is completed.
         if (percentageComplete == 1f && goPickUpBlock)
@@ -83,7 +87,7 @@ public class RobotArmController : MonoBehaviour
             RotateNeedleTowards();
         }
     }
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         if (_isLerping)
         {
@@ -105,19 +109,21 @@ public class RobotArmController : MonoBehaviour
     public void UpdateArmHeight()
     {
         mapBoundaryTop = GetHighestCubeY();
+
+        _world.RobotArm.Y = GetHighestCubeY();
     }
-    public float GetHighestCubeY()
+    public int GetHighestCubeY()
     {
         GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube");
-        float offsetY = 2f;
-        float y = 0;
+        int offsetY = 2;
+        int y = 0;
 
         if (cubes.Length > 0)
         {
-            y = cubes.Max(c => c.transform.position.y);
+            y = (int)cubes.Max(c => c.transform.position.y);
         }
 
-        return y + offsetY + .6f;
+        return y + offsetY;
     }
 
     public void UpdateSpeed(float speed)
@@ -138,9 +144,17 @@ public class RobotArmController : MonoBehaviour
             text.text = "Speed can't go lower than 0 or higher than 100.";
         }
     }
+    public void InitNeedle()
+    {
+        needle = GameObject.Find("Needle");
+        angleY = needle.transform.rotation.eulerAngles.y;
+        angleZ = needle.transform.rotation.eulerAngles.z;
+
+        SetNeedle(timeTakenDuringLerp);
+    }
     public void SetSpeedMeter(float time)
     {
-        startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : meterPointer.transform.eulerAngles.x;
+        startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : needle.transform.eulerAngles.x;
         currentAngle = startAngle;
         targetAngle = GetAngle(time);
 
@@ -156,11 +170,11 @@ public class RobotArmController : MonoBehaviour
 
         currentAngle = (left) ? currentAngle + speed : currentAngle - speed;
 
-        meterPointer.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+        needle.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
         if ((left && currentAngle >= targetAngle) || (!left && currentAngle <= targetAngle))
         {
-            meterPointer.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+            needle.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
             rotateNeedle = false;
         }
     }
@@ -168,12 +182,25 @@ public class RobotArmController : MonoBehaviour
     {
         float a = GetAngle(time);
         currentAngle = a;
-        meterPointer.transform.rotation = Quaternion.Euler(0, 0, a);
+        needle.transform.rotation = Quaternion.Euler(0, 0, a);
     }
     public float GetAngle(float time)
     {
         return -(maxAngle - (maxAngle * time));
     }
+
+
+    public void MoveLeft()
+    {
+        _world.RobotArm.X--;
+    }
+
+    public void MoveRight()
+    {
+        _world.RobotArm.X++;
+    }
+
+
 
     public void StartLerping(Vector3 direction, float spaces)
     {
@@ -252,4 +279,8 @@ public class RobotArmController : MonoBehaviour
             StartLerping(Vector3.up, distanceMapBoundary);
         }
     }
+
+
+    private Globals _globals;
+    private World _world;
 }

@@ -16,11 +16,15 @@ namespace Assets.Models.Commands
             {
                 vec = Vector3.right;
                 s = "Moved right";
+
+                robotArm.MoveRight();
             }
             else if (Direction == "left")
             {
                 vec = Vector3.left;
                 s = "Moved left";
+
+                robotArm.MoveLeft();
             }
             else if (Direction == "up")
             {

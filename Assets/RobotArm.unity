@@ -191,8 +191,7 @@ MonoBehaviour:
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
   blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
   speedMeterModel: {fileID: 100004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
-  robotArmModel: {fileID: 100004, guid: b6978931988ac4e43855005d26691881, type: 3}
-  arm: {fileID: 0}
+  robotArmModel: {fileID: 100000, guid: e2592d04e2fae0c4bb9dd2e5d5e89a6d, type: 3}
 --- !u!4 &159257697
 Transform:
   m_ObjectHideFlags: 0
@@ -287,15 +286,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.02
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.300002
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.119999886
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalRotation.x
@@ -468,6 +467,10 @@ Prefab:
     - target: {fileID: 400016, guid: 966dd05d435b4794991af942cd32baba, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400012, guid: 966dd05d435b4794991af942cd32baba, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9500000, guid: 966dd05d435b4794991af942cd32baba, type: 3}
@@ -785,7 +788,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1441470083}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7.51, z: -0.02}
+  m_LocalPosition: {x: 0, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_Children:
   - {fileID: 924979541}

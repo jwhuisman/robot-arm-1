@@ -1,4 +1,5 @@
 ﻿using Assets.Models.World;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,29 +16,19 @@ namespace Assets.Scripts
         public GameObject speedMeterModel;
         public GameObject robotArmModel;
 
-
+        // start
         public void Start()
         {
-            _globals  = GameObject.Find("Globals").GetComponent<Globals>();
-            _view     = GameObject.Find("View");
-            _factory  = GameObject.Find("Factory");
-            _cubes    = GameObject.Find("Cubes");
-            _world    = _globals.world;
-            _robotArmData = _world.RobotArm;
+            InitObjects();
+            InitSectionSize();
 
-            sectionWidthTotal = 15;
-            sectionWidth = 13;
-            spacing = (float)sectionWidthTotal / (float)sectionWidth;
+            InitRobotArm();
 
-            _robotArm = CreateRobotArm(_robotArmData);
-            CreateSpeedMeter(_robotArm.transform);
 
-            for (int i = -3; i < 3; i++)
-            {
-                CreateSection(i);
-            }
+            InitSections();
         }
 
+        // update
         public void Update()
         {
             UpdateWorld();
@@ -49,6 +40,36 @@ namespace Assets.Scripts
             _world = _globals.world;
         }
 
+        // initialize
+        public void InitObjects()
+        {
+            _globals = GameObject.Find("Globals").GetComponent<Globals>();
+            _view = GameObject.Find("View");
+            _factory = GameObject.Find("Factory");
+            _cubes = GameObject.Find("Cubes");
+            _world = _globals.world;
+            _robotArmData = _world.RobotArm;
+        }
+        public void InitSectionSize()
+        {
+            sectionWidthTotal = (int)assemblyLineModel.GetComponent<MeshRenderer>().bounds.size.x;
+            sectionWidth = sectionWidthTotal - (sectionWidthTotal / 4);
+            spacing = (float)sectionWidthTotal / (float)sectionWidth;
+        }
+        public void InitRobotArm()
+        {
+            CreateRobotArm(_robotArmData);
+            CreateSpeedMeter(_robotArm.transform);
+        }
+        public void InitSections()
+        {
+            for (int i = -3; i < 3; i++)
+            {
+                CreateSection(i);
+            }
+        }
+
+        // create
         public void CreateSection(int sectionId)
         {
             GenerateFactory(sectionId);
@@ -59,21 +80,11 @@ namespace Assets.Scripts
                 InstantiateBlocks(x);
             }
         }
-
-
-        public Vector3 RobotArmToView(RobotArm arm)
-        {
-            float x = arm.X * spacing;
-            float y = arm.Y;
-
-            return new Vector3(x, y);
-        }
-
-        public GameObject CreateRobotArm(RobotArm robotArm)
+        public void CreateRobotArm(RobotArm robotArm)
         {
             GameObject arm = Instantiate(robotArmModel);
 
-            arm.name = "Robot Arm";
+            arm.name = "RobotArm";
             arm.tag  = "RobotArm";
             arm.transform.parent = _view.transform;
             arm.transform.position = new Vector3(robotArm.X, robotArm.Y, 0);
@@ -81,7 +92,7 @@ namespace Assets.Scripts
 
             arm.AddComponent<BoxCollider>(); // dont need this in the future
 
-            return arm;
+            _robotArm = arm;
         }
         public void CreateSpeedMeter(Transform parent)
         {
@@ -100,9 +111,10 @@ namespace Assets.Scripts
             }
         }
 
+        // generate
         public void GenerateFactory(int sectionId)
         {
-            float width = 15f;
+            float width = sectionWidthTotal;
             float halfW = width / 2;
             float posX = halfW + (sectionId * width);
             float posY = width;
@@ -114,6 +126,7 @@ namespace Assets.Scripts
             InstantiateWall(sectionId, 2, posX, posY, posWallZ);
         }
 
+        // instantiate
         public void InstantiateAssemblyLine(int sectionId, float x)
         {
             GameObject assembly = Instantiate(assemblyLineModel);
@@ -141,7 +154,6 @@ namespace Assets.Scripts
                 wall.transform.position = new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
-
         public void InstantiateBlocks(int stackX)
         {
             Stack<Cube> cubes = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Cubes;
@@ -153,8 +165,7 @@ namespace Assets.Scripts
 
             instantiatedStacks.Add(stackX);
         }
-
-        public GameObject InstantiateBlock(int stackX, Cube cube)
+        public void InstantiateBlock(int stackX, Cube cube)
         {
             GameObject block = Instantiate(blockModel);
 
@@ -169,9 +180,9 @@ namespace Assets.Scripts
 
             Renderer renderer = block.GetComponent<Renderer>();
             renderer.materials = SetColors(renderer.materials, cube.Color);
-
-            return block;
         }
+
+        // misc.
         public Material[] SetColors(Material[] originals, string color)
         {
             Material[] m = new Material[2];
@@ -204,13 +215,21 @@ namespace Assets.Scripts
 
             return m;
         }
+        public Vector3 RobotArmToView(RobotArm arm)
+        {
+            float x = arm.X * spacing;
+            float y = arm.Y;
+
+            return new Vector3(x, y);
+        }
 
 
-        private int sectionWidthTotal = 15; // stacks that fit on a section
+        // privates
+        private List<int> instantiatedStacks = new List<int>();
+
+        private int sectionWidthTotal; // stacks that fit on a section
         private int sectionWidth; // stacks you want on a section
         private float spacing;
-
-        private List<int> instantiatedStacks = new List<int>();
 
         private GameObject _view;
         private GameObject _cubes;

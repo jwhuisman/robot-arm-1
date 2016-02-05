@@ -6,7 +6,6 @@ public class World
 {
     public List<CubeStack> Stacks = new List<CubeStack>();
     public RobotArm RobotArm = new RobotArm();
-   
 
     public World()
     {
@@ -24,11 +23,9 @@ public class World
 
         for (int i = 0; i < cubesAmount; i++)
         {
-            int y = stack.Cubes.Count(); 
-
-            int colorNumber = rnd.Next(0, 4);
-            string color = ((ColorEnum.Colors)colorNumber).ToString();
             string id = "(" + x + "/" + i + ")";
+            string color = ((ColorEnum.Colors)rnd.Next(0, 4)).ToString();
+            int y = stack.Cubes.Count(); 
 
             stack.Cubes.Push(new Cube(id, color, x, y));
         }

@@ -4,7 +4,7 @@
     {
         Holding = false;
         X = 0;
-        Y = 0;
+        Y = 7;
     }
 
     public bool Holding { get; set; }

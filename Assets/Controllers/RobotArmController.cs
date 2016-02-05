@@ -8,14 +8,8 @@ using UnityEngine.UI;
 public class RobotArmController : MonoBehaviour
 {
     public GameObject robotArm;
-    public GameObject plane;
-    public GameObject cubes;
-
-    // world stuff
-
 
     // test text
-    public Text text;
     public Text speedText;
 
     // lerping related
@@ -57,8 +51,6 @@ public class RobotArmController : MonoBehaviour
         timeTakenDuringLerp = 0.5f;
         speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
        
-        cubes = GameObject.Find("Cubes");
-
         InitNeedle();
     }
 
@@ -106,6 +98,7 @@ public class RobotArmController : MonoBehaviour
         }
     }
 
+    // set the height till where the arm should go up
     public void UpdateArmHeight()
     {
         mapBoundaryTop = GetHighestCubeY() + .6f;
@@ -126,6 +119,7 @@ public class RobotArmController : MonoBehaviour
         return y + offsetY;
     }
 
+    // speed meter stuff
     public void UpdateSpeed(float speed)
     {
         float time = timeTakenDuringLerp;
@@ -133,15 +127,11 @@ public class RobotArmController : MonoBehaviour
         if (speed <= 100 && speed >= 0)
         {
             time = (100f - speed) / 100f;
-            text.text = "Speed of the robot arm has been changed to: " + time + " seconds.";
             speedText.text = "Speed: " + time + " seconds";
 
             SetSpeedMeter(time);
 
             timeTakenDuringLerp = time;
-        } else
-        {
-            text.text = "Speed can't go lower than 0 or higher than 100.";
         }
     }
     public void InitNeedle()
@@ -190,18 +180,30 @@ public class RobotArmController : MonoBehaviour
     }
 
 
+    // these should trigger the animations
     public void MoveLeft()
     {
         _world.RobotArm.X--;
     }
-
     public void MoveRight()
     {
         _world.RobotArm.X++;
     }
+    public void MoveUp()
+    {
+        _world.RobotArm.Y++;
+    }
+    public void Grab()
+    {
+
+    }
+    public void Drop()
+    {
+
+    }
 
 
-
+    // old unused stuff
     public void StartLerping(Vector3 direction, float spaces)
     {
         if (!_isLerping || percentageComplete >= 1.0f)
@@ -268,7 +270,7 @@ public class RobotArmController : MonoBehaviour
                     currentlyHolding = true;
                 }
             } else if (!instruction && currentlyHolding) {
-                if (block.transform.parent = cubes.transform)
+                if (block.transform.parent = GameObject.Find("Cubes").transform)
                 {
                     currentlyHolding = false;
                 }

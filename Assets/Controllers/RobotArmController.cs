@@ -38,8 +38,6 @@ public class RobotArmController : MonoBehaviour
         _globals = GameObject.Find("Globals").GetComponent<Globals>();
         _world = _globals.world;
 
-        UpdateArmHeight();
-
         armSpeed = 0.5f;
         speedText.text = "Speed: " + armSpeed + " seconds";
        
@@ -55,15 +53,17 @@ public class RobotArmController : MonoBehaviour
         }
     }
 
-    // set the height till where the arm should go up
     public void UpdateArmHeight()
     {
-        _world.RobotArm.Y = GetHighestCubeY();
+        if (!_world.RobotArm.Holding)
+        {
+            _world.RobotArm.Y = GetHighestCubeY();
+        }
     }
     public int GetHighestCubeY()
     {
         GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-        int offsetY = 2;
+        int offsetY = 3;
         int y = 0;
 
         if (blocks.Length > 0)
@@ -150,10 +150,12 @@ public class RobotArmController : MonoBehaviour
     }
     public void Grab()
     {
+        UpdateArmHeight();
         _world.Grab();
     }
     public void Drop()
     {
+        UpdateArmHeight();
         _world.Drop();
     }
 

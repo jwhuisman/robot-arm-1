@@ -2,11 +2,11 @@
 
 public class RobotArm
 {
-    public RobotArm()
+    public RobotArm(int y)
     {
         Holding = false;
         X = 0;
-        Y = 7;
+        Y = y;
     }
 
     public Block HoldingBlock { get; set; }

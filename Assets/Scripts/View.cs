@@ -25,7 +25,6 @@ namespace Assets.Scripts
 
             InitRobotArm();
 
-
             InitSections();
         }
 
@@ -33,16 +32,17 @@ namespace Assets.Scripts
         public void Update()
         {
             UpdateWorld();
-
-            _robotArm.transform.position = RobotArmToView(_robotArmData);
         }
         public void UpdateWorld()
         {
             _world = _globals.world;
 
+            _robotArm.transform.position = RobotArmToView(_robotArmData);
+
+
             if (_robotArmData.Holding)
             {
-                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.transform.position.y - 1f);
+                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.transform.position.y - .6f);
                 wasHolding = true;
             }
             else if (wasHolding)

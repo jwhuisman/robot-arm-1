@@ -5,7 +5,7 @@ using Assets.Models.World;
 public class World
 {
     public List<BlockStack> Stacks = new List<BlockStack>();
-    public RobotArm RobotArm = new RobotArm();
+    public RobotArm RobotArm;
 
     public World()
     {
@@ -13,6 +13,8 @@ public class World
         {
             AddStack(x);
         }
+
+        RobotArm = new RobotArm(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
     }
 
     public void AddStack(int x)

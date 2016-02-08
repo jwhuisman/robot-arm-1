@@ -35,17 +35,7 @@ namespace Assets.Scripts
         {
             UpdateWorld();
 
-            SectionCheck s = NeedNewSection();
-            if (initialized && s.NeedNew)
-            {
-                int currentSectionId = GetSectionFromX(_robotArmData.X);
-                int newSectionId = currentSectionId + s.Dir;
-
-                if (!instantiatedSections.Contains(newSectionId))
-                {
-                    CreateSection(newSectionId);
-                }
-            }
+            CheckSections();
         }
         public void UpdateWorld()
         {
@@ -71,6 +61,19 @@ namespace Assets.Scripts
         }
 
         // new section
+        public void CheckSections()
+        {
+            SectionCheck s = NeedNewSection();
+            if (initialized && s.NeedNew)
+            {
+                int newSectionId = s.Section + s.Dir;
+
+                if (!instantiatedSections.Contains(newSectionId))
+                {
+                    CreateSection(newSectionId);
+                }
+            }
+        }
         public SectionCheck NeedNewSection()
         {
             SectionCheck s = new SectionCheck();
@@ -78,16 +81,19 @@ namespace Assets.Scripts
             int min = instantiatedSections.Min(sId => sId);
             int max = instantiatedSections.Max(sId => sId);
 
+            int margin = 1; // sections further (you are on 2, it will check if it needs to render 4, not 3)
             int currentSection = GetSectionFromX(_robotArmData.X);
-            if (currentSection <= min)
+            if (currentSection - margin <= min)
             {
                 s.NeedNew = true;
                 s.Dir = -1;
+                s.Section = currentSection - margin;
             }
-            else if (currentSection >= max)
+            else if (currentSection + margin >= max)
             {
                 s.NeedNew = true;
                 s.Dir = 1;
+                s.Section = currentSection + margin;
             }
 
             return s;

@@ -53,8 +53,11 @@ public class World
         {
             int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-            RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
-            RobotArm.Holding = true;
+            if (Stacks[i].Blocks.Count != 0)
+            {
+                RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
+                RobotArm.Holding = true;
+            }
         }
     }
     public void Drop()

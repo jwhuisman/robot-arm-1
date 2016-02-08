@@ -55,14 +55,11 @@ public class RobotArmController : MonoBehaviour
 
     public void UpdateArmHeight()
     {
-        if (!_world.RobotArm.Holding)
-        {
-            _world.RobotArm.Y = GetHighestCubeY();
-        }
+        _world.RobotArm.Y = GetHighestCubeY();
     }
     public int GetHighestCubeY()
     {
-        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block").Where(b => b.name != "Block-"+_world.RobotArm.HoldingBlock.Id).ToArray();
         int offsetY = 3;
         int y = 0;
 
@@ -150,8 +147,8 @@ public class RobotArmController : MonoBehaviour
     }
     public void Grab()
     {
-        UpdateArmHeight();
         _world.Grab();
+        UpdateArmHeight();
     }
     public void Drop()
     {

@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts;
 using System;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,14 @@ using UnityEngine.UI;
 public class RobotArmController : MonoBehaviour
 {
     public GameObject robotArm;
+
+    //---------------------------------------------------------//
+    //   this Controller should probably be taken apart.       //
+    //   the needle / pointer stuff should be in the view      //
+    //   the moveLeft, grab etc. should be in RobotArm (class) //
+    //   for that we also need to change the commands          //
+    //---------------------------------------------------------//
+
 
     // test text
     public Text speedText;
@@ -107,13 +114,13 @@ public class RobotArmController : MonoBehaviour
     }
     public int GetHighestCubeY()
     {
-        GameObject[] cubes = GameObject.FindGameObjectsWithTag("Cube");
+        GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
         int offsetY = 2;
         int y = 0;
 
-        if (cubes.Length > 0)
+        if (blocks.Length > 0)
         {
-            y = (int)cubes.Max(c => c.transform.position.y);
+            y = (int)blocks.Max(c => c.transform.position.y);
         }
 
         return y + offsetY;
@@ -183,23 +190,23 @@ public class RobotArmController : MonoBehaviour
     // these should trigger the animations
     public void MoveLeft()
     {
-        _world.RobotArm.X--;
+        _world.MoveLeft();
     }
     public void MoveRight()
     {
-        _world.RobotArm.X++;
+        _world.MoveRight();
     }
     public void MoveUp()
     {
-        _world.RobotArm.Y++;
+        _world.MoveUp();
     }
     public void Grab()
     {
-
+        _world.Grab();
     }
     public void Drop()
     {
-
+        _world.Drop();
     }
 
 

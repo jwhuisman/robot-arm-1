@@ -7,7 +7,7 @@ TagManager:
   - RobotArm
   - Floor
   - NetworkListener
-  - Cube
+  - Block
   - SpeedMeter
   - SpeedMeterPointer
   layers:

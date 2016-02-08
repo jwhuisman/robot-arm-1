@@ -16,6 +16,7 @@ namespace Assets.Scripts
         public GameObject speedMeterModel;
         public GameObject robotArmModel;
 
+
         // start
         public void Start()
         {
@@ -38,6 +39,21 @@ namespace Assets.Scripts
         public void UpdateWorld()
         {
             _world = _globals.world;
+
+            if (_robotArmData.Holding)
+            {
+                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.transform.position.y - 1f);
+                wasHolding = true;
+            }
+            else if (wasHolding)
+            {
+                int i = _world.Stacks.FindIndex(s => s.Id == _robotArmData.X);
+                float y = _world.Stacks[i].Blocks.Count() - 1;
+
+                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, y);
+
+                wasHolding = false;
+            }
         }
 
         // initialize
@@ -156,16 +172,16 @@ namespace Assets.Scripts
         }
         public void InstantiateBlocks(int stackX)
         {
-            Stack<Cube> cubes = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Cubes;
+            Stack<Block> cubes = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Blocks;
 
-            foreach (Cube cube in cubes)
+            foreach (Block cube in cubes)
             {
                 InstantiateBlock(stackX, cube);
             }
 
             instantiatedStacks.Add(stackX);
         }
-        public void InstantiateBlock(int stackX, Cube cube)
+        public void InstantiateBlock(int stackX, Block blockData)
         {
             GameObject block = Instantiate(blockModel);
 
@@ -173,13 +189,13 @@ namespace Assets.Scripts
 
             block.AddComponent<BoxCollider>(); // dont need this in the future
 
-            block.tag = "Cube";
-            block.name = "cube-" + cube.Id;
+            block.name = "Block-" + blockData.Id;
+            block.tag = "Block";
             block.transform.parent = _cubes.transform;
-            block.transform.position = new Vector3(x, cube.Y, 0);
+            block.transform.position = new Vector3(x, blockData.Y, 0);
 
             Renderer renderer = block.GetComponent<Renderer>();
-            renderer.materials = SetColors(renderer.materials, cube.Color);
+            renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
         // misc.
@@ -222,6 +238,10 @@ namespace Assets.Scripts
 
             return new Vector3(x, y);
         }
+        public GameObject FindBlock(string Id)
+        {
+            return GameObject.Find("Block-" + Id);
+        }
 
 
         // privates
@@ -230,13 +250,14 @@ namespace Assets.Scripts
         private int sectionWidthTotal; // stacks that fit on a section
         private int sectionWidth; // stacks you want on a section
         private float spacing;
+        private bool wasHolding = false;
 
         private GameObject _view;
         private GameObject _cubes;
         private GameObject _factory;
         private GameObject _robotArm;
-        private RobotArm _robotArmData;
-        private Globals _globals;
-        private World _world;
+        private RobotArm   _robotArmData;
+        private Globals    _globals;
+        private World      _world;
     }
 }

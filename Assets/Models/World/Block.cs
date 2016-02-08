@@ -1,12 +1,12 @@
 ﻿namespace Assets.Models.World
 {
-    public class Cube
+    public class Block
     {
-        public Cube()
+        public Block()
         {
 
         }
-        public Cube(string id, string color, int x, int y)
+        public Block(string id, string color, int x, int y)
         {
             Id = id;
             Color = color;

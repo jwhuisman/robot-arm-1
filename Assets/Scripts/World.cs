@@ -4,7 +4,7 @@ using Assets.Models.World;
 
 public class World
 {
-    public List<CubeStack> Stacks = new List<CubeStack>();
+    public List<BlockStack> Stacks = new List<BlockStack>();
     public RobotArm RobotArm = new RobotArm();
 
     public World()
@@ -17,7 +17,7 @@ public class World
 
     public void AddStack(int x)
     {
-        CubeStack stack = new CubeStack(x);
+        BlockStack stack = new BlockStack(x);
 
         int cubesAmount = rnd.Next(minCubes, maxCubes + 1);
 
@@ -25,18 +25,54 @@ public class World
         {
             string id = "(" + x + "/" + i + ")";
             string color = ((ColorEnum.Colors)rnd.Next(0, 4)).ToString();
-            int y = stack.Cubes.Count(); 
+            int y = stack.Blocks.Count(); 
 
-            stack.Cubes.Push(new Cube(id, color, x, y));
+            stack.Blocks.Push(new Block(id, color, x, y));
         }
 
         Stacks.Add(stack);
     }
 
 
+
+    public void MoveLeft()
+    {
+        RobotArm.X--;
+    }
+    public void MoveRight()
+    {
+        RobotArm.X++;
+    }
+    public void MoveUp()
+    {
+        RobotArm.Y++;
+    }
+    public void Grab()
+    {
+        if (!RobotArm.Holding)
+        {
+            int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
+
+            RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
+            RobotArm.Holding = true;
+        }
+    }
+    public void Drop()
+    {
+        if (RobotArm.Holding)
+        {
+            int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
+
+            RobotArm.HoldingBlock.Y = Stacks[i].Blocks.Count();
+            Stacks[i].Blocks.Push(RobotArm.HoldingBlock);
+
+            RobotArm.Holding = false;
+        }
+    }
+
     private System.Random rnd = new System.Random();
-    private int stackMin = -1000;
-    private int stackMax = 1000;
+    private int stackMin = -10000;
+    private int stackMax = 10000;
     private int minCubes = 1;
     private int maxCubes = 6;
 }

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Assets.Models.Commands
+﻿namespace Assets.Models.Commands
 {
     public class MoveCommand : Command
     {

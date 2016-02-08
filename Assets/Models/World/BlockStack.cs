@@ -2,15 +2,15 @@
 
 namespace Assets.Models.World
 {
-    public class CubeStack
+    public class BlockStack
     {
-        public CubeStack(int id)
+        public BlockStack(int id)
         {
-            Cubes = new Stack<Cube>();
+            Blocks = new Stack<Block>();
             Id = id;
         }
 
-        public Stack<Cube> Cubes { get; set; }
+        public Stack<Block> Blocks { get; set; }
         public int Id { get; set; }
     }
 }

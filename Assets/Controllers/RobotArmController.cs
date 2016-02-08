@@ -152,8 +152,8 @@ public class RobotArmController : MonoBehaviour
     }
     public void Drop()
     {
-        UpdateArmHeight();
         _world.Drop();
+        UpdateArmHeight();
     }
 
 

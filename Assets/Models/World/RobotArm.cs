@@ -4,6 +4,7 @@ public class RobotArm
 {
     public RobotArm(int y)
     {
+        HoldingBlock = new Block();
         Holding = false;
         X = 0;
         Y = y;

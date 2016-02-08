@@ -25,13 +25,27 @@ namespace Assets.Scripts
 
             InitRobotArm();
 
-            InitSections();
+            CreateStartSections();
+
+            initialized = true;
         }
 
         // update
         public void Update()
         {
             UpdateWorld();
+
+            SectionCheck s = NeedNewSection();
+            if (initialized && s.NeedNew)
+            {
+                int currentSectionId = GetSectionFromX(_robotArmData.X);
+                int newSectionId = currentSectionId + s.Dir;
+
+                if (!instantiatedSections.Contains(newSectionId))
+                {
+                    CreateSection(newSectionId);
+                }
+            }
         }
         public void UpdateWorld()
         {
@@ -56,6 +70,49 @@ namespace Assets.Scripts
             }
         }
 
+        // new section
+        public SectionCheck NeedNewSection()
+        {
+            SectionCheck s = new SectionCheck();
+
+            int min = instantiatedSections.Min(sId => sId);
+            int max = instantiatedSections.Max(sId => sId);
+
+            int currentSection = GetSectionFromX(_robotArmData.X);
+            if (currentSection <= min)
+            {
+                s.NeedNew = true;
+                s.Dir = -1;
+            }
+            else if (currentSection >= max)
+            {
+                s.NeedNew = true;
+                s.Dir = 1;
+            }
+
+            return s;
+        }
+        public int GetSectionFromX(int x)
+        {
+            return (RoundToMultiple(x) / sectionWidth) - 1;
+        }
+        public int RoundToMultiple(int numToRound)
+        {
+            int multiple = sectionWidth;
+
+            if (multiple == 0)
+                return numToRound;
+
+            int remainder = Math.Abs(numToRound) % multiple;
+            if (remainder == 0)
+                return numToRound;
+
+            if (numToRound < 0)
+                return -(Math.Abs(numToRound) - remainder);
+            else
+                return numToRound + multiple - remainder;
+        }
+
         // initialize
         public void InitObjects()
         {
@@ -77,15 +134,15 @@ namespace Assets.Scripts
             CreateRobotArm(_robotArmData);
             CreateSpeedMeter(_robotArm.transform);
         }
-        public void InitSections()
+
+        // create
+        public void CreateStartSections()
         {
             for (int i = -3; i < 3; i++)
             {
                 CreateSection(i);
             }
         }
-
-        // create
         public void CreateSection(int sectionId)
         {
             GenerateFactory(sectionId);
@@ -95,6 +152,8 @@ namespace Assets.Scripts
             {
                 InstantiateBlocks(x);
             }
+
+            instantiatedSections.Add(sectionId);
         }
         public void CreateRobotArm(RobotArm robotArm)
         {
@@ -147,7 +206,8 @@ namespace Assets.Scripts
         {
             GameObject assembly = Instantiate(assemblyLineModel);
             assembly.transform.parent = _factory.transform;
-            assembly.name = "assembly-(" + sectionId + ")";
+            assembly.name = "Assembly-(" + sectionId + ")";
+            assembly.tag = "Assembly";
             assembly.transform.position = new Vector3(x - .5f, -.5f);
         }
         public void InstantiateFloor(int sectionId, int amount, float x, float z)
@@ -156,7 +216,8 @@ namespace Assets.Scripts
             {
                 GameObject floor = Instantiate(floorModel);
                 floor.transform.parent = _factory.transform;
-                floor.name = "floor-(" + sectionId + "/" + i + ")";
+                floor.name = "Floor-(" + sectionId + "/" + i + ")";
+                floor.tag = "Floor";
                 floor.transform.position = new Vector3(x - .5f, -.5f, z * (i + 1));
             }
         }
@@ -166,7 +227,8 @@ namespace Assets.Scripts
             {
                 GameObject wall = Instantiate(wallModel);
                 wall.transform.parent = _factory.transform;
-                wall.name = "wall-(" + sectionId + "/" + i + ")";
+                wall.name = "Wall-(" + sectionId + "/" + i + ")";
+                wall.tag = "Wall";
                 wall.transform.position = new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
@@ -246,11 +308,13 @@ namespace Assets.Scripts
 
         // privates
         private List<int> instantiatedStacks = new List<int>();
+        private List<int> instantiatedSections = new List<int>();
 
         private int sectionWidthTotal; // stacks that fit on a section
         private int sectionWidth; // stacks you want on a section
         private float spacing;
         private bool wasHolding = false;
+        private bool initialized = false;
 
         private GameObject _view;
         private GameObject _cubes;

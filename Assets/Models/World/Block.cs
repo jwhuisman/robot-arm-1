@@ -4,7 +4,10 @@
     {
         public Block()
         {
-
+            Id = "";
+            Color = "";
+            X = 0;
+            Y = 0;
         }
         public Block(string id, string color, int x, int y)
         {

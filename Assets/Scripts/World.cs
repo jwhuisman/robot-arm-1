@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using Assets.Models.World;
+using System;
 
 public class World
 {
@@ -75,7 +76,7 @@ public class World
         }
     }
 
-    private System.Random rnd = new System.Random();
+    private Random rnd = new Random();
     private int stackMin = -10000;
     private int stackMax = 10000;
     private int minCubes = 1;

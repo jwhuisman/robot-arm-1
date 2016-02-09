@@ -7,16 +7,6 @@ using UnityEngine.UI;
 public class RobotArmController : MonoBehaviour
 {
     public GameObject robotArm;
-
-    //---------------------------------------------------------//
-    //   this Controller should probably be taken apart.       //
-    //   the needle / pointer stuff should be in the view      //
-    //   the moveLeft, grab etc. should be in RobotArm (class) //
-    //   for that we also need to change the commands          //
-    //---------------------------------------------------------//
-
-
-    // test text
     public Text speedText;
     public  float armSpeed;
 
@@ -43,7 +33,6 @@ public class RobotArmController : MonoBehaviour
        
         InitNeedle();
     }
-
 
     public void Update()
     {   

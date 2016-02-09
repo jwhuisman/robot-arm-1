@@ -331,7 +331,7 @@ namespace Assets.Scripts
         }
 
 
-        // keep this??
+        // glowing light :)
         public void UpdateBlockUnderneath()
         {
             GameObject block = FindBlockAtX(_robotArmData.X);

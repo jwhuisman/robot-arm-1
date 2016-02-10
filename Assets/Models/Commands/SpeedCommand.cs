@@ -8,12 +8,12 @@
         }
         public override void Do(RobotArmController robotArm)
         {
-            robotArm.UpdateSpeed(Speed);
+            robotArm.SetSpeed(Speed);
 
             IsDone = true;
             networkListener.ReturnMessage("ok");
         }
 
-        public float Speed { get; set; }
+        public int Speed { get; set; }
     }
 }

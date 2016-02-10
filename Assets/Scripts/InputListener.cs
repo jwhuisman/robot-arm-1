@@ -38,10 +38,6 @@ public class InputListener : MonoBehaviour
 
 
         // for testing purposes
-        else if (Input.GetKeyDown(KeyCode.UpArrow)) 
-        {
-            commandRunner.Add(new MoveCommand("up"));
-        }
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             commandRunner.Add(new SpeedCommand(10));

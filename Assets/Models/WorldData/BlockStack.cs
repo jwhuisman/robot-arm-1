@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Models.World
+namespace Assets.Models.WorldData
 {
     public class BlockStack
     {

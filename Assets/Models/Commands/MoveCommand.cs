@@ -11,14 +11,12 @@
             if (Direction == "right")
             {
                 robotArm.MoveRight();
+                world.MoveRight();
             }
             else if (Direction == "left")
             {
                 robotArm.MoveLeft();
-            }
-            else if (Direction == "up")
-            {
-                robotArm.MoveUp();
+                world.MoveLeft();
             }
 
             // should set 'command.IsDone = true' after the robotArm transform/animation is finished 

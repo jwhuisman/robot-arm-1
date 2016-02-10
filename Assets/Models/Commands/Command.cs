@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts;
+using Assets.Scripts.WorldData;
+using UnityEngine;
 
 namespace Assets.Models
 {
@@ -7,6 +9,7 @@ namespace Assets.Models
         public Command()
         {
             networkListener = GameObject.FindGameObjectWithTag("NetworkListener").GetComponent<NetworkListener>();
+            world = GameObject.Find("Globals").GetComponent<Globals>().world;
             IsDone = false;
         }
 
@@ -17,6 +20,7 @@ namespace Assets.Models
         }
         public bool IsDone { get; set; }
 
+        protected World world;
         protected NetworkListener networkListener;
     }
 }

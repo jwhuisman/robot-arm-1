@@ -1,4 +1,5 @@
-﻿using Assets.Models.World;
+﻿using Assets.Models.WorldData;
+using Assets.Scripts.WorldData;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Assets.Scripts
             InitSectionSize();
 
             InitRobotArm();
+            InitNeedle();
 
             CreateStartSections();
 
@@ -35,6 +37,7 @@ namespace Assets.Scripts
         {
             // should update only after a command is fired.
             UpdateWorld();
+            UpdateNeedle();
             CheckSections();
             UpdateBlockUnderneath();
         }
@@ -61,7 +64,16 @@ namespace Assets.Scripts
                 wasHolding = false;
             }
         }
-        
+        public void UpdateNeedle()
+        {
+            if (rotateNeedle)
+            {
+                RotateNeedleTowards();
+            }
+        }
+
+
+
 
         // initialize
         public void InitObjects()
@@ -83,6 +95,14 @@ namespace Assets.Scripts
         {
             CreateRobotArm(_robotArmData);
             CreateSpeedMeter(_robotArm.transform);
+        }
+        public void InitNeedle()
+        {
+            needle = GameObject.Find("Needle");
+
+            armSpeed = 0.5f;
+
+            SetNeedle(armSpeed);
         }
 
         // new section
@@ -243,6 +263,57 @@ namespace Assets.Scripts
             renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
+        // speed meter
+        public void SetSpeed(float speed)
+        {
+            float time = armSpeed;
+
+            if (speed <= 100 && speed >= 0)
+            {
+                time = (100f - speed) / 100f;
+
+                SetSpeedMeter(time);
+
+                armSpeed = time;
+            }
+        }
+        public void SetSpeedMeter(float time)
+        {
+            startAngle = (!float.IsNaN(currentAngle)) ? currentAngle : needle.transform.eulerAngles.x;
+            currentAngle = startAngle;
+            targetAngle = GetAngle(time);
+
+            if (targetAngle != startAngle)
+            {
+                rotateNeedle = true;
+            }
+        }
+        public void RotateNeedleTowards()
+        {
+            float speed = rotSpeed * (Math.Abs(targetAngle - startAngle) / 40);
+            bool left = (startAngle < targetAngle) ? true : false;
+
+            currentAngle = (left) ? currentAngle + speed : currentAngle - speed;
+
+            needle.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
+
+            if ((left && currentAngle >= targetAngle) || (!left && currentAngle <= targetAngle))
+            {
+                needle.transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+                rotateNeedle = false;
+            }
+        }
+        public void SetNeedle(float time)
+        {
+            float a = GetAngle(time);
+            currentAngle = a;
+            needle.transform.rotation = Quaternion.Euler(0, 0, a);
+        }
+        public float GetAngle(float time)
+        {
+            return -(maxAngle - (maxAngle * time));
+        }
+
         // helpers
         public GameObject FindBlock(string Id)
         {
@@ -285,7 +356,7 @@ namespace Assets.Scripts
                 return numToRound + multiple - remainder;
         }
 
-        // misc.
+        // misc
         public Material[] SetColors(Material[] originals, string color)
         {
             Material[] m = new Material[2];
@@ -331,7 +402,7 @@ namespace Assets.Scripts
         }
 
 
-        // glowing light :)
+        // glowing light
         public void UpdateBlockUnderneath()
         {
             GameObject block = FindBlockAtX(_robotArmData.X);
@@ -368,9 +439,20 @@ namespace Assets.Scripts
             return new Color(color.r - d, color.g - d, color.b - d);
         }
 
+
+
         // privates
         private List<int> instantiatedStacks = new List<int>();
         private List<int> instantiatedSections = new List<int>();
+
+        private GameObject needle;
+        private float armSpeed;
+        private float startAngle;
+        private float currentAngle;
+        private float targetAngle;
+        private float maxAngle = 240;
+        private float rotSpeed = 3f;
+        private bool rotateNeedle = false;
 
         private bool initialized = false;
         private bool wasHolding = false;

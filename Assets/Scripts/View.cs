@@ -13,6 +13,7 @@ namespace Assets.Scripts
         public GameObject assemblyLineModel;
         public GameObject floorModel;
         public GameObject wallModel;
+        public GameObject wallExtendModel;
         public GameObject blockModel;
         public GameObject speedMeterModel;
         public GameObject robotArmModel;
@@ -71,9 +72,6 @@ namespace Assets.Scripts
                 RotateNeedleTowards();
             }
         }
-
-
-
 
         // initialize
         public void InitObjects()
@@ -207,11 +205,11 @@ namespace Assets.Scripts
         }
         public void GenerateBlocks(int stackX)
         {
-            Stack<Block> cubes = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Blocks;
+            Stack<Block> blocks = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Blocks;
 
-            foreach (Block cube in cubes)
+            foreach (Block block in blocks)
             {
-                InstantiateBlock(stackX, cube);
+                InstantiateBlock(stackX, block);
             }
 
             instantiatedStacks.Add(stackX);
@@ -241,7 +239,7 @@ namespace Assets.Scripts
         {
             for (int i = 0; i < amount; i++)
             {
-                GameObject wall = Instantiate(wallModel);
+                GameObject wall = i == 0 ? Instantiate(wallModel) : Instantiate(wallExtendModel);
                 wall.transform.parent = _factory.transform;
                 wall.name = "Wall-(" + sectionId + "/" + i + ")";
                 wall.tag = "Wall";

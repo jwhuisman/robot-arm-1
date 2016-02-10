@@ -189,6 +189,7 @@ MonoBehaviour:
   assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
+  wallExtendModel: {fileID: 100000, guid: 53a95d7d96d494c4da10ea5ee70b7a39, type: 3}
   blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
   speedMeterModel: {fileID: 100004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
   robotArmModel: {fileID: 100000, guid: e2592d04e2fae0c4bb9dd2e5d5e89a6d, type: 3}
@@ -675,18 +676,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robotArm: {fileID: 0}
-  speedText: {fileID: 1469959202}
-  armSpeed: 0
-  needle: {fileID: 0}
-  angleY: 0
-  angleZ: 0
-  startAngle: 0
-  currentAngle: 0
-  targetAngle: 0
-  minAngle: 0
-  maxAngle: 240
-  rotSpeed: 1
-  rotateNeedle: 0
 --- !u!4 &1658030862
 Transform:
   m_ObjectHideFlags: 0

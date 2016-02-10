@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class RobotArmController : MonoBehaviour
 {
-    public GameObject robotArm;
-
     public void Start()
     {
         _globals = GameObject.Find("Globals").GetComponent<Globals>();

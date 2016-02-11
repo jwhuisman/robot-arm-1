@@ -42,7 +42,7 @@ namespace Assets.Scripts.WorldData
 
         public void MoveLeft()
         {
-            RobotArm.Y++;
+            RobotArm.X--;
         }
         public void MoveRight()
         {

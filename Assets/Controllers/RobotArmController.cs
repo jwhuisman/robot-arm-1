@@ -34,27 +34,30 @@ public class RobotArmController : MonoBehaviour
 
 
     // these should trigger the animations
+    // !important! Always execute a command in the world before you execute it in the view
     public void MoveLeft()
     {
-        
+        _view.UpdateView();
     }
     public void MoveRight()
     {
-        
+        _view.UpdateView();
     }
     public void Grab()
     {
-
         UpdateArmHeight();
+
+        _view.UpdateView();
     }
     public void Drop()
     {
-
         UpdateArmHeight();
+
+        _view.UpdateView();
     }
     public void Scan()
     {
-        
+
     }
     public void SetSpeed(int speed)
     {

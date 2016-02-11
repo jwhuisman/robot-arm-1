@@ -18,7 +18,6 @@ namespace Assets.Scripts
         public GameObject speedMeterModel;
         public GameObject robotArmModel;
 
-
         // start
         public void Start()
         {
@@ -36,12 +35,16 @@ namespace Assets.Scripts
         // update
         public void Update()
         {
-            // should update only after a command is fired.
-            UpdateWorld();
-            UpdateNeedle();
-            CheckSections();
             UpdateBlockUnderneath();
+            UpdateNeedle();
         }
+
+        public void UpdateView()
+        {
+            UpdateWorld();
+            CheckSections();
+        }
+
         public void UpdateWorld()
         {
             _world = _globals.world;
@@ -106,10 +109,10 @@ namespace Assets.Scripts
         // new section
         public void CheckSections()
         {
-            SectionCheck s = NeedNewSection();
-            if (initialized && s.NeedNew)
+            SectionCheck check = NeedNewSection();
+            if (initialized && check.NeedNew)
             {
-                int newSectionId = s.Section + s.Dir;
+                int newSectionId = check.Section + check.Dir;
 
                 if (!instantiatedSections.Contains(newSectionId))
                 {
@@ -119,27 +122,32 @@ namespace Assets.Scripts
         }
         public SectionCheck NeedNewSection()
         {
-            SectionCheck s = new SectionCheck();
-
             int min = instantiatedSections.Min(sId => sId);
             int max = instantiatedSections.Max(sId => sId);
 
-            int margin = 1; // sections further (you are on 2, it will check if it needs to render 4, not 3)
-            int currentSection = GetSectionFromX(_robotArmData.X);
-            if (currentSection - margin <= min)
+            GameObject minSection = GameObject.Find("Assembly-(" + (min+1)  + ")");
+            GameObject maxSection = GameObject.Find("Assembly-(" + (max-1) + ")");
+
+            float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
+            float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
+
+            bool minVisible = minX >= 0 && minX <= 1 ? true : false;
+            bool maxVisible = maxX >= 0 && maxX <= 1 ? true : false;
+
+            if (minVisible && maxVisible)
             {
-                s.Section = currentSection - margin;
-                s.Dir = -1;
-                s.NeedNew = true;
+                return new SectionCheck(min, -1, max, 1);
             }
-            else if (currentSection + margin >= max)
+            else if (minVisible)
             {
-                s.Section = currentSection + margin;
-                s.Dir = 1;
-                s.NeedNew = true;
+                return new SectionCheck(min, -1);
+            }
+            else if (maxVisible)
+            {
+                return new SectionCheck(max, 1);
             }
 
-            return s;
+            return new SectionCheck();
         }
 
         // create
@@ -199,9 +207,11 @@ namespace Assets.Scripts
             float posFloorZ = -width;
             float posWallZ = halfW;
 
+            int amount = 4;
+
             InstantiateAssemblyLine(sectionId, posX);
-            InstantiateFloor(sectionId, posX, posFloorZ, 2);
-            InstantiateWall(sectionId, posX, posY, posWallZ, 2);
+            InstantiateFloor(sectionId, posX, posFloorZ, amount);
+            InstantiateWall(sectionId, posX, posY, posWallZ, amount);
         }
         public void GenerateBlocks(int stackX)
         {
@@ -403,11 +413,14 @@ namespace Assets.Scripts
         // glowing light
         public void UpdateBlockUnderneath()
         {
-            GameObject block = FindBlockAtX(_robotArmData.X);
-
-            if (block != null)
+            if (_robotArmData != null)
             {
-                SetGlowToBlock(block);
+                GameObject block = FindBlockAtX(_robotArmData.X);
+
+                if (block != null)
+                {
+                    SetGlowToBlock(block);
+                }
             }
         }
         public void SetGlowToBlock(GameObject block)

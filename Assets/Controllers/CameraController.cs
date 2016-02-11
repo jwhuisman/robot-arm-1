@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts;
+using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
@@ -11,21 +12,20 @@ public class CameraController : MonoBehaviour
 	
 	void FixedUpdate ()
     {
-        Vector3 robotArmPos = robotArm.transform.position;
-        Vector3 camPos = transform.position;
-        Vector3 newCamPos = camPos;
+        Vector3 robotArm = this.robotArm.transform.position;
+        Vector3 cam = transform.position;
+        Vector3 newCam = cam;
 
-        float zDiff = (robotArmPos.y - robStartY) * zSpeed;
+        float zDiff = (robotArm.y - robStartY) * zSpeed;
 
-        newCamPos.x = robotArmPos.x;
-        newCamPos.z = (robotArmPos.y > robStartY) ? camStartZ - zDiff : camStartZ; 
+        newCam.x = robotArm.x;
+        newCam.z = (robotArm.y > robStartY) ? camStartZ - zDiff : camStartZ;
 
-        transform.position = Vector3.Lerp(camPos, newCamPos, smooth * Time.deltaTime);
+        transform.position = Vector3.Lerp(cam, newCam, smooth * Time.deltaTime);
     }
 
 
     private GameObject robotArm;
-
     private float zSpeed = 2.0f;
     private float smooth = 1.5f;
     private float robStartY;

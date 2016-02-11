@@ -43,6 +43,7 @@ namespace Assets.Scripts
         {
             UpdateWorld();
             CheckSections();
+            CheckBlocksToRender();
         }
 
         public void UpdateWorld()
@@ -75,6 +76,36 @@ namespace Assets.Scripts
                 RotateNeedleTowards();
             }
         }
+
+
+        // render optimization
+        public void CheckBlocksToRender()
+        {
+            GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
+
+            foreach (GameObject block in blocks)
+            {
+                float blockX = Camera.main.WorldToViewportPoint(block.transform.position).x;
+                bool inView = blockX >= -.5 && blockX <= 1.5 ? true : false;
+
+                Renderer rend = block.GetComponent<Renderer>();
+                if (inView)
+                {
+                    if (!rend.enabled)
+                    {
+                        block.GetComponent<Renderer>().enabled = true;
+                    }
+                }
+                else if (!inView)
+                {
+                    if (rend.enabled)
+                    {
+                        block.GetComponent<Renderer>().enabled = false;
+                    }
+                }
+            }
+        }
+
 
         // initialize
         public void InitObjects()
@@ -125,14 +156,14 @@ namespace Assets.Scripts
             int min = instantiatedSections.Min(sId => sId);
             int max = instantiatedSections.Max(sId => sId);
 
-            GameObject minSection = GameObject.Find("Assembly-(" + (min+1)  + ")");
-            GameObject maxSection = GameObject.Find("Assembly-(" + (max-1) + ")");
+            GameObject minSection = GameObject.Find("Assembly-(" + (min)  + ")");
+            GameObject maxSection = GameObject.Find("Assembly-(" + (max) + ")");
 
             float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
             float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
 
-            bool minVisible = minX >= 0 && minX <= 1 ? true : false;
-            bool maxVisible = maxX >= 0 && maxX <= 1 ? true : false;
+            bool minVisible = minX >= -.5 && minX <= 1.5 ? true : false;
+            bool maxVisible = maxX >= -.5 && maxX <= 1.5 ? true : false;
 
             if (minVisible && maxVisible)
             {

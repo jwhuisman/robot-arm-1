@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Scripts.View;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Models
 {
     public class CommandRunner : MonoBehaviour
     {
-        public RobotArmController robotArmController;
+        public RobotArm robotArm;
 
         public CommandRunner()
         {
@@ -36,7 +37,7 @@ namespace Assets.Models
         public void Next()
         {
             currentCmd = Queue.Dequeue();
-            currentCmd.Do(robotArmController);
+            currentCmd.Do(robotArm);
         }
 
         private bool firstCommand = true;

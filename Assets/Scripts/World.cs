@@ -8,7 +8,7 @@ namespace Assets.Scripts.WorldData
     public class World
     {
         public List<BlockStack> Stacks = new List<BlockStack>();
-        public RobotArm RobotArm;
+        public RobotArmData RobotArm;
 
         public World()
         {
@@ -17,7 +17,7 @@ namespace Assets.Scripts.WorldData
                 AddStack(x);
             }
 
-            RobotArm = new RobotArm(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
+            RobotArm = new RobotArmData(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
         public void AddStack(int x)

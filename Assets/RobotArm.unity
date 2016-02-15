@@ -168,6 +168,8 @@ GameObject:
   m_Component:
   - 4: {fileID: 159257697}
   - 114: {fileID: 159257696}
+  - 114: {fileID: 159257699}
+  - 114: {fileID: 159257698}
   m_Layer: 0
   m_Name: View
   m_TagString: Untagged
@@ -191,8 +193,9 @@ MonoBehaviour:
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
   wallExtendModel: {fileID: 100000, guid: 53a95d7d96d494c4da10ea5ee70b7a39, type: 3}
   blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
-  speedMeterModel: {fileID: 100004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
   robotArmModel: {fileID: 100000, guid: e2592d04e2fae0c4bb9dd2e5d5e89a6d, type: 3}
+  speedMeter: {fileID: 0}
+  sectionBuilder: {fileID: 0}
 --- !u!4 &159257697
 Transform:
   m_ObjectHideFlags: 0
@@ -208,6 +211,29 @@ Transform:
   - {fileID: 1593805963}
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &159257698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 159257695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83a994c3dc93a1247abbccea9799c206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &159257699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 159257695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfebc7f2f34917f43b61af5041d18eba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedMeterModel: {fileID: 100004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
 --- !u!1 &296191838
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +262,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
-  _RobotArmController: {fileID: 1658030861}
+  _robotArm: {fileID: 0}
   commandRunner: {fileID: 632050962}
 --- !u!4 &296191840
 Transform:
@@ -395,7 +421,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7102362c4b5b1904ba3d2b0d7aaef891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotArmController: {fileID: 1658030861}
+  robotArm: {fileID: 1658030861}
 --- !u!4 &632050963
 Transform:
   m_ObjectHideFlags: 0
@@ -658,7 +684,7 @@ GameObject:
   - 4: {fileID: 1658030862}
   - 114: {fileID: 1658030861}
   m_Layer: 0
-  m_Name: RobotArmController
+  m_Name: RobotArmScript
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,4 +1,6 @@
-﻿namespace Assets.Models.Commands
+﻿using Assets.Scripts.View;
+
+namespace Assets.Models.Commands
 {
     public class MoveCommand : Command
     {
@@ -6,7 +8,7 @@
         {
             Direction = dir;
         }
-        public override void Do(RobotArmController robotArm)
+        public override void Do(RobotArm robotArm)
         {
             if (Direction == "right")
             {

@@ -5,11 +5,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Assets.Models;
+using Assets.Scripts.View;
 
 public class NetworkListener : MonoBehaviour
 {
     public Text text;
-    public RobotArmController _RobotArmController;
+    public RobotArm _robotArm;
     public CommandRunner commandRunner;
 
 

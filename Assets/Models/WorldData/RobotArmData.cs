@@ -1,8 +1,8 @@
 ﻿using Assets.Models.WorldData;
 
-public class RobotArm
+public class RobotArmData
 {
-    public RobotArm(int y)
+    public RobotArmData(int y)
     {
         HoldingBlock = new Block();
         Holding = false;

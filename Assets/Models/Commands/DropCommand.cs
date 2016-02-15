@@ -1,8 +1,10 @@
-﻿namespace Assets.Models.Commands
+﻿using Assets.Scripts.View;
+
+namespace Assets.Models.Commands
 {
     public class DropCommand : Command
     {
-        public override void Do(RobotArmController robotArm)
+        public override void Do(RobotArm robotArm)
         {
             world.Drop();
             robotArm.Drop();

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.View;
 using Assets.Scripts.WorldData;
 using UnityEngine;
 
@@ -13,7 +14,7 @@ namespace Assets.Models
             IsDone = false;
         }
 
-        public virtual void Do(RobotArmController robotArm) { }
+        public virtual void Do(RobotArm robotArm) { }
         public void Stop()
         {
             IsDone = true;

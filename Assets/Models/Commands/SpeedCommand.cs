@@ -1,4 +1,6 @@
-﻿namespace Assets.Models.Commands
+﻿using Assets.Scripts.View;
+
+namespace Assets.Models.Commands
 {
     public class SpeedCommand : Command
     {
@@ -6,7 +8,7 @@
         {
             Speed = speed;
         }
-        public override void Do(RobotArmController robotArm)
+        public override void Do(RobotArm robotArm)
         {
             robotArm.SetSpeed(Speed);
 

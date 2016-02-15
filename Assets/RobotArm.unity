@@ -188,11 +188,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78c99825fdfcb34ea9fb225a50f1ec3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
-  floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
-  wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
-  wallExtendModel: {fileID: 100000, guid: 53a95d7d96d494c4da10ea5ee70b7a39, type: 3}
-  blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
   robotArmModel: {fileID: 100000, guid: e2592d04e2fae0c4bb9dd2e5d5e89a6d, type: 3}
   speedMeter: {fileID: 0}
   sectionBuilder: {fileID: 0}
@@ -222,6 +217,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83a994c3dc93a1247abbccea9799c206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
+  floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
+  wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
+  wallExtendModel: {fileID: 100000, guid: 53a95d7d96d494c4da10ea5ee70b7a39, type: 3}
+  blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
 --- !u!114 &159257699
 MonoBehaviour:
   m_ObjectHideFlags: 0

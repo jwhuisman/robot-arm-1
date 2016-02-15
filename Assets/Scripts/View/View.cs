@@ -31,8 +31,8 @@ namespace Assets.Scripts.View
         public void UpdateView()
         {
             UpdateWorld();
-            CheckBlocksToRender();
 
+            sectionBuilder.CheckSectionsToRender();
             sectionBuilder.CheckSections();
         }
         public void UpdateWorld()
@@ -128,32 +128,6 @@ namespace Assets.Scripts.View
             spacing = (float)sectionWidthTotal / (float)sectionWidth;
 
             sectionBuilder.SetSectionSize(sectionWidthTotal, sectionWidth, spacing);
-        }
-        public void CheckBlocksToRender()
-        {
-            GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block");
-
-            foreach (GameObject block in blocks)
-            {
-                float blockX = Camera.main.WorldToViewportPoint(block.transform.position).x;
-                bool inView = blockX >= -.1 && blockX <= 1.1 ? true : false;
-
-                Renderer rend = block.GetComponent<Renderer>();
-                if (inView)
-                {
-                    if (!rend.enabled)
-                    {
-                        block.GetComponent<Renderer>().enabled = true;
-                    }
-                }
-                else if (!inView)
-                {
-                    if (rend.enabled)
-                    {
-                        block.GetComponent<Renderer>().enabled = false;
-                    }
-                }
-            }
         }
 
 

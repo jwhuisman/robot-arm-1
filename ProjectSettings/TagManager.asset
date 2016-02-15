@@ -12,6 +12,7 @@ TagManager:
   - SpeedMeterPointer
   - Assembly
   - Wall
+  - Section
   layers:
   - Default
   - TransparentFX

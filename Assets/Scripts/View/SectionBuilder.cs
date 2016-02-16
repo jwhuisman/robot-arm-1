@@ -20,10 +20,7 @@ namespace Assets.Scripts.View
         public void Start()
         {
             _globals = GameObject.Find("Globals").GetComponent<Globals>();
-            _view = GameObject.Find("View");
-            _cubes = GameObject.Find("Cubes");
             _world = _globals.world;
-            _robotArmData = _world.RobotArm;
             _factory = GameObject.Find("Factory");
 
             CreateStartSections();
@@ -45,11 +42,9 @@ namespace Assets.Scripts.View
             _currentSection.tag = "Section";
             _currentSection.transform.parent = _factory.transform;
             _currentSection.transform.position = new Vector3((sectionId * sectionWidthTotal) + (sectionWidthTotal / 2), 0);
-            Instantiate(_currentSection);
 
             _currentBlocks = new GameObject("Blocks");
             _currentBlocks.transform.parent = _currentSection.transform;
-            Instantiate(_currentBlocks);
 
             GenerateFactory(sectionId);
 
@@ -70,14 +65,14 @@ namespace Assets.Scripts.View
             float halfW = width / 2;
             float posX = halfW + (sectionId * width);
             float posY = width;
-            float posFloorZ = -width;
+            float posFloorZ = 0;
             float posWallZ = halfW;
 
             int amountF = 2;
             int amountW = 4;
 
             InstantiateAssemblyLine(sectionId, posX);
-            InstantiateFloor(sectionId, posX, posFloorZ, amountF);
+            InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
             InstantiateWall(sectionId, posX, posY, posWallZ, amountW);
         }
         public void GenerateBlocks(int stackX)
@@ -97,13 +92,12 @@ namespace Assets.Scripts.View
             assembly.transform.parent = _currentSection.transform;
             assembly.name = "Assembly";
             assembly.tag = "Assembly";
-            assembly.transform.position = new Vector3(x - .5f, -.5f);
+            assembly.transform.position = new Vector3(x - .5f, -1.5f);
         }
-        public void InstantiateFloor(int sectionId, float x, float z, int amount = 1)
+        public void InstantiateFloor(int sectionId, float x, float z, float width, int amount = 1)
         {
             GameObject floorT = new GameObject("Floor");
             floorT.transform.parent = _currentSection.transform;
-            Instantiate(floorT);
 
             for (int i = 0; i < amount; i++)
             {
@@ -111,14 +105,13 @@ namespace Assets.Scripts.View
                 floor.transform.parent = floorT.transform;
                 floor.name = "Floor_" + i;
                 floor.tag = "Floor";
-                floor.transform.position = new Vector3(x - .5f, -.5f, z * (i + 1));
+                floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
         }
         public void InstantiateWall(int sectionId, float x, float y, float z, int amount = 1)
         {
             GameObject wallT = new GameObject("Wall");
             wallT.transform.parent = _currentSection.transform;
-            Instantiate(wallT);
 
             for (int i = 0; i < amount; i++)
             {
@@ -145,7 +138,7 @@ namespace Assets.Scripts.View
         }
 
         // check for generating new section
-        public void CheckSections()
+        public void CheckSectionsToCreate()
         {
             SectionCheck check = NeedNewSection();
             if (initialized && check.NeedNew)
@@ -295,11 +288,7 @@ namespace Assets.Scripts.View
 
         private bool initialized = false;
 
-        private GameObject _view;
-        private GameObject _cubes;
         private GameObject _factory;
-        private GameObject _robotArm;
-        private RobotArmData _robotArmData;
         private Globals _globals;
         private World _world;
     }

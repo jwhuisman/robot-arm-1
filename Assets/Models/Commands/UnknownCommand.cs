@@ -2,14 +2,12 @@
 
 namespace Assets.Models.Commands
 {
-    public class ScanCommand : Command
+    public class UnknownCommand : Command
     {
         public override void Do(RobotArm robotArm)
         {
-            message = "Color: " + world.Scan();
-            robotArm.Scan();
-
             IsDone = true;
+            message = "I dont even";
         }
     }
 }

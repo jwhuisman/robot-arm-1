@@ -32,8 +32,8 @@ namespace Assets.Scripts.View
         {
             UpdateWorld();
 
+            sectionBuilder.CheckSectionsToCreate();
             sectionBuilder.CheckSectionsToRender();
-            sectionBuilder.CheckSections();
         }
         public void UpdateWorld()
         {
@@ -65,7 +65,6 @@ namespace Assets.Scripts.View
             _globals = GameObject.Find("Globals").GetComponent<Globals>();
             _view = GameObject.Find("View");
 
-            _cubes = GameObject.Find("Cubes");
             _world = _globals.world;
             _robotArmData = _world.RobotArm;
 
@@ -132,18 +131,13 @@ namespace Assets.Scripts.View
 
 
         // privates
-        private List<int> instantiatedStacks = new List<int>();
         private int sectionWidthTotal;
         private int sectionWidth;
         private float spacing;
 
-        private Material[] oldMaterials = new Material[2];
-        private GameObject lastBlock;
         private bool wasHolding = false;
 
         private GameObject _view;
-        private GameObject _cubes;
-        private GameObject _factory;
         private GameObject _robotArm;
         private RobotArmData   _robotArmData;
         private Globals    _globals;

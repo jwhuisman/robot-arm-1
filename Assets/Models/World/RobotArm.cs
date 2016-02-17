@@ -1,6 +1,4 @@
-﻿using Assets.Models.World;
-
-public class RobotArm
+﻿public class RobotArm
 {
     public RobotArm()
     {

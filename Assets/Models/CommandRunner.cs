@@ -18,14 +18,15 @@ namespace Assets.Models
             {
                 if (Queue.Count != 0)
                 {
-                    Next();
+                    Debug.Log("Next one!");
+                    //Next();
                 }
             }
 
             if (firstCommand && Queue.Count != 0)
             {
                 firstCommand = false;
-                Next();
+                //Next();
             }
         }
 
@@ -33,10 +34,13 @@ namespace Assets.Models
         {
             Queue.Enqueue(cmd);
         }
+
         public void Next()
         {
+            Debug.Log("Next command!");
             currentCmd = Queue.Dequeue();
             currentCmd.Do(robotArmController);
+            
         }
 
         private bool firstCommand = true;

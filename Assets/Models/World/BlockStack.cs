@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
 
-namespace Assets.Models.World
+public class BlockStack
 {
-    public class BlockStack
+    public BlockStack(int id)
     {
-        public BlockStack(int id)
-        {
-            Blocks = new Stack<Block>();
-            Id = id;
-        }
-
-        public Stack<Block> Blocks { get; set; }
-        public int Id { get; set; }
+        Blocks = new Stack<Block>();
+        Id = id;
     }
+
+    public Stack<Block> Blocks { get; set; }
+    public int Id { get; set; }
 }

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class RobotArmController : MonoBehaviour
 {
-    public GameObject robotArm;
 
     //---------------------------------------------------------//
     //   this Controller should probably be taken apart.       //
@@ -15,23 +14,10 @@ public class RobotArmController : MonoBehaviour
     //   for that we also need to change the commands          //
     //---------------------------------------------------------//
 
+    public GameObject robotArm;
 
     // test text
     public Text speedText;
-
-    // lerping related
-    private Vector3 _startPosition;
-    private Vector3 _endPosition;
-    private bool _isLerping;
-    private float percentageComplete;
-    private float _timeStartedLerping;
-    public  float timeTakenDuringLerp;
-
-    // pick up, put down a block related.
-    public  bool currentlyHolding = false;
-    private bool goPickUpBlock = false;
-    private bool goPutDownBlock = false;
-    private bool goUpFromPlane = false;
     
     private float mapBoundaryTop;
 
@@ -46,62 +32,27 @@ public class RobotArmController : MonoBehaviour
     public float maxAngle = 240;
     public float rotSpeed = 3f;
     public bool rotateNeedle = false;
+    public Vector3 targetPosition;
 
 
     public void Start()
     {
         _globals = GameObject.Find("Globals").GetComponent<Globals>();
+        _view = GameObject.Find("View").GetComponent<View>();
+        _animator = GetComponent<Animator>();
+
         _world = _globals.world;
 
         UpdateArmHeight();
 
-        timeTakenDuringLerp = 0.5f;
-        speedText.text = "Speed: " + timeTakenDuringLerp + " seconds";
-       
         InitNeedle();
     }
 
-
     public void Update()
-    {   
-        // Actions after the animation "going down" is completed.
-        if (percentageComplete == 1f && goPickUpBlock)
-        {
-            goPickUpBlock = false;
-            GrabRelease(true);
-        }
-        if (percentageComplete == 1f && goPutDownBlock)
-        {
-            goPutDownBlock = false;
-            GrabRelease(false);
-        }
-        if (percentageComplete == 1f && goUpFromPlane)
-        {
-            goUpFromPlane = false;
-            StartLerping(Vector3.up, mapBoundaryTop);
-        }
-
+    {
         if (rotateNeedle)
         {
             RotateNeedleTowards();
-        }
-    }
-    public void FixedUpdate()
-    {
-        if (_isLerping)
-        {
-            float timeSinceStarted = Time.time - _timeStartedLerping;
-            percentageComplete = timeSinceStarted / timeTakenDuringLerp;
-            
-            robotArm.transform.position = Vector3.Lerp(_startPosition, _endPosition, percentageComplete);
-
-            if (percentageComplete >= 1.0f)
-            {
-                UpdateArmHeight();
-
-                percentageComplete = 1.0f;
-                _isLerping = false;
-            }
         }
     }
 
@@ -129,17 +80,17 @@ public class RobotArmController : MonoBehaviour
     // speed meter stuff
     public void UpdateSpeed(float speed)
     {
-        float time = timeTakenDuringLerp;
+        //float time = timeTakenDuringLerp;
 
-        if (speed <= 100 && speed >= 0)
-        {
-            time = (100f - speed) / 100f;
-            speedText.text = "Speed: " + time + " seconds";
+        //if (speed <= 100 && speed >= 0)
+        //{
+        //    time = (100f - speed) / 100f;
+        //    speedText.text = "Speed: " + time + " seconds";
 
-            SetSpeedMeter(time);
+        //    SetSpeedMeter(time);
 
-            timeTakenDuringLerp = time;
-        }
+        //    timeTakenDuringLerp = time;
+        //}
     }
     public void InitNeedle()
     {
@@ -147,7 +98,7 @@ public class RobotArmController : MonoBehaviour
         angleY = needle.transform.rotation.eulerAngles.y;
         angleZ = needle.transform.rotation.eulerAngles.z;
 
-        SetNeedle(timeTakenDuringLerp);
+        //SetNeedle(timeTakenDuringLerp);
     }
     public void SetSpeedMeter(float time)
     {
@@ -186,110 +137,85 @@ public class RobotArmController : MonoBehaviour
         return -(maxAngle - (maxAngle * time));
     }
 
+    // animator stuff
+    public void GrabStateScript()
+    {
+        if (_world.RobotArm.X != robotArm.transform.position.x)
+        {
+            Debug.Log("ERROR: RobotArm View does not have the same position as the RobotArm World.");
+        }
 
+        GameObject blockBeneath = _view.FindBlockAtX(_world.RobotArm.X);
+        blockBeneath.transform.parent = robotArm.transform;
+    }
+    public void PositionCalculateStateScript()
+    {
+        mapBoundaryTop = GetHighestCubeY();
+        targetPosition = new Vector3(transform.position.x, mapBoundaryTop, transform.position.z);
+
+        _animator.SetTrigger("Next");
+    }
+
+    
     // these should trigger the animations
     public void MoveLeft()
     {
-        _world.MoveLeft();
+
+        //_world.MoveLeft();
     }
     public void MoveRight()
     {
-        _world.MoveRight();
+        //_world.MoveRight();
     }
     public void MoveUp()
     {
-        _world.MoveUp();
+        //_world.MoveUp();
     }
     public void Grab()
     {
-        _world.Grab();
+        bool blockDetected = false;
+        float positionY = GetHighestCubeY();
+
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Block")
+            {
+                blockDetected = true;
+            }
+        }
+
+        // if world.RobotArm holds a block, then View.RobotArm also needs to pick up a block.
+        if (_view.FindBlockAtX(_world.RobotArm.X) == null)
+        {
+            // positionY should be changed to the position of the assembly line (findWithTag)
+            positionY = 1.5f;
+            _animator.SetBool("GoPickUp", false);
+        }
+        else if (_world.RobotArm.Holding && blockDetected)
+        {
+            positionY = _view.FindBlockAtX(_world.RobotArm.X).transform.position.y + 2.5f;
+            _animator.SetBool("GoPickUp", false);
+        }
+        else if (_world.RobotArm.Holding)
+        {
+            positionY = _view.FindBlockAtX(_world.RobotArm.X).transform.position.y + 1.5f;
+            _animator.SetBool("GoPickUp", true);
+        }
+
+        targetPosition = new Vector3(transform.position.x, positionY, transform.position.z);
+        this._animator.SetTrigger("PickUp animation");
     }
     public void Drop()
     {
-        _world.Drop();
+        //_world.Drop();
     }
-
-
-    // old unused stuff
-    public void StartLerping(Vector3 direction, float spaces)
+    public void Scan()
     {
-        if (!_isLerping || percentageComplete >= 1.0f)
-        {
-            _isLerping = true;
-            _timeStartedLerping = Time.time;
-            _startPosition = robotArm.transform.position;
-            _endPosition = robotArm.transform.position + direction * spaces;
-        }
-    }
-    public void StartPickUpPutDown(bool instruction)
-    {
-        RaycastHit raycastNearestDownwardObject;
-        if (Physics.Raycast(robotArm.transform.position, Vector3.down, out raycastNearestDownwardObject))
-        {
-            // if : the plane is raycasted the robotArm will go down, touch it, and go back up.
-            // else : instruction = true : pick up a block. false : put down a block.
-
-            // Note: By resetting the precentage we ensure everything goes consecutively and the robotArm will go up after completing the "going down" animation.
-            //if (raycastNearestDownwardObject.transform.name == plane.name)
-            //{
-            //    // Note: there is nothing to pick up because the robotArm raycasted the plane and the robotArm doesn't hold a block.
-            //    float distanceTillHitPlane = raycastNearestDownwardObject.distance - (robotArm.transform.localScale.y / 2 ) ;
-            //    StartLerping(Vector3.down, distanceTillHitPlane);
-
-            //    percentageComplete = 0f;
-            //    goUpFromPlane = true;
-            //}
-            if (instruction && !currentlyHolding)
-            {
-                float distanceTillHitBlock = raycastNearestDownwardObject.distance - (robotArm.transform.localScale.y / 2);
-                StartLerping(Vector3.down, distanceTillHitBlock);
-                
-                percentageComplete = 0f;
-                goPickUpBlock = true;
-            }
-            else if (!instruction && currentlyHolding)
-            {
-                // casts a raycast from the point of the block, downwards.
-                RaycastHit underneathBlock;
-                if (Physics.Raycast(raycastNearestDownwardObject.transform.position, Vector3.down, out underneathBlock))
-                {
-                    float distanceUnderneathBlock = underneathBlock.distance - (raycastNearestDownwardObject.transform.lossyScale.y / 2 );
-                    StartLerping(Vector3.down, distanceUnderneathBlock); 
-
-                    percentageComplete = 0f;
-                    goPutDownBlock = true;
-                }
-            }
-        }
-    }
-    public void GrabRelease(bool instruction)
-    {
-        RaycastHit blockDirectlyUnderneath;
-        if (Physics.Raycast(robotArm.transform.position, Vector3.down, out blockDirectlyUnderneath))
-        {
-            var block = GameObject.Find(blockDirectlyUnderneath.transform.name);
-
-            // instruction =  If true : grab a block. If false : release a block.  
-            if (instruction && !currentlyHolding)
-            {
-                if (block.transform.parent = robotArm.transform)
-                {
-                    currentlyHolding = true;
-                }
-            } else if (!instruction && currentlyHolding) {
-                if (block.transform.parent = GameObject.Find("Cubes").transform)
-                {
-                    currentlyHolding = false;
-                }
-            }
-
-            // after grabbing or releasing a block, go up to the mapBoundaryTop.
-            float distanceMapBoundary = mapBoundaryTop - robotArm.transform.position.y;
-            StartLerping(Vector3.up, distanceMapBoundary);
-        }
+        this._animator.SetTrigger("Scan animation");
     }
 
-
-    private Globals _globals;
-    private World _world;
+    private Globals  _globals;
+    private World    _world;
+    private Animator _animator;
+    private View     _view;
 }

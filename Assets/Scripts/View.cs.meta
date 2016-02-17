@@ -1,12 +1,18 @@
 fileFormatVersion: 2
 guid: c78c99825fdfcb34ea9fb225a50f1ec3
-timeCreated: 1454575506
+timeCreated: 1455182996
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - assemblyLineModel: {instanceID: 0}
+  - floorModel: {instanceID: 0}
+  - wallModel: {instanceID: 0}
+  - blockModel: {instanceID: 0}
+  - speedMeterModel: {instanceID: 0}
+  - robotArmModel: {instanceID: 0}
   executionOrder: 150
-  icon: {instanceID: 0}
+  icon: {fileID: 864586104465068316, guid: 0000000000000000d000000000000000, type: 0}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

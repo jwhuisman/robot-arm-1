@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using Assets.Models.World;
 
 public class World
 {
@@ -52,7 +51,7 @@ public class World
         if (!RobotArm.Holding)
         {
             int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
-
+            
             RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
             RobotArm.Holding = true;
         }
@@ -69,7 +68,18 @@ public class World
             RobotArm.Holding = false;
         }
     }
+    public string Scan()
+    {
+        if (RobotArm.Holding)
+        {
+            return RobotArm.HoldingBlock.Color;
+        }
+        else
+        {
+            return "there is no block to scan";
+        }
 
+    }
     private System.Random rnd = new System.Random();
     private int stackMin = -10000;
     private int stackMax = 10000;

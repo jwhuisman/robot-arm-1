@@ -1,6 +1,4 @@
-﻿using Assets.Models.World;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -25,7 +23,6 @@ namespace Assets.Scripts
 
             InitRobotArm();
 
-
             InitSections();
         }
 
@@ -34,26 +31,11 @@ namespace Assets.Scripts
         {
             UpdateWorld();
 
-            _robotArm.transform.position = RobotArmToView(_robotArmData);
+            //_robotArm.transform.position = RobotArmToView(_robotArmData);
         }
         public void UpdateWorld()
         {
             _world = _globals.world;
-
-            if (_robotArmData.Holding)
-            {
-                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.transform.position.y - 1f);
-                wasHolding = true;
-            }
-            else if (wasHolding)
-            {
-                int i = _world.Stacks.FindIndex(s => s.Id == _robotArmData.X);
-                float y = _world.Stacks[i].Blocks.Count() - 1;
-
-                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, y);
-
-                wasHolding = false;
-            }
         }
 
         // initialize
@@ -65,6 +47,7 @@ namespace Assets.Scripts
             _cubes = GameObject.Find("Cubes");
             _world = _globals.world;
             _robotArmData = _world.RobotArm;
+            _robotArmController = GameObject.Find("RobotArmController");
         }
         public void InitSectionSize()
         {
@@ -98,13 +81,15 @@ namespace Assets.Scripts
         }
         public void CreateRobotArm(RobotArm robotArm)
         {
-            GameObject arm = Instantiate(robotArmModel);
+            GameObject arm = GameObject.Find("robot-hand");
 
-            arm.name = "RobotArm";
-            arm.tag  = "RobotArm";
-            arm.transform.parent = _view.transform;
+            //arm.name = "RobotArm";
+            //arm.tag  = "RobotArm";
+            //arm.transform.parent = _view.transform;
             arm.transform.position = new Vector3(robotArm.X, robotArm.Y, 0);
             arm.transform.rotation = Quaternion.identity;
+            //arm.GetComponent<Animator>().runtimeAnimatorController = _robotArmController.GetComponent<Animator>().runtimeAnimatorController;
+
 
             arm.AddComponent<BoxCollider>(); // dont need this in the future
 
@@ -243,7 +228,23 @@ namespace Assets.Scripts
             return GameObject.Find("Block-" + Id);
         }
 
+        public GameObject FindBlockAtX(int x)
+        {
+            GameObject[] stack = GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x)).ToArray();
 
+            if (stack.Count() != 0)
+            {
+                float y = stack.Max(s => s.transform.position.y);
+                return stack.Where(s => s.transform.position.y == y).SingleOrDefault();
+            }
+
+            return null;
+        }
+
+        public float WorldToView(int x)
+        {
+            return x * spacing;
+        }
         // privates
         private List<int> instantiatedStacks = new List<int>();
 
@@ -256,6 +257,7 @@ namespace Assets.Scripts
         private GameObject _cubes;
         private GameObject _factory;
         private GameObject _robotArm;
+        private GameObject _robotArmController;
         private RobotArm   _robotArmData;
         private Globals    _globals;
         private World      _world;

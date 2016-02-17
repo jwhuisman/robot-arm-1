@@ -34,6 +34,10 @@ namespace Assets.Models
             else if (instruction == "speed")
             {
                 return new SpeedCommand(int.Parse(parameter));
+            }
+            else if (instruction == "scan")
+            {
+                return new ScanCommand();
             } else
             {
                 return null;

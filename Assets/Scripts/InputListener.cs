@@ -18,7 +18,6 @@ public class InputListener : MonoBehaviour
             Application.Quit();
         }
 
-
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             commandRunner.Add(new DropCommand());
@@ -34,6 +33,10 @@ public class InputListener : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             commandRunner.Add(new MoveCommand("right"));
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            commandRunner.Add(new ScanCommand());
         }
 
 

@@ -6,8 +6,8 @@ namespace Assets.Models.Commands
     {
         public override void Do(RobotArm robotArm)
         {
+            message = "What is this I dont even";
             IsDone = true;
-            message = "I dont even";
         }
     }
 }

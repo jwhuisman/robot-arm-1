@@ -12,9 +12,16 @@ namespace Assets.Scripts.View
         // models
         public GameObject assemblyLineModel;
         public GameObject floorModel;
+        public GameObject blockModel;
+
         public GameObject wallModel;
         public GameObject wallExtendModel;
-        public GameObject blockModel;
+        public GameObject wallInsetModel;
+        public GameObject wallInsetExtendModel;
+        public GameObject wallInsetLeftModel;
+        public GameObject wallInsetLeftExtendModel;
+        public GameObject wallInsetRightModel;
+        public GameObject wallInsetRightExtendModel;
 
         // start
         public void Start()
@@ -22,6 +29,8 @@ namespace Assets.Scripts.View
             _globals = GameObject.Find("Globals").GetComponent<Globals>();
             _world = _globals.world;
             _factory = GameObject.Find("Factory");
+
+            rnd = new System.Random();
 
             CreateStartSections();
 
@@ -33,10 +42,10 @@ namespace Assets.Scripts.View
         {
             for (int i = -3; i < 3; i++)
             {
-                CreateSection(i);
+                CreateSection(i, 0);
             }
         }
-        public void CreateSection(int sectionId)
+        public void CreateSection(int sectionId, int dir = 0)
         {
             _currentSection = new GameObject("Section_"+sectionId);
             _currentSection.tag = "Section";
@@ -46,7 +55,9 @@ namespace Assets.Scripts.View
             _currentBlocks = new GameObject("Blocks");
             _currentBlocks.transform.parent = _currentSection.transform;
 
-            GenerateFactory(sectionId);
+            int type = GenerateWallType(sectionId, dir);
+
+            GenerateFactory(sectionId, type);
 
             int startX = sectionId * sectionWidth;
             for (int x = startX; x < startX + sectionWidth; x++)
@@ -54,12 +65,12 @@ namespace Assets.Scripts.View
                 GenerateBlocks(x);
             }
 
-            instantiatedSections.Add(sectionId);
+            instantiatedSections.Add(new Section(sectionId, type));
             _currentSection = null;
         }
 
         // generation
-        public void GenerateFactory(int sectionId)
+        public void GenerateFactory(int sectionId, int type)
         {
             float width = sectionWidthTotal;
             float halfW = width / 2;
@@ -73,7 +84,7 @@ namespace Assets.Scripts.View
 
             InstantiateAssemblyLine(sectionId, posX);
             InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
-            InstantiateWall(sectionId, posX, posY, posWallZ, amountW);
+            InstantiateWall(sectionId, posX, posY, posWallZ, type, amountW);
         }
         public void GenerateBlocks(int stackX)
         {
@@ -84,6 +95,52 @@ namespace Assets.Scripts.View
                 InstantiateBlock(stackX, block);
             }
         }
+        public int GenerateWallType(int sectionId, int dir)
+        {
+            // types:
+            // 0 = normal
+            // 1 = inset
+            // 2 = inset corner left
+            // 3 = inset corner right
+
+            if (dir == 0) { return 0; }
+
+            int prevType = instantiatedSections.Where(s => s.Id == sectionId - dir).SingleOrDefault().Type;
+
+            return GetRandom(prevType, dir);
+        }
+        public int GetRandom(int prevType, int dir)
+        {
+            int type = rnd.Next(0, 4);
+
+            if (dir == 0)
+            {
+                type = 0;
+            }
+            else if (dir == -1)
+            {
+                if (prevType == 0 && type == 1 || prevType == 0 && type == 2 ||
+                    prevType == 1 && type == 3 || prevType == 1 && type == 0 ||
+                    prevType == 2 && type == 3 || prevType == 2 && type == 1 || prevType == 2 && type == 2 ||
+                    prevType == 3 && type == 0 || prevType == 3 && type == 3)
+                {
+                    type = GetRandom(prevType, dir);
+                }
+            }
+            else if (dir == 1)
+            {
+                if (prevType == 0 && type == 1 || prevType == 0 && type == 3 ||
+                    prevType == 1 && type == 2 || prevType == 1 && type == 0 ||
+                    prevType == 2 && type == 2 || prevType == 2 && type == 0 ||
+                    prevType == 3 && type == 1 || prevType == 3 && type == 2 || prevType == 3 && type == 3)
+                {
+                    type = GetRandom(prevType, dir);
+                }
+            }
+
+            return type;
+        }
+
 
         // instantiation
         public void InstantiateAssemblyLine(int sectionId, float x)
@@ -108,14 +165,20 @@ namespace Assets.Scripts.View
                 floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
         }
-        public void InstantiateWall(int sectionId, float x, float y, float z, int amount = 1)
+        public void InstantiateWall(int sectionId, float x, float y, float z, int type, int amount = 1)
         {
             GameObject wallT = new GameObject("Wall");
             wallT.transform.parent = _currentSection.transform;
 
+            GameObject wall;
+
             for (int i = 0; i < amount; i++)
             {
-                GameObject wall = i == 0 ? Instantiate(wallModel) : Instantiate(wallExtendModel);
+                wall = (type == 1) ? ((i == 0) ? Instantiate(wallInsetModel) : Instantiate(wallInsetExtendModel)) :
+                       (type == 2) ? ((i == 0) ? Instantiate(wallInsetLeftModel) : Instantiate(wallInsetLeftExtendModel)) :
+                       (type == 3) ? ((i == 0) ? Instantiate(wallInsetRightModel) : Instantiate(wallInsetRightExtendModel)) : 
+                       ((i == 0) ? Instantiate(wallModel) : Instantiate(wallExtendModel));
+
                 wall.transform.parent = wallT.transform;
                 wall.name = "Wall_" + i;
                 wall.tag = "Wall";
@@ -138,23 +201,10 @@ namespace Assets.Scripts.View
         }
 
         // check for generating new section
-        public void CheckSectionsToCreate()
-        {
-            SectionCheck check = NeedNewSection();
-            if (initialized && check.NeedNew)
-            {
-                int newSectionId = check.Section + check.Dir;
-
-                if (!instantiatedSections.Contains(newSectionId))
-                {
-                    CreateSection(newSectionId);
-                }
-            }
-        }
         public SectionCheck NeedNewSection()
         {
-            int min = instantiatedSections.Min(sId => sId);
-            int max = instantiatedSections.Max(sId => sId);
+            int min = instantiatedSections.Min(s => s.Id);
+            int max = instantiatedSections.Max(s => s.Id);
 
             GameObject minSection = GameObject.Find("Section_" + min);
             GameObject maxSection = GameObject.Find("Section_" + max);
@@ -179,6 +229,19 @@ namespace Assets.Scripts.View
             }
 
             return new SectionCheck();
+        }
+        public void CheckSectionsToCreate()
+        {
+            SectionCheck check = NeedNewSection();
+            if (initialized && check.NeedNew)
+            {
+                int newSectionId = check.Section + check.Dir;
+
+                if (!instantiatedSections.Any(s => s.Id == newSectionId))
+                {
+                    CreateSection(newSectionId, check.Dir);
+                }
+            }
         }
         public void CheckSectionsToRender()
         {
@@ -220,7 +283,6 @@ namespace Assets.Scripts.View
             sectionWidth = width;
             spacing = space;
         }
-
 
         // misc
         public Material[] SetColors(Material[] originals, string color)
@@ -278,9 +340,10 @@ namespace Assets.Scripts.View
 
 
         // privates
-        private List<int> instantiatedSections = new List<int>();
+        private List<Section> instantiatedSections = new List<Section>();
         private GameObject _currentSection;
         private GameObject _currentBlocks;
+        private System.Random rnd;
 
         private int sectionWidthTotal;
         private int sectionWidth;

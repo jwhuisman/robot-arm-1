@@ -170,11 +170,9 @@ namespace Assets.Scripts.View
             GameObject wallT = new GameObject("Wall");
             wallT.transform.parent = _currentSection.transform;
 
-            GameObject wall;
-
             for (int i = 0; i < amount; i++)
             {
-                wall = (type == 1) ? ((i == 0) ? Instantiate(wallInsetModel) : Instantiate(wallInsetExtendModel)) :
+                GameObject wall = (type == 1) ? ((i == 0) ? Instantiate(wallInsetModel) : Instantiate(wallInsetExtendModel)) :
                        (type == 2) ? ((i == 0) ? Instantiate(wallInsetLeftModel) : Instantiate(wallInsetLeftExtendModel)) :
                        (type == 3) ? ((i == 0) ? Instantiate(wallInsetRightModel) : Instantiate(wallInsetRightExtendModel)) : 
                        ((i == 0) ? Instantiate(wallModel) : Instantiate(wallExtendModel));

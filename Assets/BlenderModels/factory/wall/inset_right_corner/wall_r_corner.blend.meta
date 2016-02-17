@@ -12,6 +12,9 @@ ModelImporter:
     100008: platform_stuff
     100010: platform_stuff2
     100012: Circle
+    100014: railing
+    100016: railing-top
+    100018: wall
     400000: //RootNode
     400002: Plane
     400004: platform
@@ -19,6 +22,9 @@ ModelImporter:
     400008: platform_stuff
     400010: platform_stuff2
     400012: Circle
+    400014: railing
+    400016: railing-top
+    400018: wall
     2300000: //RootNode
     2300002: Plane
     2300004: platform
@@ -26,6 +32,9 @@ ModelImporter:
     2300008: platform_stuff
     2300010: platform_stuff2
     2300012: Circle
+    2300014: railing
+    2300016: railing-top
+    2300018: wall
     3300000: //RootNode
     3300002: Plane
     3300004: platform
@@ -33,12 +42,18 @@ ModelImporter:
     3300008: platform_stuff
     3300010: platform_stuff2
     3300012: Circle
+    3300014: railing
+    3300016: railing-top
+    3300018: wall
     4300000: Plane
     4300002: platform2
     4300004: platform
     4300006: platform_stuff
     4300008: platform_stuff2
     4300010: Circle
+    4300012: railing-top
+    4300014: railing
+    4300016: wall
     7400000: Default Take
     9500000: //RootNode
   materials:

@@ -4,10 +4,19 @@ namespace Assets.Models.Commands
 {
     public class UnknownCommand : Command
     {
+        public UnknownCommand(string instruction)
+        {
+            Instruction = instruction;
+        }
+
         public override void Do(RobotArm robotArm)
         {
-            message = "What is this I dont even";
+            message = "I dont know what \"" + Instruction + "\" means";
             IsDone = true;
+
+            networkListener.ReturnMessage(message);
         }
+
+        public string Instruction { get; set; }   
     }
 }

@@ -22,6 +22,9 @@ namespace Assets.Models.Commands
             }
 
             IsDone = true;
+
+
+            networkListener.ReturnMessage(message);
         }
 
         public string Direction { get; set; }

@@ -10,6 +10,8 @@ namespace Assets.Models.Commands
             robotArm.Drop();
 
             IsDone = true;
+
+            networkListener.ReturnMessage(message);
         }
     }
 }

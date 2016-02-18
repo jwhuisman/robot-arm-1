@@ -41,7 +41,7 @@ namespace Assets.Models
             }
             else
             {
-                return new UnknownCommand();
+                return new UnknownCommand(data);
             }
         }
     }

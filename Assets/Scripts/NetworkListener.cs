@@ -85,7 +85,7 @@ public class NetworkListener : MonoBehaviour
         _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
 
         connected = true;
-        ReturnMessage("Connected to the Robot Arm");
+        ReturnMessage("hello");
         Debug.Log("Client connected.");
 
         // start listening for a new client

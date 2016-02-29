@@ -129,7 +129,7 @@ public class NetworkListener : MonoBehaviour
                 // byte 10 the mostly used, thats why it gets the functionality.
 
                 // for some reason this doesnt work...
-                message.Remove(c, 1);
+                //message.Remove(c, 1);
             }
             else
             {

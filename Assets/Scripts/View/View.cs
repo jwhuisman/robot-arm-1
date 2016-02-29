@@ -20,7 +20,7 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
-            InitObjects();
+            InitComponents();
 
             InitRobotArm();
 
@@ -60,7 +60,7 @@ namespace Assets.Scripts.View
         }
         
         // initialize
-        public void InitObjects()
+        public void InitComponents()
         {
             _globals = GameObject.Find("Globals").GetComponent<Globals>();
             _view = GameObject.Find("View");
@@ -97,7 +97,9 @@ namespace Assets.Scripts.View
         }
         public GameObject FindBlockAtX(int x)
         {
-            GameObject[] stack = GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x)).ToArray();
+            GameObject[] stack = (!_world.RobotArm.Holding) 
+                ? GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x)).ToArray() 
+                : GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x) && b.name != "Block-" + _world.RobotArm.HoldingBlock.Id).ToArray();
 
             if (stack.Count() != 0)
             {

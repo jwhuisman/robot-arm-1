@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
         Vector3 newCam = cam;
 
         float zDiff = (armPos.y - roboStartY);
-        float yDiff = Math.Abs(cam.z - camStartZ) / 2;
+        float yDiff = Math.Abs(cam.z - camStartZ) / 1.8f;
 
         newCam.x = armPos.x;
         newCam.z = (armPos.y > roboStartY) ? camStartZ - zDiff : camStartZ;

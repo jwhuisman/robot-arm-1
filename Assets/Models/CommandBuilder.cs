@@ -21,7 +21,9 @@ namespace Assets.Models
 
             if (instruction == "move")
             {
-                return new MoveCommand(parameter);
+                if (parameter == "right" || parameter == "left")
+                    return new MoveCommand(parameter);
+                return new UnknownCommand(data);
             }
             else if (instruction == "grab")
             {
@@ -33,7 +35,12 @@ namespace Assets.Models
             }
             else if (instruction == "speed")
             {
-                return new SpeedCommand(int.Parse(parameter));
+                int speed;
+                bool isInt = int.TryParse(parameter, out speed);
+
+                if (isInt)
+                    return new SpeedCommand(speed);
+                return new UnknownCommand(data);
             }
             else if (instruction == "scan")
             {

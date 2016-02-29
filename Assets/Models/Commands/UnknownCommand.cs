@@ -11,7 +11,7 @@ namespace Assets.Models.Commands
 
         public override void Do(RobotArm robotArm)
         {
-            message = "I dont know what \"" + Instruction + "\" means";
+            message = "nope";
             IsDone = true;
 
             networkListener.ReturnMessage(message);

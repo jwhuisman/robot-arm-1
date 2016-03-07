@@ -84,7 +84,7 @@ namespace Assets.Scripts.WorldData
                 return RobotArm.HoldingBlock.Color;
             }
 
-            return string.Empty;
+            return "none";
         }
 
         private Random rnd = new Random();

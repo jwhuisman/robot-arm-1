@@ -33,7 +33,7 @@ namespace Assets.Models
             }
             else if (instruction == "speed")
             {
-                return new SpeedCommand(int.Parse(parameter));
+                return new SpeedCommand((int)float.Parse(parameter));
             }
             else if (instruction == "scan")
             {

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.View;
+using System.Threading;
 
 namespace Assets.Models.Commands
 {
@@ -22,7 +23,6 @@ namespace Assets.Models.Commands
             }
 
             IsDone = true;
-
 
             networkListener.ReturnMessage(message);
         }

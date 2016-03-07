@@ -13,6 +13,8 @@ namespace Assets.Models.Commands
             robotArm.SetSpeed(Speed);
 
             IsDone = true;
+
+            networkListener.ReturnMessage(message);
         }
 
         public int Speed { get; set; }

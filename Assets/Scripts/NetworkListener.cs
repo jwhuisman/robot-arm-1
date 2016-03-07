@@ -33,7 +33,7 @@ public class NetworkListener : MonoBehaviour
         {
             if (_client != null && _client.Available > 0)
             {
-                string data = FilterDataIntoMessage();
+                string data = GetData();
                 if (data != "")
                 {
                     Debug.Log(string.Format("Message received:\n{0}", data));
@@ -45,6 +45,8 @@ public class NetworkListener : MonoBehaviour
     void OnApplicationQuit()
     {
         ReturnMessage("bye");
+
+        CloseTcpConnection();
     }
 
     public void AddCommand(string data)
@@ -59,10 +61,11 @@ public class NetworkListener : MonoBehaviour
     public void ReturnMessage(string message)
     {
         // sends a message to the telnet client.
-        if (connected)
+        if (connected && _client != null && _client.GetStream() != null)
         {
-            message += Environment.NewLine;
-            _client.GetStream().Write(Encoding.ASCII.GetBytes(message), 0, message.Length);
+            message = message == string.Empty ? "*no answer*" : message;
+
+            _client.GetStream().Write(Encoding.ASCII.GetBytes(message.ToLower()), 0, message.Length);
             _client.GetStream().Flush();
         }
     }
@@ -94,10 +97,28 @@ public class NetworkListener : MonoBehaviour
 
     private void CloseTcpConnection()
     {
-        _client.Close();
+        if (connected)
+        {
+            _client.Close();
+    
+            connected = false;
+            Debug.Log("Client disconnected!");
+        }
+    }
 
-        connected = false;
-        Debug.Log("Client disconnected!");
+    private string GetData()
+    {
+        NetworkStream stream = _client.GetStream();
+
+        StringBuilder data = new StringBuilder();
+        while (stream.DataAvailable)
+        {
+            data.Append((char)stream.ReadByte());
+        }
+
+        AddCommand(data.ToString());
+
+        return data.ToString();
     }
 
     private string FilterDataIntoMessage()

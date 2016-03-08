@@ -29,15 +29,13 @@ public class NetworkListener : MonoBehaviour
 
     void Update()
     {
-        if (connected)
+        if (IsConnected)
         {
-            if (_client != null && _client.Available > 0)
+            string data = GetData();
+            if (data != "")
             {
-                string data = GetData();
-                if (data != "")
-                {
-                    Debug.Log(string.Format("Message received:\n{0}", data));
-                }
+                AddCommand(data);
+                Debug.Log(string.Format("Data received: \n{0}", data));
             }
         }
     }
@@ -61,10 +59,8 @@ public class NetworkListener : MonoBehaviour
     public void ReturnMessage(string message)
     {
         // sends a message to the telnet client.
-        if (connected && _client != null && _client.GetStream() != null)
+        if (IsConnected)
         {
-            message = message == string.Empty ? "*no answer*" : message;
-
             _client.GetStream().Write(Encoding.ASCII.GetBytes(message.ToLower()), 0, message.Length);
             _client.GetStream().Flush();
         }
@@ -78,16 +74,57 @@ public class NetworkListener : MonoBehaviour
         Debug.Log("Started listening..");
     }
 
+    public bool IsConnected
+    {
+        get
+        {
+            try
+            {
+                if (_client != null && _client.Client != null && _client.Client.Connected)
+                {
+                    /* pear to the documentation on Poll:
+                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                     * -or- true if data is available for reading; 
+                     * -or- true if the connection has been closed, reset, or terminated; 
+                     * otherwise, returns false
+                     */
+
+                    // Detect if client disconnected
+                    if (_client.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        byte[] buff = new byte[1];
+                        if (_client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                        {
+                            // Client disconnected
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+
     private void OnAcceptTcpClient(IAsyncResult result)
     {
-        if (connected)
-        {
-            CloseTcpConnection();
-        }
+        CloseTcpConnection();
 
         _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
 
-        connected = true;
         ReturnMessage("hello");
         Debug.Log("Client connected.");
 
@@ -97,11 +134,13 @@ public class NetworkListener : MonoBehaviour
 
     private void CloseTcpConnection()
     {
-        if (connected)
+        _server.Stop();
+
+        if (IsConnected)
         {
+            _client.GetStream().Close();
             _client.Close();
-    
-            connected = false;
+
             Debug.Log("Client disconnected!");
         }
     }
@@ -115,8 +154,6 @@ public class NetworkListener : MonoBehaviour
         {
             data.Append((char)stream.ReadByte());
         }
-
-        AddCommand(data.ToString());
 
         return data.ToString();
     }
@@ -163,8 +200,6 @@ public class NetworkListener : MonoBehaviour
         return message.ToString().ToLower();
     }
 
-
-    private bool connected = false;
 
     private TcpListener _server;
     private TcpClient _client;

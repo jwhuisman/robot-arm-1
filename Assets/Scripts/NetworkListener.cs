@@ -29,9 +29,9 @@ public class NetworkListener : MonoBehaviour
 
     void Update()
     {
-        if (IsConnected)
+        if (IsConnected && _client != null && _client.Available > 0)
         {
-            string data = GetData();
+            string data = FilterDataIntoMessage();
             if (data != "")
             {
                 AddCommand(data);
@@ -42,14 +42,12 @@ public class NetworkListener : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        ReturnMessage("bye");
-
         CloseTcpConnection();
     }
 
     public void AddCommand(string data)
     {
-        var cmd = commandBuilder.BuildCommand(data.ToLower());
+        var cmd = commandBuilder.BuildCommand(data);
         if (cmd != null)
         {
             commandRunner.Add(cmd);
@@ -58,7 +56,6 @@ public class NetworkListener : MonoBehaviour
 
     public void ReturnMessage(string message)
     {
-        // sends a message to the telnet client.
         if (IsConnected)
         {
             _client.GetStream().Write(Encoding.ASCII.GetBytes(message.ToLower()), 0, message.Length);
@@ -138,6 +135,8 @@ public class NetworkListener : MonoBehaviour
 
         if (IsConnected)
         {
+            ReturnMessage("Bye");
+
             _client.GetStream().Close();
             _client.Close();
 
@@ -145,59 +144,37 @@ public class NetworkListener : MonoBehaviour
         }
     }
 
-    private string GetData()
-    {
-        NetworkStream stream = _client.GetStream();
-
-        StringBuilder data = new StringBuilder();
-        while (stream.DataAvailable)
-        {
-            data.Append((char)stream.ReadByte());
-        }
-
-        return data.ToString();
-    }
-
     private string FilterDataIntoMessage()
     {
-        const char NEW_LINE = (char)10;
-        const char CARRIAGE_RETURN = (char)13;
-
-        Debug.Assert(_client != null, "The client is empty.");
-        Debug.Assert(_client.Available > 0, "The client is not available.");
+        char NEW_LINE = (char)10;
+        char CARRIAGE_RETURN = (char)13;
 
         NetworkStream stream = _client.GetStream();
 
-        int c = 0;
         while (stream.DataAvailable)
         {
             int i = stream.ReadByte();
-            if (i == NEW_LINE)
+            char j = Convert.ToChar(i);
+            if (Convert.ToChar(i).Equals(NEW_LINE) || Convert.ToChar(i).Equals(CARRIAGE_RETURN))
             {
                 string msg = message.ToString().ToLower().Replace("\r", "").Replace("\n", "");
+
                 message = new StringBuilder();
 
-                AddCommand(msg);
-
-                return msg.ToString().ToLower();
+                return msg;
             }
-            else if (i == CARRIAGE_RETURN && c > 0)
+            else if (i == CARRIAGE_RETURN)
             {
                 // In some OS'es the byte 13 has the same fucntion as the byte 10.
                 // byte 10 the mostly used, thats why it gets the functionality.
-
-                // for some reason this doesnt work...
-                //message.Remove(c, 1);
             }
             else
             {
                 message.Append((char)i);
             }
-
-            c++;
         }
 
-        return message.ToString().ToLower();
+        return string.Empty;
     }
 
 

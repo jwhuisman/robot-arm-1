@@ -155,7 +155,7 @@ public class NetworkListener : MonoBehaviour
         {
             int i = stream.ReadByte();
             char j = Convert.ToChar(i);
-            if (Convert.ToChar(i).Equals(NEW_LINE) || Convert.ToChar(i).Equals(CARRIAGE_RETURN))
+            if (j.Equals(NEW_LINE) || j.Equals(CARRIAGE_RETURN))
             {
                 string msg = message.ToString().ToLower().Replace("\r", "").Replace("\n", "");
 
@@ -163,14 +163,14 @@ public class NetworkListener : MonoBehaviour
 
                 return msg;
             }
-            else if (i == CARRIAGE_RETURN)
+            else if (j.Equals(CARRIAGE_RETURN))
             {
                 // In some OS'es the byte 13 has the same fucntion as the byte 10.
                 // byte 10 the mostly used, thats why it gets the functionality.
             }
             else
             {
-                message.Append((char)i);
+                message.Append(j);
             }
         }
 

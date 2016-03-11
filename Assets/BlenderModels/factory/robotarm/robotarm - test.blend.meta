@@ -6,26 +6,11 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
-    100002: hand-left
-    100004: hand-right
-    100006: pivot
     400000: //RootNode
-    400002: hand-left
-    400004: hand-right
-    400006: pivot
     2300000: //RootNode
-    2300002: hand-left
-    2300004: hand-right
-    2300006: pivot
     3300000: //RootNode
-    3300002: hand-left
-    3300004: hand-right
-    3300006: pivot
     4300000: Cube
     4300002: Cube_001
-    4300004: pivot
-    4300006: hand-left
-    4300008: hand-right
     7400000: Default Take
     9500000: //RootNode
   materials:
@@ -71,7 +56,7 @@ ModelImporter:
     normalSmoothAngle: 60
     normalImportMode: 0
     tangentImportMode: 3
-  importAnimation: 1
+  importAnimation: 0
   copyAvatar: 0
   humanDescription:
     human: []

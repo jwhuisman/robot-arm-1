@@ -6,7 +6,7 @@ public class CameraController : MonoBehaviour
 {
     void Start()
     {
-        robotArm = GameObject.Find("RobotArm");
+        robotArm = GameObject.Find("robot-hand-holder");
         roboStartY = robotArm.transform.position.y;
         camStartY = transform.position.y; // 5.15
         camStartZ = transform.position.z; // -13.63

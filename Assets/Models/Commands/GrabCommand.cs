@@ -7,11 +7,7 @@ namespace Assets.Models.Commands
         public override void Do(RobotArm robotArm)
         {
             world.Grab();
-            robotArm.Grab();
-
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
+            robotArm.Placement(true);
         }
     }
 }

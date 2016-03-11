@@ -9,20 +9,22 @@ namespace Assets.Models
     {
         public Command()
         {
-            networkListener = GameObject.Find("Scripts").GetComponent<NetworkListener>();
-            world = GameObject.Find("Globals").GetComponent<Globals>().world;
-            IsDone = false;
+            //EventManager.AnimationIsDone += AnimationFinished;
+            networkListener = GameObject.FindWithTag("Scripts").GetComponent<NetworkListener>();
+            world = GameObject.FindWithTag("Scripts").GetComponent<Globals>().world;
             message = "ok";
+            IsDone = false;
         }
 
         public virtual void Do(RobotArm robotArm) { }
-        public void Stop()
+
+        public void AnimationFinished()
         {
-            networkListener.ReturnMessage(message);
             IsDone = true;
+            networkListener.ReturnMessage(message);
         }
+        public string message { get; set; }
         public bool IsDone { get; set; }
-        protected string message { get; set; }
 
         protected World world;
         protected NetworkListener networkListener;

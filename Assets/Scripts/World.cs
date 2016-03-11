@@ -58,7 +58,7 @@ namespace Assets.Scripts.WorldData
             {
                 int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-                if (Stacks[i].Blocks.Count != 0)
+                if (Stacks[i].Blocks.Count() > 0)
                 {
                     RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
                     RobotArm.Holding = true;

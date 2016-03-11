@@ -18,7 +18,6 @@ public class InputListener : MonoBehaviour
             Application.Quit();
         }
 
-
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             commandRunner.Add(new DropCommand());

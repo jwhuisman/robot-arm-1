@@ -26,7 +26,8 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
-            _globals = GameObject.Find("Globals").GetComponent<Globals>();
+
+            _globals = GameObject.FindWithTag("Scripts").GetComponent<Globals>();
             _world = _globals.world;
             _factory = GameObject.Find("Factory");
 
@@ -35,6 +36,9 @@ namespace Assets.Scripts.View
             CreateStartSections();
 
             initialized = true;
+
+            _robotArm = GameObject.FindWithTag("RobotArm");
+            _robotArm.transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.GetComponent<RobotArm>().GetHighestCubeY(), _robotArm.transform.position.z);
         }
 
         // creation
@@ -140,8 +144,7 @@ namespace Assets.Scripts.View
 
             return type;
         }
-
-
+        
         // instantiation
         public void InstantiateAssemblyLine(int sectionId, float x)
         {
@@ -273,7 +276,6 @@ namespace Assets.Scripts.View
             }
         }
 
-
         // set section size and spacing
         public void SetSectionSize(int widthTotal, int width, float space)
         {
@@ -348,6 +350,7 @@ namespace Assets.Scripts.View
         private float spacing;
 
         private bool initialized = false;
+        private GameObject _robotArm;
 
         private GameObject _factory;
         private Globals _globals;

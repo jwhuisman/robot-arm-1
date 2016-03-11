@@ -36,7 +36,13 @@ namespace Assets.Models
         }
         public void Next()
         {
+            if (currentCmd != null)
+            {
+                EventManager.AnimationIsDone -= currentCmd.AnimationFinished;
+            }
+
             currentCmd = Queue.Dequeue();
+            EventManager.AnimationIsDone += currentCmd.AnimationFinished;
             currentCmd.Do(robotArm);
         }
 

@@ -8,10 +8,6 @@ namespace Assets.Models.Commands
         {
             message = world.Scan();
             robotArm.Scan();
-
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
         }
     }
 }

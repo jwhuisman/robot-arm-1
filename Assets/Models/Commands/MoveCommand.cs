@@ -9,22 +9,19 @@ namespace Assets.Models.Commands
         {
             Direction = dir;
         }
+
         public override void Do(RobotArm robotArm)
         {
             if (Direction == "right")
             {
                 world.MoveRight();
-                robotArm.MoveRight();
             }
             else if (Direction == "left")
             {
                 world.MoveLeft();
-                robotArm.MoveLeft();
             }
 
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
+            robotArm.HorizontalMovement(Direction);
         }
 
         public string Direction { get; set; }

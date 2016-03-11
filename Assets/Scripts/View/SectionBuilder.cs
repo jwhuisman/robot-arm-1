@@ -198,7 +198,7 @@ namespace Assets.Scripts.View
             renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
-        // check for generating new section
+        // check for generating/rendering new section
         public SectionCheck NeedNewSection()
         {
             int min = instantiatedSections.Min(s => s.Id);
@@ -210,8 +210,8 @@ namespace Assets.Scripts.View
             float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
             float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
 
-            bool minVisible = minX >= -.5 && minX <= 1.5 ? true : false;
-            bool maxVisible = maxX >= -.5 && maxX <= 1.5 ? true : false;
+            bool minVisible = minX >= -1 && minX <= 2 ? true : false;
+            bool maxVisible = maxX >= -1 && maxX <= 2 ? true : false;
 
             if (minVisible && maxVisible)
             {
@@ -234,10 +234,16 @@ namespace Assets.Scripts.View
             if (initialized && check.NeedNew)
             {
                 int newSectionId = check.Section + check.Dir;
+                int newSectionIdRight = check.SectionRight + check.DirRight;
 
                 if (!instantiatedSections.Any(s => s.Id == newSectionId))
                 {
                     CreateSection(newSectionId, check.Dir);
+                }
+
+                if (check.BothWays && !instantiatedSections.Any(s => s.Id == newSectionIdRight))
+                {
+                    CreateSection(newSectionIdRight, check.DirRight);
                 }
             }
         }

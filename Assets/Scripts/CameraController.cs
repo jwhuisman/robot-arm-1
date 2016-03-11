@@ -8,8 +8,8 @@ public class CameraController : MonoBehaviour
     {
         robotArm = GameObject.Find("RobotArm");
         roboStartY = robotArm.transform.position.y;
-        camStartY = transform.position.y; // 5.15
-        camStartZ = transform.position.z; // -13.63
+        camStartY = transform.position.y;
+        camStartZ = transform.position.z;
     }
 	
 	void FixedUpdate()
@@ -30,8 +30,8 @@ public class CameraController : MonoBehaviour
 
 
     private GameObject robotArm;
-    private float smooth = 1.5f;
     private float roboStartY;
     private float camStartY;
     private float camStartZ;
+    private float smooth = 5f; // the higher this is, the less likely it is for sections not te render/create
 }

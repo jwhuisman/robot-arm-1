@@ -13,6 +13,8 @@ public class NetworkListener : MonoBehaviour
     public RobotArm _robotArm;
     public CommandRunner commandRunner;
 
+    const char NEW_LINE = (char)10;
+    const char CARRIAGE_RETURN = (char)13;
 
     void Start()
     {
@@ -146,9 +148,6 @@ public class NetworkListener : MonoBehaviour
 
     private string FilterDataIntoMessage()
     {
-        char NEW_LINE = (char)10;
-        char CARRIAGE_RETURN = (char)13;
-
         NetworkStream stream = _client.GetStream();
 
         while (stream.DataAvailable)
@@ -162,11 +161,6 @@ public class NetworkListener : MonoBehaviour
                 message = new StringBuilder();
 
                 return msg;
-            }
-            else if (j.Equals(CARRIAGE_RETURN))
-            {
-                // In some OS'es the byte 13 has the same fucntion as the byte 10.
-                // byte 10 the mostly used, thats why it gets the functionality.
             }
             else
             {

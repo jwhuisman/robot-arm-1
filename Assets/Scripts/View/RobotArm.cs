@@ -171,6 +171,15 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Grab");
         }
 
+        public void PretendDrop()
+        {
+            int stackHeight = _world.CurrentStack.Blocks.Count + 1;
+            targetPosition = transform.position;
+            targetPosition.y = stackHeight * blockHeight + heightOffset;
+
+            _animator.SetTrigger("Pretend Drop");
+        }
+
         public void Placement(bool grab)
         {
             bool blockDetected = false;

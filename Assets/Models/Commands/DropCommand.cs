@@ -6,8 +6,15 @@ namespace Assets.Models.Commands
     {
         public override void Do(RobotArm robotArm)
         {
-            world.Drop();
-            robotArm.Drop();
+            if (world.RobotArm.Holding)
+            {
+                world.Drop();
+                robotArm.Drop();
+            }
+            else
+            {
+                robotArm.PretendDrop();
+            }
         }
     }
 }

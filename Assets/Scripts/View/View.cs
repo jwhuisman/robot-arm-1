@@ -27,8 +27,6 @@ namespace Assets.Scripts.View
         // update
         public void UpdateView()
         {
-            UpdateWorld();
-
             sectionBuilder.CheckSectionsToCreate();
             sectionBuilder.CheckSectionsToRender();
         }
@@ -62,13 +60,6 @@ namespace Assets.Scripts.View
         public float WorldToView(int x)
         {
             return x * spacing;
-        }
-        public Vector3 RobotArmToView(RobotArmData robotArmData)
-        {
-            float x = robotArmData.X * spacing;
-            float y = robotArmData.Y;
-
-            return new Vector3(x, y);
         }
 
         // privates

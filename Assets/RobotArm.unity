@@ -205,9 +205,11 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 255703150}
+  - 114: {fileID: 255703151}
+  - 95: {fileID: 255703152}
   m_Layer: 0
   m_Name: robot-hand-holder
-  m_TagString: Untagged
+  m_TagString: RobotArm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -226,6 +228,38 @@ Transform:
   - {fileID: 1246093163}
   m_Father: {fileID: 159257697}
   m_RootOrder: 3
+--- !u!114 &255703151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 255703149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13a036519219eef46b8be3c6f441423f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotArmModel: {fileID: 913337110}
+  cubeDisposal: {fileID: 163021199}
+  targetPosition: {x: 0, y: 0, z: 0}
+  blockHeight: 1
+--- !u!95 &255703152
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 255703149}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b35d6f901a145a4f81c296f9244b92c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1001 &432783514
 Prefab:
   m_ObjectHideFlags: 0
@@ -239,7 +273,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.375
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
       propertyPath: m_LocalPosition.z
@@ -279,9 +313,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100004, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
       propertyPath: m_TagString
-      value: RobotArm
+      value: Untagged
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9500000, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
   m_IsPrefabParent: 0
 --- !u!4 &432783515 stripped
@@ -303,7 +338,7 @@ GameObject:
   - 114: {fileID: 623548371}
   m_Layer: 0
   m_Name: Global Scripts
-  m_TagString: GlobalScripts
+  m_TagString: Scripts
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -319,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7102362c4b5b1904ba3d2b0d7aaef891, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotArm: {fileID: 913337111}
+  robotArm: {fileID: 255703151}
 --- !u!114 &623548371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,7 +378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
-  _robotArm: {fileID: 0}
+  _robotArm: {fileID: 255703151}
   commandRunner: {fileID: 623548370}
 --- !u!114 &623548373
 MonoBehaviour:
@@ -384,20 +419,6 @@ MonoBehaviour:
 GameObject:
   m_PrefabParentObject: {fileID: 100004, guid: c26b532ce2a327040a6f11f890a3361e, type: 3}
   m_PrefabInternal: {fileID: 432783514}
---- !u!114 &913337111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 913337110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13a036519219eef46b8be3c6f441423f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  robotArmModel: {fileID: 913337110}
-  cubeDisposal: {fileID: 163021199}
-  targetPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1120064384
 GameObject:
   m_ObjectHideFlags: 0

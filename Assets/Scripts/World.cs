@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Assets.Models.WorldData;
 
 namespace Assets.Scripts.WorldData
@@ -18,6 +19,14 @@ namespace Assets.Scripts.WorldData
             }
 
             RobotArm = new RobotArmData(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
+        }
+
+        public int Height
+        {
+            get
+            {
+                return Stacks.Max(s => s.Blocks.Count);
+            }
         }
 
         public void AddStack(int x)
@@ -48,10 +57,7 @@ namespace Assets.Scripts.WorldData
         {
             RobotArm.X++;
         }
-        public void MoveUp()
-        {
-            RobotArm.Y++;
-        }
+
         public void Grab()
         {
             if (!RobotArm.Holding)

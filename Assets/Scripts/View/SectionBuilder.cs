@@ -36,9 +36,6 @@ namespace Assets.Scripts.View
             CreateStartSections();
 
             initialized = true;
-
-            _robotArm = GameObject.FindWithTag("RobotArm");
-            _robotArm.transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.GetComponent<RobotArm>().GetHighestCubeY(), _robotArm.transform.position.z);
         }
 
         // creation

@@ -10,6 +10,8 @@ namespace Assets.Scripts.View
         public GameObject cubeDisposal;
         public Vector3 targetPosition;
 
+        public float blockHeight = 1.0f;
+
         public void Start()
         {
             GetHighestCubeY();
@@ -31,11 +33,11 @@ namespace Assets.Scripts.View
         }
         public void UpdateArmHeight()
         {
-            // View
-            //_view.robotArmHolder.transform.position = new Vector3(_view.robotArmHolder.transform.position.x, GetHighestCubeY(), _view.robotArmHolder.transform.position.z);
+            float offset = 1;
 
-            // World
-            _world.RobotArm.Y = GetHighestCubeY();
+            var position = transform.position;
+            position.y = (_world.Height + offset) * blockHeight;
+            transform.position = position;
         }
         public int GetHighestCubeY()
         {

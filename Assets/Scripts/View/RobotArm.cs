@@ -117,6 +117,18 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Horizontal animation");
         }
 
+        public void MoveLeft()
+        {
+            targetPosition = new Vector3(transform.position.x - (1f * _view.spacing), transform.position.y, transform.position.z);
+            _animator.SetTrigger("Move Left");
+        }
+
+        public void MoveRight()
+        {
+            targetPosition = new Vector3(transform.position.x - (-1f * _view.spacing), transform.position.y, transform.position.z);
+            _animator.SetTrigger("Move Right");
+        }
+
         public void Grab()
         {
             // Calculate the position the robot hand needs to move to in order to grab the top

@@ -8,8 +8,7 @@ public class HorizonVerticalMovement : StateMachineBehaviour {
     {
         _robotArm = animator.gameObject.transform;
 
-        var targetPosition = animator.GetComponent<RobotArm>().targetPosition;
-        _target = new Vector3(targetPosition.x, targetPosition.y, targetPosition.z);
+        _target = animator.GetComponent<RobotArm>().targetPosition;
         _speed = 2.5f * animator.GetFloat("Speed");
     }
 

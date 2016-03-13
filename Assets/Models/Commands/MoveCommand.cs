@@ -14,13 +14,13 @@ namespace Assets.Models.Commands
             if (Direction == "right")
             {
                 world.MoveRight();
+                robotArm.MoveRight();
             }
             else if (Direction == "left")
             {
                 world.MoveLeft();
+                robotArm.MoveLeft();
             }
-
-            robotArm.HorizontalMovement(Direction);
         }
 
         public string Direction { get; set; }

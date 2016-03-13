@@ -38,11 +38,11 @@ namespace Assets.Models
         {
             if (currentCmd != null)
             {
-                EventManager.AnimationIsDone -= currentCmd.AnimationFinished;
+                robotArm.AnimationIsDone -= currentCmd.AnimationFinished;
             }
 
             currentCmd = Queue.Dequeue();
-            EventManager.AnimationIsDone += currentCmd.AnimationFinished;
+            robotArm.AnimationIsDone += currentCmd.AnimationFinished;
             currentCmd.Do(robotArm);
         }
 

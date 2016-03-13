@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.WorldData;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ namespace Assets.Scripts.View
         public GameObject robotArmModel;
         public GameObject cubeDisposal;
         public Vector3 targetPosition;
+        public GameObject block;
 
         public float blockHeight = 1.0f;
+        public float heightOffset;
 
         public void Start()
         {
@@ -26,7 +29,7 @@ namespace Assets.Scripts.View
             _globals = GetComponent<Globals>();
             _view = GameObject.Find("View").GetComponent<View>();
             _world = GameObject.Find("Global Scripts").GetComponent<Globals>().world;
-            _animator = gameObject.GetComponent<Animator>();
+            _animator = gameObject.GetComponentInChildren<Animator>();
 
             robotArmModel = GameObject.Find("robot-hand");
             _roboCubeDisposal = GameObject.Find("RobotArm-CubeDisposal");
@@ -36,7 +39,7 @@ namespace Assets.Scripts.View
             float offset = 1;
 
             var position = transform.position;
-            position.y = (_world.Height + offset) * blockHeight;
+            position.y = (_world.Height + offset) * blockHeight + heightOffset;
             transform.position = position;
         }
         public int GetHighestCubeY()
@@ -113,6 +116,24 @@ namespace Assets.Scripts.View
             }
             _animator.SetTrigger("Horizontal animation");
         }
+
+        public void Grab()
+        {
+            // Calculate the position the robot hand needs to move to in order to grab the top
+            // block. Note that the top block has already been grabbed in the world, so we need
+            // to add 1 to the height of the stack to compensate.
+            int stackHeight = _world.CurrentStack.Blocks.Count + 1;
+            targetPosition = transform.position;
+            targetPosition.y = stackHeight * blockHeight + heightOffset;
+
+            // Find the GameObject that represents the block we're going to grab, so we can
+            // parent underneath the robot hand later.
+            block = FindBlock(_world.RobotArm.HoldingBlock.Id);
+
+            // Start the animation.
+            _animator.SetTrigger("Grab");
+        }
+
         public void Placement(bool grab)
         {
             bool blockDetected = false;
@@ -230,6 +251,17 @@ namespace Assets.Scripts.View
         public float WorldToView(int x)
         {
             return x * _view.spacing;
+        }
+
+        public event EventHandler AnimationIsDone;
+
+        public void OnAnimationIsDone()
+        {
+            var eventHandler = AnimationIsDone;
+            if (eventHandler != null)
+            {
+                AnimationIsDone(this, EventArgs.Empty);
+            }
         }
 
         private float mapBoundaryTop;

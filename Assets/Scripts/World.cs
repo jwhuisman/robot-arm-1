@@ -29,6 +29,14 @@ namespace Assets.Scripts.WorldData
             }
         }
 
+        public BlockStack CurrentStack
+        {
+            get
+            {
+                return Stacks.Single(s => s.Id == RobotArm.X);
+            }
+        }
+
         public void AddStack(int x)
         {
             BlockStack stack = new BlockStack(x);
@@ -94,8 +102,8 @@ namespace Assets.Scripts.WorldData
         }
 
         private Random rnd = new Random();
-        private int stackMin = -10000;
-        private int stackMax = 10000;
+        private int stackMin = -50;
+        private int stackMax = 50;
         private int minCubes = 1;
         private int maxCubes = 6;
     }

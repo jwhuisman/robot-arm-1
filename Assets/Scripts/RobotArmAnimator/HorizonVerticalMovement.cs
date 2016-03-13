@@ -7,7 +7,9 @@ public class HorizonVerticalMovement : StateMachineBehaviour {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         _robotArm = animator.gameObject.transform;
-        _target = new Vector3(_robotArm.GetComponent<RobotArm>().targetPosition.x, _robotArm.GetComponent<RobotArm>().targetPosition.y, _robotArm.GetComponent<RobotArm>().targetPosition.z);
+
+        var targetPosition = animator.GetComponent<RobotArm>().targetPosition;
+        _target = new Vector3(targetPosition.x, targetPosition.y, targetPosition.z);
         _speed = 2.5f * animator.GetFloat("Speed");
     }
 

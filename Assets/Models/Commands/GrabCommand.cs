@@ -7,7 +7,7 @@ namespace Assets.Models.Commands
         public override void Do(RobotArm robotArm)
         {
             world.Grab();
-            robotArm.Placement(true);
+            robotArm.Grab();
         }
     }
 }

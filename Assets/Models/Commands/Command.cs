@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts;
 using Assets.Scripts.View;
 using Assets.Scripts.WorldData;
+using System;
 using UnityEngine;
 
 namespace Assets.Models
@@ -18,7 +19,7 @@ namespace Assets.Models
 
         public virtual void Do(RobotArm robotArm) { }
 
-        public void AnimationFinished()
+        public void AnimationFinished(object sender, EventArgs e)
         {
             IsDone = true;
             networkListener.ReturnMessage(message);

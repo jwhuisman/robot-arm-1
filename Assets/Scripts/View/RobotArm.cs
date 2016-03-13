@@ -134,6 +134,22 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Grab");
         }
 
+        public void Drop()
+        {
+            // Calculate the position the robot hand needs to move to in order to drop the block
+            // on the stap. Note that the block has already been dropped in the world, so we need
+            // to subtract 1 from the height of the stack to compensate.
+            int stackHeight = _world.CurrentStack.Blocks.Count;
+            targetPosition = transform.position;
+            targetPosition.y = stackHeight * blockHeight + heightOffset;
+
+            // We still know which block to set down, because it hasn't changed since last we
+            // called Grab().
+
+            // Start the animation.
+            _animator.SetTrigger("Drop");
+        }
+
         public void Placement(bool grab)
         {
             bool blockDetected = false;

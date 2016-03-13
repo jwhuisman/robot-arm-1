@@ -84,7 +84,7 @@ namespace Assets.Scripts.View
             float posWallZ = halfW;
 
             int amountF = 2;
-            int amountW = 4;
+            int amountW = 2;
 
             InstantiateAssemblyLine(sectionId, posX);
             InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
@@ -168,12 +168,22 @@ namespace Assets.Scripts.View
                 floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
         }
-        public void InstantiateWall(int sectionId, float x, float y, float z, int type, int amount = 1)
+        public void InstantiateWall(int sectionId, float x, float y, float z, int type, int amount = 1, int offset = 0, bool useOriginalTransform = false)
         {
-            GameObject wallT = new GameObject("Wall");
-            wallT.transform.parent = _currentSection.transform;
+            GameObject wallT;
+            if (!useOriginalTransform)
+            {
+                wallT = new GameObject("Wall");
+                wallT.transform.parent = _currentSection.transform;
+            }
+            else
+            {
+                _currentSection = GameObject.Find("Section_" + sectionId);
+                wallT = _currentSection.transform.Find("Wall").gameObject;
+                wallT.transform.parent = _currentSection.transform;
+            }
 
-            for (int i = 0; i < amount; i++)
+            for (int i = offset; i < offset + amount; i++)
             {
                 GameObject wall = (type == 1) ? ((i == 0) ? Instantiate(wallInsetModel) : Instantiate(wallInsetExtendModel)) :
                        (type == 2) ? ((i == 0) ? Instantiate(wallInsetLeftModel) : Instantiate(wallInsetLeftExtendModel)) :
@@ -181,9 +191,9 @@ namespace Assets.Scripts.View
                        ((i == 0) ? Instantiate(wallModel) : Instantiate(wallExtendModel));
 
                 wall.transform.parent = wallT.transform;
-                wall.name = "Wall_" + i;
+                wall.name = useOriginalTransform ? "Wall_" + type + "_" + (i + 1) : "Wall_" + type + "_" + i;
                 wall.tag = "Wall";
-                wall.transform.position = new Vector3(x - .5f, (y * i) - .5f, z);
+                wall.transform.position = useOriginalTransform ? new Vector3(x - .5f, (y * (i+1)) - .5f, z) : new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
         public void InstantiateBlock(int stackX, Block blockData)
@@ -201,7 +211,7 @@ namespace Assets.Scripts.View
             renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
-        // check for generating new section
+        // check for generating/rendering new section
         public SectionCheck NeedNewSection()
         {
             int min = instantiatedSections.Min(s => s.Id);
@@ -213,8 +223,8 @@ namespace Assets.Scripts.View
             float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
             float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
 
-            bool minVisible = minX >= -.5 && minX <= 1.5 ? true : false;
-            bool maxVisible = maxX >= -.5 && maxX <= 1.5 ? true : false;
+            bool minVisible = minX >= -1 && minX <= 2 ? true : false;
+            bool maxVisible = maxX >= -1 && maxX <= 2 ? true : false;
 
             if (minVisible && maxVisible)
             {
@@ -237,10 +247,16 @@ namespace Assets.Scripts.View
             if (initialized && check.NeedNew)
             {
                 int newSectionId = check.Section + check.Dir;
+                int newSectionIdRight = check.SectionRight + check.DirRight;
 
                 if (!instantiatedSections.Any(s => s.Id == newSectionId))
                 {
                     CreateSection(newSectionId, check.Dir);
+                }
+
+                if (check.BothWays && !instantiatedSections.Any(s => s.Id == newSectionIdRight))
+                {
+                    CreateSection(newSectionIdRight, check.DirRight);
                 }
             }
         }
@@ -255,6 +271,9 @@ namespace Assets.Scripts.View
 
                 if (inView)
                 {
+                    int sectionId = int.Parse(section.name.Split('_')[1]);
+                    CheckWallsToRender(sectionId);
+
                     foreach (Renderer child in section.GetComponentsInChildren<Renderer>())
                     {
                         if (!child.enabled)
@@ -274,6 +293,67 @@ namespace Assets.Scripts.View
                     }
                 }
             }
+        }
+        public void CheckWallsToRender(int sectionId)
+        {
+            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find("Wall");
+            List<GameObject> walls = new List<GameObject>();
+
+            foreach (Transform child in _wall)
+            {
+                if (child.tag == "Wall" && child.gameObject != null)
+                {
+                    walls.Add(child.gameObject);
+                }
+            }
+
+            if (walls.Count > 0)
+            {
+                float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, walls.Max(w => w.transform.position.y))).y;
+                bool maxWallInView = maxWallY >= 0f && maxWallY <= 1f ? true : false;
+
+                if (maxWallInView)
+                {
+                    GameObject wall = walls.Where(w => w.transform.position.y == walls.Max(ww => ww.transform.position.y)).SingleOrDefault();
+
+                    string[] wallName = wall.name.Split('_');
+                    int type = int.Parse(wallName[1]);
+                    int amount = 1;
+                    int offset = int.Parse(wallName[2]);
+
+                    InstantiateWall(sectionId, 
+                        wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z, 
+                        type, amount, offset, true);
+                }
+            }
+
+
+            //foreach (GameObject wall in walls)
+            //{
+            //    float wallY = Camera.main.WorldToViewportPoint(wall.transform.position).y;
+            //    bool inView = wallY >= 0f && wallY <= 1f ? true : false;
+
+            //    if (inView)
+            //    {
+            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
+            //        {
+            //            if (!child.enabled)
+            //            {
+            //                child.enabled = true;
+            //            }
+            //        }
+            //    }
+            //    else if (!inView)
+            //    {
+            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
+            //        {
+            //            if (child.enabled)
+            //            {
+            //                child.enabled = false;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         // set section size and spacing

@@ -13,6 +13,8 @@ public class NetworkListener : MonoBehaviour
     public RobotArm _robotArm;
     public CommandRunner commandRunner;
 
+    const char NEW_LINE = (char)10;
+    const char CARRIAGE_RETURN = (char)13;
 
     void Start()
     {
@@ -29,29 +31,25 @@ public class NetworkListener : MonoBehaviour
 
     void Update()
     {
-        if (connected)
+        if (IsConnected && _client != null && _client.Available > 0)
         {
-            if (_client != null && _client.Available > 0)
+            string data = FilterDataIntoMessage();
+            if (data != "")
             {
-                string data = GetData();
-                if (data != "")
-                {
-                    Debug.Log(string.Format("Message received:\n{0}", data));
-                }
+                AddCommand(data);
+                Debug.Log(string.Format("Data received: \n{0}", data));
             }
         }
     }
 
     void OnApplicationQuit()
     {
-        ReturnMessage("bye");
-
         CloseTcpConnection();
     }
 
     public void AddCommand(string data)
     {
-        var cmd = commandBuilder.BuildCommand(data.ToLower());
+        var cmd = commandBuilder.BuildCommand(data);
         if (cmd != null)
         {
             commandRunner.Add(cmd);
@@ -60,11 +58,8 @@ public class NetworkListener : MonoBehaviour
 
     public void ReturnMessage(string message)
     {
-        // sends a message to the telnet client.
-        if (connected && _client != null && _client.GetStream() != null)
+        if (IsConnected)
         {
-            message = message == string.Empty ? "*no answer*" : message;
-
             _client.GetStream().Write(Encoding.ASCII.GetBytes(message.ToLower()), 0, message.Length);
             _client.GetStream().Flush();
         }
@@ -78,16 +73,57 @@ public class NetworkListener : MonoBehaviour
         Debug.Log("Started listening..");
     }
 
+    public bool IsConnected
+    {
+        get
+        {
+            try
+            {
+                if (_client != null && _client.Client != null && _client.Client.Connected)
+                {
+                    /* pear to the documentation on Poll:
+                     * When passing SelectMode.SelectRead as a parameter to the Poll method it will return 
+                     * -either- true if Socket.Listen(Int32) has been called and a connection is pending;
+                     * -or- true if data is available for reading; 
+                     * -or- true if the connection has been closed, reset, or terminated; 
+                     * otherwise, returns false
+                     */
+
+                    // Detect if client disconnected
+                    if (_client.Client.Poll(0, SelectMode.SelectRead))
+                    {
+                        byte[] buff = new byte[1];
+                        if (_client.Client.Receive(buff, SocketFlags.Peek) == 0)
+                        {
+                            // Client disconnected
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+
     private void OnAcceptTcpClient(IAsyncResult result)
     {
-        if (connected)
-        {
-            CloseTcpConnection();
-        }
+        CloseTcpConnection();
 
         _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
 
-        connected = true;
         ReturnMessage("hello");
         Debug.Log("Client connected.");
 
@@ -97,74 +133,44 @@ public class NetworkListener : MonoBehaviour
 
     private void CloseTcpConnection()
     {
-        if (connected)
+        _server.Stop();
+
+        if (IsConnected)
         {
+            ReturnMessage("Bye");
+
+            _client.GetStream().Close();
             _client.Close();
-    
-            connected = false;
+
             Debug.Log("Client disconnected!");
         }
     }
 
-    private string GetData()
-    {
-        NetworkStream stream = _client.GetStream();
-
-        StringBuilder data = new StringBuilder();
-        while (stream.DataAvailable)
-        {
-            data.Append((char)stream.ReadByte());
-        }
-
-        AddCommand(data.ToString());
-
-        return data.ToString();
-    }
-
     private string FilterDataIntoMessage()
     {
-        const char NEW_LINE = (char)10;
-        const char CARRIAGE_RETURN = (char)13;
-
-        Debug.Assert(_client != null, "The client is empty.");
-        Debug.Assert(_client.Available > 0, "The client is not available.");
-
         NetworkStream stream = _client.GetStream();
 
-        int c = 0;
         while (stream.DataAvailable)
         {
             int i = stream.ReadByte();
-            if (i == NEW_LINE)
+            char j = Convert.ToChar(i);
+            if (j.Equals(NEW_LINE) || j.Equals(CARRIAGE_RETURN))
             {
                 string msg = message.ToString().ToLower().Replace("\r", "").Replace("\n", "");
+
                 message = new StringBuilder();
 
-                AddCommand(msg);
-
-                return msg.ToString().ToLower();
-            }
-            else if (i == CARRIAGE_RETURN && c > 0)
-            {
-                // In some OS'es the byte 13 has the same fucntion as the byte 10.
-                // byte 10 the mostly used, thats why it gets the functionality.
-
-                // for some reason this doesnt work...
-                //message.Remove(c, 1);
+                return msg;
             }
             else
             {
-                message.Append((char)i);
+                message.Append(j);
             }
-
-            c++;
         }
 
-        return message.ToString().ToLower();
+        return string.Empty;
     }
 
-
-    private bool connected = false;
 
     private TcpListener _server;
     private TcpClient _client;

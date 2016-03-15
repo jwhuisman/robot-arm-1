@@ -36,6 +36,19 @@ public class InputListener : MonoBehaviour
             commandRunner.Add(new MoveCommand("right"));
         }
 
+        else if (Input.GetKeyDown(KeyCode.F1))
+        {
+            commandRunner.Add(new LoadLevelCommand(1));
+        }
+        else if (Input.GetKeyDown(KeyCode.F2))
+        {
+            commandRunner.Add(new LoadLevelCommand(2));
+        }
+        else if (Input.GetKeyDown(KeyCode.F3))
+        {
+            commandRunner.Add(new LoadLevelCommand(0));
+        }
+
 
         // for testing purposes
         else if (Input.GetKeyDown(KeyCode.Alpha1))

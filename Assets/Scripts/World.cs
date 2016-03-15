@@ -8,37 +8,33 @@ namespace Assets.Scripts.WorldData
     public class World
     {
         public List<BlockStack> Stacks = new List<BlockStack>();
+        public Levels levels = new Levels();
         public RobotArmData RobotArm;
 
         public World()
         {
-            for (int x = stackMin; x < stackMax; x++)
-            {
-                AddStack(x);
-            }
+            Stacks = levels.GenerateRandomLevel();
 
-            RobotArm = new RobotArmData(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
+            RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
-        public void AddStack(int x)
+        public void LoadLevel(int level)
         {
-            BlockStack stack = new BlockStack(x);
+            RobotArm.X = 0;
 
-            int cubesAmount = rnd.Next(minCubes, maxCubes + 1);
-
-            for (int i = 0; i < cubesAmount; i++)
+            if (level == 0)
             {
-                string id = "(" + x + "/" + i + ")";
-                string color = ((ColorEnum.Colors)rnd.Next(0, 4)).ToString();
-                int y = stack.Blocks.Count();
-
-                stack.Blocks.Push(new Block(id, color, x, y));
+                Stacks = levels.GenerateRandomLevel();
             }
-
-            Stacks.Add(stack);
+            if (level == 1)
+            {
+                Stacks = levels.LoadLevel1();
+            }
+            if (level == 2)
+            {
+                Stacks = levels.LoadLevel2();
+            }
         }
-
-
 
         public void MoveLeft()
         {
@@ -86,11 +82,5 @@ namespace Assets.Scripts.WorldData
 
             return "none";
         }
-
-        private Random rnd = new Random();
-        private int stackMin = -10000;
-        private int stackMax = 10000;
-        private int minCubes = 1;
-        private int maxCubes = 6;
     }
 }

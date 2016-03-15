@@ -16,7 +16,6 @@ namespace Assets.Scripts.View
         public SpeedMeter speedMeter;
         public SectionBuilder sectionBuilder;
 
-
         // start
         public void Start()
         {

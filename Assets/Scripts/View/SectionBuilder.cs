@@ -26,9 +26,9 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
-            _globals = GameObject.Find("Globals").GetComponent<Globals>();
+            _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
             _world = _globals.world;
-            _factory = GameObject.Find("Factory");
+            _factory = GameObject.Find(Tags.Factory);
 
             rnd = new System.Random();
 
@@ -37,10 +37,29 @@ namespace Assets.Scripts.View
             initialized = true;
         }
 
-        // creation
-        public void CreateStartSections()
+        // reload after load level
+        public void Reload()
         {
-            for (int i = -3; i < 3; i++)
+            Transform factory = _factory.transform;
+            foreach (Transform child in factory.GetComponentInChildren<Transform>())
+            {
+                Destroy(child.gameObject);
+            }
+
+            instantiatedSections = new List<Section>();
+
+            Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
+
+            robotArm.position = new Vector3(0, robotArm.position.y, robotArm.position.z);
+
+            CreateStartSections();
+        }
+
+
+        // creation
+        public void CreateStartSections(int currentSection = 0)
+        {
+            for (int i = currentSection - 3; i < currentSection + 3; i++)
             {
                 CreateSection(i, 0);
             }
@@ -88,11 +107,13 @@ namespace Assets.Scripts.View
         }
         public void GenerateBlocks(int stackX)
         {
-            Stack<Block> blocks = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Blocks;
-
-            foreach (Block block in blocks)
+            Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
+            if (blocks.Count > 0)
             {
-                InstantiateBlock(stackX, block);
+                foreach (Block block in blocks)
+                {
+                    InstantiateBlock(stackX, block);
+                }
             }
         }
         public int GenerateWallType(int sectionId, int dir)

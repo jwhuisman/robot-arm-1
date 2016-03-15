@@ -20,18 +20,11 @@ namespace Assets.Scripts
         // so the stack amount = stackMax * 2 + 1
         public static int stackMax;
 
-        public List<BlockStack> LoadLevel1()
+        public List<BlockStack> LoadLevel(string name)
         {
-            return ParseFile(path + "level1.txt");
+            return ParseFile(path + "" + name +".txt");
         }
-        public List<BlockStack> LoadLevel2()
-        {
-            return ParseFile(path + "level2.txt");
-        }
-        public List<BlockStack> LoadLevel3()
-        {
-            return ParseFile(path + "level3.txt");
-        }
+
 
         public List<BlockStack> GenerateRandomLevel()
         {
@@ -69,14 +62,18 @@ namespace Assets.Scripts
         public List<BlockStack> ParseFile(string path)
         {
             List<BlockStack> stacks = new List<BlockStack>();
-            bool needOneMoreStack = false;
 
             int lineCount = File.ReadAllLines(path).Length;
-            stackMax = (lineCount - 1) / 2;
+            bool needOneMoreStack = false;
+
             if ((lineCount - 1) % 2 != 0)
             {
                 needOneMoreStack = true;
                 stackMax = (lineCount) / 2;
+            }
+            else
+            {
+                stackMax = (lineCount - 1) / 2;
             }
 
 
@@ -100,8 +97,8 @@ namespace Assets.Scripts
                     else if (line.Contains("@random"))
                     {
                         string[] data = line.Split(' ');
-                        int min = int.Parse(data[1]);
-                        int max = data.Length > 2 ? int.Parse(data[2]) : min;
+                        int min = data.Length > 1 ? int.Parse(data[1]) : 1;
+                        int max = data.Length > 2 ? int.Parse(data[2]) : data.Length > 1 ? min : 1;
 
                         stack = GenerateStack(c, min, max);
                     }

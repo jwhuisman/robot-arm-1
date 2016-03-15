@@ -18,27 +18,19 @@ namespace Assets.Scripts.WorldData
             RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
-        public void LoadLevel(int level)
+        public void LoadLevel(string name)
         {
             RobotArm.X = 0;
             RobotArm.Holding = false;
             RobotArm.HoldingBlock = new Block();
 
-            if (level == 0)
+            if (name == "")
             {
                 Stacks = levels.GenerateRandomLevel();
             }
-            else if (level == 1)
+            else
             {
-                Stacks = levels.LoadLevel1();
-            }
-            else if (level == 2)
-            {
-                Stacks = levels.LoadLevel2();
-            }
-            else if (level == 3)
-            {
-                Stacks = levels.LoadLevel3();
+                Stacks = levels.LoadLevel(name);
             }
         }
 

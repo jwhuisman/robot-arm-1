@@ -5,14 +5,14 @@ namespace Assets.Models.Commands
 {
     public class LoadLevelCommand : Command
     {
-        public LoadLevelCommand(int level = 0)
+        public LoadLevelCommand(string name = "")
         {
-            Level = level;
+            LevelName = name;
         }
 
         public override void Do(RobotArm robotArm)
         {
-            world.LoadLevel(Level);
+            world.LoadLevel(LevelName);
 
             GameObject.Find(Tags.View).GetComponent<SectionBuilder>().Reload();
 
@@ -21,6 +21,6 @@ namespace Assets.Models.Commands
             networkListener.ReturnMessage(message);
         }
 
-        public int Level { get; set; }
+        public string LevelName { get; set; }
     }
 }

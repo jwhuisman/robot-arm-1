@@ -46,6 +46,10 @@ namespace Assets.Models
             {
                 return new ScanCommand();
             }
+            else if (instruction == "load")
+            {
+                return new LoadLevelCommand(parameter);
+            }
             else
             {
                 return new UnknownCommand(data);

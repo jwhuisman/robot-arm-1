@@ -38,15 +38,15 @@ public class InputListener : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.F1))
         {
-            commandRunner.Add(new LoadLevelCommand(1));
+            commandRunner.Add(new LoadLevelCommand("level1"));
         }
         else if (Input.GetKeyDown(KeyCode.F2))
         {
-            commandRunner.Add(new LoadLevelCommand(2));
+            commandRunner.Add(new LoadLevelCommand("coollevel"));
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand(3));
+            commandRunner.Add(new LoadLevelCommand("toren"));
         }
         else if (Input.GetKeyDown(KeyCode.F4))
         {

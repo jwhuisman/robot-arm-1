@@ -7,7 +7,11 @@ namespace Assets.Scripts
 {
     public class Levels
     {
-        public static int stackMax = 100;
+        // stackMax is not the amount of stacks
+        // it's the stacks placed before and after (x = 0)
+        // when stackMax = 3 that means there are 7 stacks
+        // -3, -2, -1, 0, 1, 2, 3
+        public static int stackMax = 1000;
 
         public List<BlockStack> LoadLevel1()
         {

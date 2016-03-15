@@ -40,18 +40,19 @@ namespace Assets.Scripts.View
         // reload after load level
         public void Reload()
         {
+            // delete the factory
             Transform factory = _factory.transform;
             foreach (Transform child in factory.GetComponentInChildren<Transform>())
             {
                 Destroy(child.gameObject);
             }
-
             instantiatedSections = new List<Section>();
 
+            // set the robot arm to x=0
             Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
-
             robotArm.position = new Vector3(0, robotArm.position.y, robotArm.position.z);
 
+            // create the first few sections
             CreateStartSections();
         }
 
@@ -169,7 +170,7 @@ namespace Assets.Scripts.View
             GameObject assembly = Instantiate(assemblyLineModel);
             assembly.transform.parent = _currentSection.transform;
             assembly.name = "Assembly";
-            assembly.tag = "Assembly";
+            assembly.tag = Tags.Assembly;
             assembly.transform.position = new Vector3(x - .5f, -1.5f);
         }
         public void InstantiateFloor(int sectionId, float x, float z, float width, int amount = 1)
@@ -182,7 +183,7 @@ namespace Assets.Scripts.View
                 GameObject floor = Instantiate(floorModel);
                 floor.transform.parent = floorT.transform;
                 floor.name = "Floor_" + i;
-                floor.tag = "Floor";
+                floor.tag = Tags.Floor;
                 floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
         }
@@ -197,7 +198,7 @@ namespace Assets.Scripts.View
             else
             {
                 _currentSection = GameObject.Find("Section_" + sectionId);
-                wallT = _currentSection.transform.Find("Wall").gameObject;
+                wallT = _currentSection.transform.Find(Tags.Wall).gameObject;
                 wallT.transform.parent = _currentSection.transform;
             }
 
@@ -210,7 +211,7 @@ namespace Assets.Scripts.View
 
                 wall.transform.parent = wallT.transform;
                 wall.name = useOriginalTransform ? "Wall_" + type + "_" + (i + 1) : "Wall_" + type + "_" + i;
-                wall.tag = "Wall";
+                wall.tag = Tags.Wall;
                 wall.transform.position = useOriginalTransform ? new Vector3(x - .5f, (y * (i+1)) - .5f, z) : new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
@@ -221,7 +222,7 @@ namespace Assets.Scripts.View
             float x = (spacing * (float)stackX);
 
             block.name = "Block-" + blockData.Id;
-            block.tag = "Block";
+            block.tag = Tags.Block;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
 
@@ -280,7 +281,7 @@ namespace Assets.Scripts.View
         }
         public void CheckSectionsToRender()
         {
-            GameObject[] sections = GameObject.FindGameObjectsWithTag("Section");
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
 
             foreach (GameObject section in sections)
             {
@@ -314,12 +315,12 @@ namespace Assets.Scripts.View
         }
         public void CheckWallsToRender(int sectionId)
         {
-            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find("Wall");
+            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
             List<GameObject> walls = new List<GameObject>();
 
             foreach (Transform child in _wall)
             {
-                if (child.tag == "Wall" && child.gameObject != null)
+                if (child.tag == Tags.Wall && child.gameObject != null)
                 {
                     walls.Add(child.gameObject);
                 }
@@ -344,34 +345,6 @@ namespace Assets.Scripts.View
                         type, amount, offset, true);
                 }
             }
-
-
-            //foreach (GameObject wall in walls)
-            //{
-            //    float wallY = Camera.main.WorldToViewportPoint(wall.transform.position).y;
-            //    bool inView = wallY >= 0f && wallY <= 1f ? true : false;
-
-            //    if (inView)
-            //    {
-            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
-            //        {
-            //            if (!child.enabled)
-            //            {
-            //                child.enabled = true;
-            //            }
-            //        }
-            //    }
-            //    else if (!inView)
-            //    {
-            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
-            //        {
-            //            if (child.enabled)
-            //            {
-            //                child.enabled = false;
-            //            }
-            //        }
-            //    }
-            //}
         }
 
 

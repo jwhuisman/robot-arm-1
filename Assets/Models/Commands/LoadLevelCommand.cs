@@ -13,7 +13,7 @@ namespace Assets.Models.Commands
         public override void Do(RobotArm robotArm)
         {
             world.LoadLevel(Level);
-            GameObject.Find("View").GetComponent<SectionBuilder>().Reload();
+            GameObject.Find(Tags.View).GetComponent<SectionBuilder>().Reload();
 
             IsDone = true;
 

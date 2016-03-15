@@ -9,8 +9,8 @@ namespace Assets.Models
     {
         public Command()
         {
-            networkListener = GameObject.Find("Scripts").GetComponent<NetworkListener>();
-            world = GameObject.Find("Globals").GetComponent<Globals>().world;
+            networkListener = GameObject.Find(Tags.Scripts).GetComponent<NetworkListener>();
+            world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
             IsDone = false;
             message = "ok";
         }

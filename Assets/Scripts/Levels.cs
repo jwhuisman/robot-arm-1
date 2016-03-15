@@ -41,7 +41,6 @@ namespace Assets.Scripts
 
             return stacks;
         }
-
         public List<BlockStack> GenerateRandomLevel()
         {
             List<BlockStack> stacks = new List<BlockStack>();

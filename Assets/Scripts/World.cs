@@ -21,6 +21,8 @@ namespace Assets.Scripts.WorldData
         public void LoadLevel(int level)
         {
             RobotArm.X = 0;
+            RobotArm.Holding = false;
+            RobotArm.HoldingBlock = new Block();
 
             if (level == 0)
             {

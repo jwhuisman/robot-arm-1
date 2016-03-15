@@ -52,8 +52,11 @@ namespace Assets.Scripts.View
                 int i = _world.Stacks.FindIndex(s => s.Id == _robotArmData.X);
                 float y = _world.Stacks[i].Blocks.Count() - 1;
 
-                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, y);
-                _robotArmData.HoldingBlock = new Block();
+                if (_robotArmData.HoldingBlock.Id != "")
+                {
+                    FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, y);
+                    _robotArmData.HoldingBlock = new Block();
+                }
 
                 wasHolding = false;
             }

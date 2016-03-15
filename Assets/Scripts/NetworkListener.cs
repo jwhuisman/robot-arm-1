@@ -133,6 +133,7 @@ public class NetworkListener : MonoBehaviour
 
     private void CloseTcpConnection()
     {
+        //if (_server.Server.Connected)  ??
         _server.Stop();
 
         if (IsConnected)

@@ -366,21 +366,21 @@ namespace Assets.Scripts.View
             m[0] = new Material(originals[0]);
             m[1] = new Material(originals[1]);
 
-            switch (color)
+            switch (color.ToLower())
             {
-                case "Red":
+                case "red":
                     m[0].color = Color.red;
                     m[1].color = Color.red;
                     break;
-                case "Green":
+                case "green":
                     m[0].color = Color.green;
                     m[1].color = Color.green;
                     break;
-                case "Blue":
+                case "blue":
                     m[0].color = Color.blue;
                     m[1].color = Color.blue;
                     break;
-                case "White":
+                case "white":
                     m[0].color = Color.white;
                     m[1].color = Color.white;
                     break;

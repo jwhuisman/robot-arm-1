@@ -32,9 +32,13 @@ namespace Assets.Scripts.WorldData
             {
                 Stacks = levels.LoadLevel1();
             }
-            else if(level == 2)
+            else if (level == 2)
             {
                 Stacks = levels.LoadLevel2();
+            }
+            else if (level == 3)
+            {
+                Stacks = levels.LoadLevel3();
             }
         }
 
@@ -56,7 +60,7 @@ namespace Assets.Scripts.WorldData
             {
                 int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-                if (Stacks[i].Blocks.Count != 0)
+                if (1 != -1 && Stacks[i].Blocks.Count != 0)
                 {
                     RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
                     RobotArm.Holding = true;
@@ -69,10 +73,13 @@ namespace Assets.Scripts.WorldData
             {
                 int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-                RobotArm.HoldingBlock.Y = Stacks[i].Blocks.Count();
-                Stacks[i].Blocks.Push(RobotArm.HoldingBlock);
-
-                RobotArm.Holding = false;
+                if (i != -1)
+                {
+                    RobotArm.HoldingBlock.Y = Stacks[i].Blocks.Count();
+                    Stacks[i].Blocks.Push(RobotArm.HoldingBlock);
+                        
+                    RobotArm.Holding = false;
+                }
             }
         }
         public string Scan()

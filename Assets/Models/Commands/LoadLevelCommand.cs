@@ -5,7 +5,7 @@ namespace Assets.Models.Commands
 {
     public class LoadLevelCommand : Command
     {
-        public LoadLevelCommand(int level)
+        public LoadLevelCommand(int level = 0)
         {
             Level = level;
         }

@@ -46,7 +46,11 @@ public class InputListener : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand(0));
+            commandRunner.Add(new LoadLevelCommand(3));
+        }
+        else if (Input.GetKeyDown(KeyCode.F4))
+        {
+            commandRunner.Add(new LoadLevelCommand());
         }
 
 

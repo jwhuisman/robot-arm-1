@@ -28,11 +28,11 @@ namespace Assets.Scripts.WorldData
             {
                 Stacks = levels.GenerateRandomLevel();
             }
-            if (level == 1)
+            else if (level == 1)
             {
                 Stacks = levels.LoadLevel1();
             }
-            if (level == 2)
+            else if(level == 2)
             {
                 Stacks = levels.LoadLevel2();
             }

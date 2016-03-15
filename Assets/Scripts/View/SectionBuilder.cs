@@ -108,12 +108,15 @@ namespace Assets.Scripts.View
         }
         public void GenerateBlocks(int stackX)
         {
-            Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
-            if (blocks.Count > 0)
+            if (stackX >= -Levels.stackMax && stackX <= Levels.stackMax)
             {
-                foreach (Block block in blocks)
+                Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
+                if (blocks.Count > 0)
                 {
-                    InstantiateBlock(stackX, block);
+                    foreach (Block block in blocks)
+                    {
+                        InstantiateBlock(stackX, block);
+                    }
                 }
             }
         }

@@ -7,10 +7,12 @@ namespace Assets.Scripts
 {
     public class Levels
     {
+        public static int stackMax = 100;
+
         public List<BlockStack> LoadLevel1()
         {
             List<BlockStack> stacks = new List<BlockStack>();
-            for (int x = stackMin; x < stackMax; x++)
+            for (int x = -stackMax; x <= stackMax; x++)
             {
                 stacks.Add(new BlockStack(x));
             }
@@ -24,7 +26,7 @@ namespace Assets.Scripts
         public List<BlockStack> LoadLevel2()
         {
             List<BlockStack> stacks = new List<BlockStack>();
-            for (int x = stackMin; x < stackMax; x++)
+            for (int x = -stackMax; x <= stackMax; x++)
             {
                 stacks.Add(new BlockStack(x));
             }
@@ -44,7 +46,7 @@ namespace Assets.Scripts
         public List<BlockStack> GenerateRandomLevel()
         {
             List<BlockStack> stacks = new List<BlockStack>();
-            for (int x = stackMin; x < stackMax; x++)
+            for (int x = -stackMax; x <= stackMax; x++)
             {
                 stacks.Add(GenerateStack(x));
             }
@@ -71,8 +73,6 @@ namespace Assets.Scripts
         }
 
         private Random rnd = new Random();
-        private int stackMin = -10000;
-        private int stackMax = 10000;
         private int minCubes = 1;
         private int maxCubes = 6;
     }

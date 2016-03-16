@@ -48,21 +48,26 @@ namespace Assets.Scripts.View
             }
             instantiatedSections = new List<Section>();
 
-            // set the robot arm to x=0
-            Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
-            robotArm.position = new Vector3(0, robotArm.position.y, robotArm.position.z);
-
             // create the first few sections
             CreateStartSections();
+
+            // set the robot arm to x=0 and y to the new highest block
+            Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
+            robotArm.position = new Vector3(0, GameObject.Find(Tags.Scripts).GetComponent<RobotArm>().GetHighestCubeY(), robotArm.position.z);
+            
+            // check what to render/create
+            CheckSectionsToCreate();
+            CheckSectionsToRender();
         }
 
 
         // creation
         public void CreateStartSections(int currentSection = 0)
         {
-            for (int i = currentSection - 3; i < currentSection + 3; i++)
+            for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
                 CreateSection(i, 0);
+                CheckWallsToRender(i);
             }
         }
         public void CreateSection(int sectionId, int dir = 0)

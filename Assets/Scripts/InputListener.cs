@@ -46,7 +46,7 @@ public class InputListener : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand("toren"));
+            commandRunner.Add(new LoadLevelCommand("tower"));
         }
         else if (Input.GetKeyDown(KeyCode.F4))
         {

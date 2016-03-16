@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    class Globals : MonoBehaviour
+    public class Globals : MonoBehaviour
     {
         public World world;
 

@@ -65,6 +65,11 @@ public class BlockManager : MonoBehaviour
 
     private int GetLeftmostVisibleStack()
     {
+        if (Camera.main.transform.position.z >= 0)
+        {
+            throw new InvalidOperationException("No blocks are visible. Did you move the camera behind the blocks?");
+        }
+
         Vector3 viewportPosition = new Vector3(0, 0, -Camera.main.transform.position.z);
         Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
         return (int) worldPosition.x - 1;
@@ -72,6 +77,11 @@ public class BlockManager : MonoBehaviour
 
     private int GetRightmostVisibleStack()
     {
+        if (Camera.main.transform.position.z >= 0)
+        {
+            throw new InvalidOperationException("No blocks are visible. Did you move the camera behind the blocks?");
+        }
+
         Vector3 viewportPosition = new Vector3(1, 1, -Camera.main.transform.position.z);
         Vector3 worldPosition = Camera.main.ViewportToWorldPoint(viewportPosition);
         return (int) worldPosition.x + 2;

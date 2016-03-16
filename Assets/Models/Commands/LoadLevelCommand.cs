@@ -5,14 +5,15 @@ namespace Assets.Models.Commands
 {
     public class LoadLevelCommand : Command
     {
-        public LoadLevelCommand(string name = "")
+        public LoadLevelCommand(string name = "", string user = "")
         {
             LevelName = name;
+            UserName = user;
         }
 
         public override void Do(RobotArm robotArm)
         {
-            world.LoadLevel(LevelName);
+            world.LoadLevel(LevelName, UserName);
 
             GameObject.Find(Tags.View).GetComponent<SectionBuilder>().Reload();
 
@@ -22,5 +23,6 @@ namespace Assets.Models.Commands
         }
 
         public string LevelName { get; set; }
+        public string UserName { get; set; }
     }
 }

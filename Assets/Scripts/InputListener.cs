@@ -38,15 +38,15 @@ public class InputListener : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.F1))
         {
-            commandRunner.Add(new LoadLevelCommand("level1"));
+            commandRunner.Add(new LoadLevelCommand("tower"));
         }
         else if (Input.GetKeyDown(KeyCode.F2))
         {
-            commandRunner.Add(new LoadLevelCommand("coollevel"));
+            commandRunner.Add(new LoadLevelCommand("tower", "bas"));
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand("tower"));
+            commandRunner.Add(new LoadLevelCommand("coollevel"));
         }
         else if (Input.GetKeyDown(KeyCode.F4))
         {
@@ -54,7 +54,6 @@ public class InputListener : MonoBehaviour
         }
 
 
-        // for testing purposes
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             commandRunner.Add(new SpeedCommand(10));

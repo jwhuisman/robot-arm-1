@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 namespace Assets.Scripts
 {
@@ -23,11 +24,38 @@ namespace Assets.Scripts
         // public static because the section builder needs this data too
         public static int stackMax;
 
-        public List<BlockStack> LoadLevel(string name)
+        public List<BlockStack> LoadLevel(string name, string user = "")
         {
-            string file = Path.Combine(path, name + ".txt");
-            if (File.Exists(file))
-                return ParseFile(file);
+            if (user == "")
+            {
+                user = "_default"; // folder for default levels
+            }
+
+            string file = user + "/" + name + ".txt";
+            string filePath = Path.Combine(levelPath, file);
+
+            if (File.Exists(filePath))
+            {
+                return ParseFile(filePath);
+            }
+            else
+            {
+                // search online and download
+                WebRequest webRequest = WebRequest.Create("http://localhost/levels/" + file);
+
+                Directory.CreateDirectory(levelPath + "/" + user);
+
+                string pathToWrite = Path.Combine(levelPath, file);
+                using (WebResponse resp = webRequest.GetResponse())
+                {
+                    string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    File.WriteAllText(pathToWrite, data);
+                }
+
+                return ParseFile(pathToWrite);
+            }
+
+            // if level and url doesnt exist
             return GenerateRandomLevel();
         }
         public List<BlockStack> ParseFile(string path)
@@ -48,7 +76,8 @@ namespace Assets.Scripts
             }
 
 
-            // add 'amount' empty stacks so you can place blocks there...
+            // add 'amount' empty stacks so you can place blocks there, 
+            // because you cant place blocks on the ground if there is no stack
             int amount = 100;
             int c = -stackMax - amount;
             for (int i = 0; i < amount; i++)
@@ -135,7 +164,7 @@ namespace Assets.Scripts
 
 
 
-        private string path = Path.GetFullPath(".") + "\\Assets\\Levels\\";
+        private string levelPath = Path.GetFullPath(".") + "\\Levels\\";
         private Random rnd = new Random();
         private int minCubes = 1;
         private int maxCubes = 6;

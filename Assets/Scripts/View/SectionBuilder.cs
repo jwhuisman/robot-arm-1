@@ -51,7 +51,7 @@ namespace Assets.Scripts.View
             // create the first few sections
             CreateStartSections();
 
-            // set the robot arm to x=0 and y to the new highest block
+            // set the robot arm to x=0 and y=new highest block
             Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
             robotArm.position = new Vector3(0, GameObject.Find(Tags.Scripts).GetComponent<RobotArm>().GetHighestCubeY(), robotArm.position.z);
             

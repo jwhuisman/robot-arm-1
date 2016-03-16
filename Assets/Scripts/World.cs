@@ -18,7 +18,7 @@ namespace Assets.Scripts.WorldData
             RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
-        public void LoadLevel(string name)
+        public void LoadLevel(string name, string user)
         {
             RobotArm.X = 0;
             RobotArm.Holding = false;
@@ -30,7 +30,7 @@ namespace Assets.Scripts.WorldData
             }
             else
             {
-                Stacks = levels.LoadLevel(name);
+                Stacks = levels.LoadLevel(name, user);
             }
         }
 

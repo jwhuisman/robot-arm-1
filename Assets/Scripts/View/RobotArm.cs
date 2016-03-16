@@ -57,19 +57,15 @@ namespace Assets.Scripts.View
         }
         public void SetSpeed(int speed)
         {
-            float time = 0;
+            float time = 50;
 
             if (speed <= 100 && speed >= 0)
             {
                 time = (100f - speed) / 100f;
-
-                armSpeed = time;
             }
 
             _view.speedMeter.SetSpeed(time);
         }
-
-        private float armSpeed;
 
         private Globals _globals;
         private World _world;

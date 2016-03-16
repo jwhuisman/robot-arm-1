@@ -1,0 +1,3 @@
+red white
+@random 4
+red white

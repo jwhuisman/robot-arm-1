@@ -1,9 +1,0 @@
-red
-white red
-blue white red
-green blue white red
-@random 1 5
-green blue white red
-blue white red
-white red
-red

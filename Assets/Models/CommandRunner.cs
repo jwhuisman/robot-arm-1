@@ -1,4 +1,6 @@
-﻿using Assets.Scripts.View;
+﻿using Assets.Models.Commands;
+using Assets.Scripts;
+using Assets.Scripts.View;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -38,6 +40,13 @@ namespace Assets.Models
         {
             currentCmd = Queue.Dequeue();
             currentCmd.Do(robotArm);
+
+            if (currentCmd is LoadLevelCommand)
+            {
+                Levels levels = GameObject.Find(Tags.Globals).GetComponent<Globals>().world.levels;
+
+                levels.DownloadAgain();
+            }
         }
 
         private bool firstCommand = true;

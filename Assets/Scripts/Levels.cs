@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
 
 namespace Assets.Scripts
 {
@@ -24,9 +23,12 @@ namespace Assets.Scripts
         // so the stack amount = stackMax * 2 + 1
         // public static because the section builder needs this data too
         public static int stackMax;
+        public string currentLevel;
 
         public List<BlockStack> LoadLevel(string name, out bool levelExists, bool changeLevelExists = true)
         {
+            currentLevel = name;
+
             levelExists = false;
 
             string[] nSplit = name.Split('/');
@@ -44,26 +46,30 @@ namespace Assets.Scripts
             else
             {
                 string pathToWrite = Path.Combine(levelPath, file);
-
-                string uri = "http://localhost/levels/" + file;
+                string uri = levelUri + file;
                 if (Ping(uri))
                 {
-                    Directory.CreateDirectory(levelPath + "/" + user);
-
-                    WebRequest webRequest = WebRequest.Create(uri);
-                    using (WebResponse resp = webRequest.GetResponse())
-                    {
-                        string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                        File.WriteAllText(pathToWrite, data);
-                    }
+                    DownloadLevel(uri, pathToWrite, user);
 
                     if (changeLevelExists)
                         levelExists = true;
+
                     return ParseFile(pathToWrite);
                 }
 
                 // level does not exist. Load new one and keep levelExists to false (third parameter)
                 return LoadLevel("empty", out levelExists, false);
+            }
+        }
+        private void DownloadLevel(string uri, string pathToWrite, string user)
+        {
+            Directory.CreateDirectory(levelPath + "/" + user);
+
+            WebRequest webRequest = WebRequest.Create(uri);
+            using (WebResponse resp = webRequest.GetResponse())
+            {
+                string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                File.WriteAllText(pathToWrite, data);
             }
         }
         private List<BlockStack> ParseFile(string path)
@@ -157,6 +163,17 @@ namespace Assets.Scripts
             }
         }
 
+        public void DownloadAgain()
+        {
+            string[] nSplit = currentLevel.Split('/');
+            string user = nSplit.Length > 1 ? nSplit[0] : "_default";
+            string file = user == "_default" ? user + "/" + currentLevel + ".txt" : currentLevel + ".txt";
+
+            string uri = levelUri + file;
+            string pathToWrite = Path.Combine(levelPath, file);
+
+            DownloadLevel(uri, pathToWrite, user);
+        }
 
         private List<BlockStack> GenerateRandomLevel()
         {
@@ -194,6 +211,7 @@ namespace Assets.Scripts
 
 
         private string levelPath = Path.GetFullPath(".") + "\\Levels\\";
+        private string levelUri = "http://localhost/levels/";
         private Random rnd = new Random();
         private int minCubes = 1;
         private int maxCubes = 6;

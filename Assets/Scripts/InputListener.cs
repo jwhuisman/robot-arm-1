@@ -60,6 +60,10 @@ public class InputListener : MonoBehaviour
         {
             commandRunner.Add(new LoadLevelCommand("doesnt/exist"));
         }
+        else if (Input.GetKeyDown(KeyCode.F7))
+        {
+            commandRunner.Add(new LoadLevelCommand("exist/even/less/than/others@#!@#$!615.nl.com"));
+        }
 
 
         else if (Input.GetKeyDown(KeyCode.Alpha1))

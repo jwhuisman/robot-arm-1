@@ -7,7 +7,7 @@ namespace Assets.Models
         public Command BuildCommand(string data)
         {
             string[] dataSplitted = new string[5];
-            string instruction = "", parameter = "", user = "";
+            string instruction = "", parameter = "";
 
             if (data.IndexOf(' ') >= 0)
             {
@@ -48,8 +48,7 @@ namespace Assets.Models
             }
             else if (instruction == "load")
             {
-                user = dataSplitted.Length > 2 ? dataSplitted[2] : user;
-                return new LoadLevelCommand(parameter, user);
+                return new LoadLevelCommand(parameter);
             }
             else
             {

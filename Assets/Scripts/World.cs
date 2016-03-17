@@ -13,25 +13,22 @@ namespace Assets.Scripts.WorldData
 
         public World()
         {
-            Stacks = levels.GenerateRandomLevel();
+            bool levelExists;
+            Stacks = levels.LoadLevel("random", out levelExists);
 
             RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
-        public void LoadLevel(string name, string user)
+        public bool LoadLevel(string name)
         {
             RobotArm.X = 0;
             RobotArm.Holding = false;
             RobotArm.HoldingBlock = new Block();
 
-            if (name == "")
-            {
-                Stacks = levels.GenerateRandomLevel();
-            }
-            else
-            {
-                Stacks = levels.LoadLevel(name, user);
-            }
+            bool levelExists;
+            Stacks = levels.LoadLevel(name, out levelExists);
+
+            return levelExists;
         }
 
         public void MoveLeft()

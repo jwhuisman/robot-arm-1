@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 
 namespace Assets.Scripts
 {
     public class Levels
     {
-        // level save/load stuff
+        // level load stuff
         // ----------
         // each line is a stack
         // 'red blue white' => red block at the bottom
@@ -24,41 +25,48 @@ namespace Assets.Scripts
         // public static because the section builder needs this data too
         public static int stackMax;
 
-        public List<BlockStack> LoadLevel(string name, string user = "")
+        public List<BlockStack> LoadLevel(string name, out bool levelExists, bool changeLevelExists = true)
         {
-            if (user == "")
-            {
-                user = "_default"; // folder for default levels
-            }
+            levelExists = false;
 
-            string file = user + "/" + name + ".txt";
+            string[] nSplit = name.Split('/');
+            string user = nSplit.Length > 1 ? nSplit[0] : "_default";
+
+            string file = user == "_default" ? user + "/" + name + ".txt" : name + ".txt";
             string filePath = Path.Combine(levelPath, file);
 
             if (File.Exists(filePath))
             {
+                if (changeLevelExists)
+                    levelExists = true;
                 return ParseFile(filePath);
             }
             else
             {
-                // search online and download
-                WebRequest webRequest = WebRequest.Create("http://localhost/levels/" + file);
-
-                Directory.CreateDirectory(levelPath + "/" + user);
-
                 string pathToWrite = Path.Combine(levelPath, file);
-                using (WebResponse resp = webRequest.GetResponse())
+
+                string uri = "http://localhost/levels/" + file;
+                if (Ping(uri))
                 {
-                    string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                    File.WriteAllText(pathToWrite, data);
+                    Directory.CreateDirectory(levelPath + "/" + user);
+
+                    WebRequest webRequest = WebRequest.Create(uri);
+                    using (WebResponse resp = webRequest.GetResponse())
+                    {
+                        string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        File.WriteAllText(pathToWrite, data);
+                    }
+
+                    if (changeLevelExists)
+                        levelExists = true;
+                    return ParseFile(pathToWrite);
                 }
 
-                return ParseFile(pathToWrite);
+                // level does not exist. Load new one and keep levelExists to false (third parameter)
+                return LoadLevel("empty", out levelExists, false);
             }
-
-            // if level and url doesnt exist
-            return GenerateRandomLevel();
         }
-        public List<BlockStack> ParseFile(string path)
+        private List<BlockStack> ParseFile(string path)
         {
             List<BlockStack> stacks = new List<BlockStack>();
 
@@ -129,7 +137,28 @@ namespace Assets.Scripts
             return stacks;
         }
 
-        public List<BlockStack> GenerateRandomLevel()
+        private bool Ping(string url)
+        {
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Timeout = 3000;
+                request.AllowAutoRedirect = false;
+                request.Method = "HEAD";
+
+                using (var response = request.GetResponse())
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        private List<BlockStack> GenerateRandomLevel()
         {
             stackMax = defaultStackMax;
 
@@ -141,7 +170,7 @@ namespace Assets.Scripts
 
             return stacks;
         }
-        public BlockStack GenerateStack(int x, int min, int max)
+        private BlockStack GenerateStack(int x, int min, int max)
         {
             BlockStack stack = new BlockStack(x);
 

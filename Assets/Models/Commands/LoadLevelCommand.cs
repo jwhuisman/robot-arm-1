@@ -5,24 +5,26 @@ namespace Assets.Models.Commands
 {
     public class LoadLevelCommand : Command
     {
-        public LoadLevelCommand(string name = "", string user = "")
+        public LoadLevelCommand(string name)
         {
             LevelName = name;
-            UserName = user;
         }
 
         public override void Do(RobotArm robotArm)
         {
-            world.LoadLevel(LevelName, UserName);
-
+            bool levelExists = world.LoadLevel(LevelName);
             GameObject.Find(Tags.View).GetComponent<SectionBuilder>().Reload();
 
             IsDone = true;
+
+            if (!levelExists)
+            {
+                message = "wrong";
+            }
 
             networkListener.ReturnMessage(message);
         }
 
         public string LevelName { get; set; }
-        public string UserName { get; set; }
     }
 }

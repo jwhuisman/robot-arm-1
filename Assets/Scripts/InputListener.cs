@@ -42,15 +42,23 @@ public class InputListener : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F2))
         {
-            commandRunner.Add(new LoadLevelCommand("tower", "bas"));
+            commandRunner.Add(new LoadLevelCommand("bas/tower"));
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand("coollevel"));
+            commandRunner.Add(new LoadLevelCommand("random"));
         }
         else if (Input.GetKeyDown(KeyCode.F4))
         {
-            commandRunner.Add(new LoadLevelCommand());
+            commandRunner.Add(new LoadLevelCommand("empty"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F5))
+        {
+            commandRunner.Add(new LoadLevelCommand(""));
+        }
+        else if (Input.GetKeyDown(KeyCode.F6))
+        {
+            commandRunner.Add(new LoadLevelCommand("doesnt/exist"));
         }
 
 

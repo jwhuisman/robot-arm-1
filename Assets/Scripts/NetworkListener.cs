@@ -60,6 +60,7 @@ public class NetworkListener : MonoBehaviour
     {
         if (IsConnected)
         {
+            message += '\n';
             _client.GetStream().Write(Encoding.ASCII.GetBytes(message.ToLower()), 0, message.Length);
             _client.GetStream().Flush();
         }

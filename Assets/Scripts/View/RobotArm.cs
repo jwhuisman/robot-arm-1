@@ -28,7 +28,6 @@ namespace Assets.Scripts.View
         public void OnValidate()
         {
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-
             UpdateRobotHeight();
         }
 
@@ -50,6 +49,13 @@ namespace Assets.Scripts.View
 
         public void UpdateRobotHeight()
         {
+            if (_world == null)
+            {
+                // We're in the editor, or the robot arm hasn't been fully initialized
+                // yet, so we can ignore this call.
+                return;
+            }
+
             var position = transform.position;
             position.y = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
             transform.parent.transform.position = position;

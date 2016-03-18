@@ -7,62 +7,69 @@ namespace Assets.Scripts.View
 {
     public class RobotArm : MonoBehaviour
     {
-        public GameObject robotArmModel;
         public GameObject cubeDisposal;
 
-        public float blockHeight = 1.0f;
-        public float heightOffset;
+        [Header("Scales")]
+        public float blockHeight = 1f;
+        public float blockWidth = 1f;
+        public float robotArmHeight = 1f;
+        public float blockHalf;
+
+        // Space between RobotArm and the heighest Block
+        // Warning : DO NOT SET BELOW 1.0f or bad things will happen.
+        [Header("Never set below 1")]
+        public float distanceToHighestStack = 2.0f;
 
         public void Start()
         {
-            GetHighestCubeY();
-
             InitializeComponents();
+        }
+        
+        public void OnValidate()
+        {
+            distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
 
-            UpdateArmHeight();
+            UpdateRobotHeight();
         }
 
         public void InitializeComponents()
         {
+            // initializations of scripts
             _globals = GetComponent<Globals>();
             _view = GameObject.Find("View").GetComponent<View>();
             _world = GameObject.Find("Global Scripts").GetComponent<Globals>().world;
             _animator = gameObject.GetComponentInChildren<Animator>();
 
-            robotArmModel = GameObject.Find("robot-hand");
             _roboCubeDisposal = GameObject.Find("RobotArm-CubeDisposal");
-        }
-        public void UpdateArmHeight()
-        {
-            float offset = 1;
 
+            // Defining/Calculating offset and position
+            blockHalf = blockHeight / 2;
+
+            UpdateRobotHeight();
+        }
+
+        public void UpdateRobotHeight()
+        {
             var position = transform.position;
-            position.y = (_world.Height + offset) * blockHeight + heightOffset;
-            transform.position = position;
+            position.y = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
+            transform.parent.transform.position = position;
         }
-        public int GetHighestCubeY()
-        {
-            GameObject[] blocks = GameObject.FindGameObjectsWithTag("Block").Where(b => b.name != "Block-" + _world.RobotArm.HoldingBlock.Id).ToArray();
-            int offsetY = 3;
-            int y = 0;
-
-            if (blocks.Length > 0)
-            {
-                y = (int)blocks.Max(c => c.transform.position.y);
-            }
-
-            return y + offsetY;
-        }
-
+        
         public void MoveLeft()
         {
-            targetPosition = new Vector3(transform.position.x - (1f * _view.spacing), transform.position.y, transform.position.z);
+            // Calculates with the width and spacing between blocks
+            // how far it needs to travel to the block at the left.
+            targetPosition = new Vector3(transform.position.x - (blockWidth * _view.spacing), transform.position.y, transform.position.z);
+
             _animator.SetTrigger("Move Left");
         }
 
         public void MoveRight()
         {
-            targetPosition = new Vector3(transform.position.x - (-1f * _view.spacing), transform.position.y, transform.position.z);
+            // Calculates with the width and spacing between blocks
+            // how far it needs to travel to the block at the right.
+            targetPosition = new Vector3(transform.position.x - (-blockWidth * _view.spacing), transform.position.y, transform.position.z);
+
             _animator.SetTrigger("Move Right");
         }
 
@@ -73,7 +80,7 @@ namespace Assets.Scripts.View
             // to add 1 to the height of the stack to compensate.
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
-            targetPosition.y = stackHeight * blockHeight + heightOffset;
+            targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             // Find the GameObject that represents the block we're going to grab, so we can
             // parent underneath the robot hand later.
@@ -90,7 +97,7 @@ namespace Assets.Scripts.View
             // to subtract 1 from the height of the stack to compensate.
             int stackHeight = _world.CurrentStack.Blocks.Count;
             targetPosition = transform.position;
-            targetPosition.y = stackHeight * blockHeight + heightOffset;
+            targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             // We still know which block to set down, because it hasn't changed since last we
             // called Grab().
@@ -103,7 +110,7 @@ namespace Assets.Scripts.View
         {
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
-            targetPosition.y = stackHeight * blockHeight + heightOffset;
+            targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             _animator.SetTrigger("Pretend Grab");
         }
@@ -112,16 +119,21 @@ namespace Assets.Scripts.View
         {
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
-            targetPosition.y = stackHeight * blockHeight + heightOffset;
+            targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             _animator.SetTrigger("Pretend Drop");
         }
         
         public void Scan()
         {
-            bool ReadyScan = (_world.RobotArm.Holding) ? true : false;
-            _animator.SetBool("ReadyScan", ReadyScan);
-            _animator.SetTrigger("Scan animation");
+            if (_world.RobotArm.Holding)
+            {
+                _animator.SetTrigger("Scan animation");
+            }
+            else
+            {
+                OnAnimationIsDone();
+            }
         }
 
         public void UpdateSpeed(int speed)
@@ -131,36 +143,15 @@ namespace Assets.Scripts.View
             if (speed <= 100 && speed >= 0)
             {
                 time = (100f - speed) / 100f;
-
-                armSpeed = time;
             }
 
-            _view.speedMeter.SetSpeed(time);
+            OnAnimationIsDone();
         }
 
         // Helpers and converters
-        public GameObject FindBlockAtX(int x, bool viewHolding = false)
-        {
-            GameObject[] stack = (viewHolding)
-                ? GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x) && b.name != "Block-" + _world.RobotArm.HoldingBlock.Id).ToArray()
-                : GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x)).ToArray();
-
-            if (stack.Count() != 0)
-            {
-                float y = stack.Max(s => s.transform.position.y);
-                return stack.Where(s => s.transform.position.y == y).SingleOrDefault();
-            }
-
-            return null;
-        }
         public GameObject FindBlock(string Id)
         {
             return GameObject.Find("Block-" + Id);
-        }
-
-        public float WorldToView(int x)
-        {
-            return x * _view.spacing;
         }
 
         public event EventHandler AnimationIsDone;
@@ -172,13 +163,13 @@ namespace Assets.Scripts.View
             {
                 AnimationIsDone(this, EventArgs.Empty);
             }
+
+            UpdateRobotHeight();
         }
 
         internal Vector3 targetPosition;
         internal GameObject block;
 
-        private float mapBoundaryTop;
-        private float armSpeed;
         private GameObject _roboCubeDisposal;
 
         private Animator _animator;

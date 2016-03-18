@@ -8,6 +8,7 @@ namespace Assets.Models.Commands
         {
             Speed = speed;
         }
+
         public override void Do(RobotArm robotArm)
         {
             robotArm.UpdateSpeed(Speed);

@@ -34,48 +34,52 @@ public class InputListener : MonoBehaviour
         {
             commandRunner.Add(new MoveCommand("right"));
         }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            commandRunner.Add(new ScanCommand());
+        }
 
 
         // for testing purposes
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            commandRunner.Add(new SpeedCommand(10));
+            commandRunner.Add(new SpeedCommand(1));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            commandRunner.Add(new SpeedCommand(20));
+            commandRunner.Add(new SpeedCommand(2));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            commandRunner.Add(new SpeedCommand(30));
+            commandRunner.Add(new SpeedCommand(3));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            commandRunner.Add(new SpeedCommand(40));
+            commandRunner.Add(new SpeedCommand(4));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            commandRunner.Add(new SpeedCommand(50));
+            commandRunner.Add(new SpeedCommand(5));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            commandRunner.Add(new SpeedCommand(60));
+            commandRunner.Add(new SpeedCommand(6));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            commandRunner.Add(new SpeedCommand(70));
+            commandRunner.Add(new SpeedCommand(7));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            commandRunner.Add(new SpeedCommand(80));
+            commandRunner.Add(new SpeedCommand(8));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            commandRunner.Add(new SpeedCommand(90));
+            commandRunner.Add(new SpeedCommand(9));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            commandRunner.Add(new SpeedCommand(100));
+            commandRunner.Add(new SpeedCommand(10));
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using Assets.Scripts.View;
 
-public class HorizonVerticalMovement : StateMachineBehaviour {
+public class VerticalMovement : StateMachineBehaviour {
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -9,7 +9,7 @@ public class HorizonVerticalMovement : StateMachineBehaviour {
         _robotArm = animator.gameObject.transform;
 
         _target = animator.GetComponent<RobotArm>().targetPosition;
-        _speed = 2.5f * animator.GetFloat("Speed");
+        _speed = 2f * animator.GetFloat("Speed");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

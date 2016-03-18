@@ -128,9 +128,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 163021200}
   - {fileID: 1120064385}
   - {fileID: 1593805963}
+  - {fileID: 1246093163}
   - {fileID: 255703150}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -170,33 +170,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speedMeterModel: {fileID: 100004, guid: 966dd05d435b4794991af942cd32baba, type: 3}
---- !u!1 &163021199
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 163021200}
-  m_Layer: 0
-  m_Name: Cubes
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &163021200
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 163021199}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 159257697}
-  m_RootOrder: 0
 --- !u!1 &255703149
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +179,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 255703150}
   m_Layer: 0
-  m_Name: robot-hand-holder
+  m_Name: Robot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -223,7 +196,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 432783515}
-  - {fileID: 1246093163}
   m_Father: {fileID: 159257697}
   m_RootOrder: 3
 --- !u!1001 &432783514
@@ -327,7 +299,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 623548369}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 860723f219b51064d907a97e8cfe34cd, type: 3}
   m_Name: 
@@ -413,12 +385,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a036519219eef46b8be3c6f441423f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotArmModel: {fileID: 913337110}
-  cubeDisposal: {fileID: 163021199}
-  targetPosition: {x: 0, y: 0, z: 0}
-  block: {fileID: 0}
+  cubeDisposal: {fileID: 1246093162}
   blockHeight: 1
-  heightOffset: 0.375
+  blockWidth: 1
+  robotArmHeight: 1
+  blockHalf: 0
+  distanceToHighestStack: 2
 --- !u!1 &1120064384
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,7 +417,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 159257697}
-  m_RootOrder: 1
+  m_RootOrder: 0
 --- !u!1001 &1196696923
 Prefab:
   m_ObjectHideFlags: 0
@@ -487,7 +459,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 199188, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 21250200, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
       propertyPath: m_Enabled
@@ -543,7 +515,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 21246966, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
       propertyPath: m_Color.a
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 21200204, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
       propertyPath: m_Enabled
@@ -561,6 +533,73 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: -3.4596667
       objectReference: {fileID: 0}
+    - target: {fileID: 155710, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 21246966, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_FlipX
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 21200204, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21239716, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21231604, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21200480, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21214634, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21226106, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2f597bedd7cb7fa4582a46cb1319955d,
+        type: 3}
+    - target: {fileID: 21246966, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fd3f474bf6b55c49b3fdb0b238bbc61,
+        type: 3}
+    - target: {fileID: 21250200, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fd3f474bf6b55c49b3fdb0b238bbc61,
+        type: 3}
+    - target: {fileID: 21274294, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fd3f474bf6b55c49b3fdb0b238bbc61,
+        type: 3}
+    - target: {fileID: 21202234, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fd3f474bf6b55c49b3fdb0b238bbc61,
+        type: 3}
+    - target: {fileID: 21279374, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2fd3f474bf6b55c49b3fdb0b238bbc61,
+        type: 3}
+    - target: {fileID: 492368, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -1.12
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d61fa7248e2ba5c4485fbc4fdba20e0c, type: 2}
   m_IsPrefabParent: 0
@@ -573,7 +612,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1246093163}
   m_Layer: 0
-  m_Name: RobotArm-CubeDisposal
+  m_Name: CubeDisposal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -589,8 +628,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 255703150}
-  m_RootOrder: 1
+  m_Father: {fileID: 159257697}
+  m_RootOrder: 2
 --- !u!1 &1297704969
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,7 +717,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 159257697}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!1 &2052329896
 GameObject:
   m_ObjectHideFlags: 0

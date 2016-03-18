@@ -14,7 +14,7 @@ namespace Assets.Scripts.View
 
         public void InitNeedle()
         {
-            CreateSpeedMeter(GameObject.Find("robot-hand-holder").transform);
+            CreateSpeedMeter(GameObject.Find("Robot").transform);
 
             needle = GameObject.Find("Needle");
 

@@ -55,8 +55,6 @@ namespace Assets.Scripts.WorldData
             Stacks.Add(stack);
         }
 
-
-
         public void MoveLeft()
         {
             RobotArm.X--;
@@ -65,7 +63,6 @@ namespace Assets.Scripts.WorldData
         {
             RobotArm.X++;
         }
-
         public void Grab()
         {
             if (!RobotArm.Holding)

@@ -38,7 +38,13 @@ namespace Assets.Models
         }
         public void Next()
         {
+            if (currentCmd != null)
+            {
+                robotArm.AnimationIsDone -= currentCmd.AnimationFinished;
+            }
+
             currentCmd = Queue.Dequeue();
+            robotArm.AnimationIsDone += currentCmd.AnimationFinished;
             currentCmd.Do(robotArm);
 
             if (currentCmd is LoadLevelCommand)

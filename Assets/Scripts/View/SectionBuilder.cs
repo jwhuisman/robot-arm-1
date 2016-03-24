@@ -170,8 +170,7 @@ namespace Assets.Scripts.View
 
             return type;
         }
-
-
+        
         // instantiation
         public void InstantiateAssemblyLine(int sectionId, float x)
         {
@@ -355,7 +354,6 @@ namespace Assets.Scripts.View
             }
         }
 
-
         // set section size and spacing
         public void SetSectionSize(int widthTotal, int width, float space)
         {
@@ -430,6 +428,7 @@ namespace Assets.Scripts.View
         private float spacing;
 
         private bool initialized = false;
+        private GameObject _robotArm;
 
         private GameObject _factory;
         private Globals _globals;

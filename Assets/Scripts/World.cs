@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using Assets.Models.WorldData;
 
 namespace Assets.Scripts.WorldData
@@ -17,6 +18,22 @@ namespace Assets.Scripts.WorldData
             Stacks = levels.LoadLevel("random", out levelExists);
 
             RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
+        }
+
+        public int Height
+        {
+            get
+            {
+                return Stacks.Max(s => s.Blocks.Count);
+            }
+        }
+
+        public BlockStack CurrentStack
+        {
+            get
+            {
+                return Stacks.Single(s => s.Id == RobotArm.X);
+            }
         }
 
         public bool LoadLevel(string name)
@@ -39,23 +56,20 @@ namespace Assets.Scripts.WorldData
         {
             RobotArm.X++;
         }
-        public void MoveUp()
-        {
-            RobotArm.Y++;
-        }
         public void Grab()
         {
             if (!RobotArm.Holding)
             {
                 int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-                if (1 != -1 && Stacks[i].Blocks.Count != 0)
+                if (Stacks[i].Blocks.Count() > 0)
                 {
                     RobotArm.HoldingBlock = Stacks[i].Blocks.Pop();
                     RobotArm.Holding = true;
                 }
             }
         }
+
         public void Drop()
         {
             if (RobotArm.Holding)
@@ -80,5 +94,11 @@ namespace Assets.Scripts.WorldData
 
             return "none";
         }
+
+        private Random rnd = new Random();
+        private int stackMin = -50;
+        private int stackMax = 50;
+        private int minCubes = 1;
+        private int maxCubes = 6;
     }
 }

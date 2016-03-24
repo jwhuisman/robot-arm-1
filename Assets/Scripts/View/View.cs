@@ -9,20 +9,17 @@ namespace Assets.Scripts.View
 {
     public class View : MonoBehaviour
     {
-        // blender models
-        public GameObject robotArmModel;
+        public float spacing = 1.25f;
 
         // stuff the view knows
-        public SpeedMeter speedMeter;
         public SectionBuilder sectionBuilder;
-
+        public GameObject robotArmHolder;
+        public SpeedMeter speedMeter;
 
         // start
         public void Start()
         {
             InitComponents();
-
-            InitRobotArm();
 
             InitSectionSize();
         }
@@ -30,101 +27,23 @@ namespace Assets.Scripts.View
         // update
         public void UpdateView()
         {
-            UpdateWorld();
-
             sectionBuilder.CheckSectionsToCreate();
             sectionBuilder.CheckSectionsToRender();
         }
-        public void UpdateWorld()
-        {
-            _world = _globals.world;
 
-            _robotArm.transform.position = RobotArmToView(_robotArmData);
-
-
-            if (_robotArmData.Holding)
-            {
-                FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, _robotArm.transform.position.y - .6f);
-                wasHolding = true;
-            }
-            else if (wasHolding)
-            {
-                int i = _world.Stacks.FindIndex(s => s.Id == _robotArmData.X);
-                float y = _world.Stacks[i].Blocks.Count() - 1;
-
-                if (_robotArmData.HoldingBlock.Id != "")
-                {
-                    FindBlock(_robotArmData.HoldingBlock.Id).transform.position = new Vector3(_robotArm.transform.position.x, y);
-                    _robotArmData.HoldingBlock = new Block();
-                }
-
-                wasHolding = false;
-            }
-        }
-        
-        // initialize
+        // Initialize
         public void InitComponents()
         {
-            _globals = GameObject.Find("Globals").GetComponent<Globals>();
-            _view = GameObject.Find("View");
-
+            _globals = GameObject.Find("Global Scripts").GetComponent<Globals>();
+            _view = GameObject.Find(Tags.View);
             _world = _globals.world;
+
             _robotArmData = _world.RobotArm;
 
             speedMeter = _view.GetComponent<SpeedMeter>();
             sectionBuilder = _view.GetComponent<SectionBuilder>();
         }
-        public void InitRobotArm()
-        {
-            CreateRobotArm(_robotArmData);
-        }
 
-        // create
-        public void CreateRobotArm(RobotArmData robotArmData)
-        {
-            GameObject arm = Instantiate(robotArmModel);
-
-            arm.name = "RobotArm";
-            arm.tag  = "RobotArm";
-            arm.transform.parent = _view.transform;
-            arm.transform.position = new Vector3(robotArmData.X, robotArmData.Y, 0);
-            arm.transform.rotation = Quaternion.identity;
-
-            _robotArm = arm;
-        }
-
-        // helpers
-        public GameObject FindBlock(string Id)
-        {
-            return GameObject.Find("Block-" + Id);
-        }
-        public GameObject FindBlockAtX(int x)
-        {
-            GameObject[] stack = (!_world.RobotArm.Holding) 
-                ? GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x)).ToArray() 
-                : GameObject.FindGameObjectsWithTag("Block").Where(b => b.transform.position.x == WorldToView(x) && b.name != "Block-" + _world.RobotArm.HoldingBlock.Id).ToArray();
-
-            if (stack.Count() != 0)
-            {
-                float  y = stack.Max(s => s.transform.position.y);
-                return stack.Where(s => s.transform.position.y == y).SingleOrDefault();
-            }
-
-            return null;
-        }
-        public float WorldToView(int x)
-        {
-            return x * spacing;
-        }
-        public Vector3 RobotArmToView(RobotArmData robotArmData)
-        {
-            float x = robotArmData.X * spacing;
-            float y = robotArmData.Y;
-
-            return new Vector3(x, y);
-        }
-
-        // misc
         public void InitSectionSize()
         {
             sectionWidthTotal = (int)sectionBuilder.assemblyLineModel.GetComponent<MeshRenderer>().bounds.size.x;
@@ -133,19 +52,26 @@ namespace Assets.Scripts.View
 
             sectionBuilder.SetSectionSize(sectionWidthTotal, sectionWidth, spacing);
         }
-
+        
+        // helpers
+        public GameObject FindBlock(string Id)
+        {
+            return GameObject.Find("Block-" + Id);
+        }
+        public float WorldToView(int x)
+        {
+            return x * spacing;
+        }
 
         // privates
         private int sectionWidthTotal;
         private int sectionWidth;
-        private float spacing;
 
         private bool wasHolding = false;
 
-        private GameObject _view;
-        private GameObject _robotArm;
+        private GameObject     _view;
         private RobotArmData   _robotArmData;
-        private Globals    _globals;
-        private World      _world;
+        private Globals        _globals;
+        private World          _world;
     }
 }

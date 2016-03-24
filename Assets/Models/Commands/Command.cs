@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts;
 using Assets.Scripts.View;
 using Assets.Scripts.WorldData;
+using System;
 using UnityEngine;
 
 namespace Assets.Models
@@ -11,18 +12,20 @@ namespace Assets.Models
         {
             networkListener = GameObject.Find(Tags.Scripts).GetComponent<NetworkListener>();
             world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
-            IsDone = false;
+            //EventManager.AnimationIsDone += AnimationFinished;
             message = "ok";
+            IsDone = false;
         }
 
         public virtual void Do(RobotArm robotArm) { }
-        public void Stop()
+
+        public void AnimationFinished(object sender, EventArgs e)
         {
-            networkListener.ReturnMessage(message);
             IsDone = true;
+            networkListener.ReturnMessage(message);
         }
+        public string message { get; set; }
         public bool IsDone { get; set; }
-        protected string message { get; set; }
 
         protected World world;
         protected NetworkListener networkListener;

@@ -18,7 +18,6 @@ public class InputListener : MonoBehaviour
             Application.Quit();
         }
 
-
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             commandRunner.Add(new DropCommand());
@@ -34,6 +33,10 @@ public class InputListener : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             commandRunner.Add(new MoveCommand("right"));
+        }
+        else if (Input.GetKeyDown(KeyCode.S))
+        {
+            commandRunner.Add(new ScanCommand());
         }
 
         else if (Input.GetKeyDown(KeyCode.F1))
@@ -100,7 +103,7 @@ public class InputListener : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            commandRunner.Add(new SpeedCommand(90));
+            commandRunner.Add(new SpeedCommand(99));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {

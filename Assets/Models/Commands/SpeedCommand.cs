@@ -8,13 +8,10 @@ namespace Assets.Models.Commands
         {
             Speed = speed;
         }
+
         public override void Do(RobotArm robotArm)
         {
-            robotArm.SetSpeed(Speed);
-
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
+            robotArm.UpdateSpeed(Speed);
         }
 
         public int Speed { get; set; }

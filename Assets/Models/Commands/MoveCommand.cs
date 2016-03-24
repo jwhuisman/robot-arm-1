@@ -8,6 +8,7 @@ namespace Assets.Models.Commands
         {
             Direction = dir;
         }
+
         public override void Do(RobotArm robotArm)
         {
             if (Direction == "right")
@@ -20,10 +21,6 @@ namespace Assets.Models.Commands
                 world.MoveLeft();
                 robotArm.MoveLeft();
             }
-
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
         }
 
         public string Direction { get; set; }

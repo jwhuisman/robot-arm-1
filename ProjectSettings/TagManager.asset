@@ -13,6 +13,8 @@ TagManager:
   - Assembly
   - Wall
   - Section
+  - View
+  - Scripts
   layers:
   - Default
   - TransparentFX

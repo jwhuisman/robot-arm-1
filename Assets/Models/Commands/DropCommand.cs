@@ -6,12 +6,15 @@ namespace Assets.Models.Commands
     {
         public override void Do(RobotArm robotArm)
         {
-            world.Drop();
-            robotArm.Drop();
-
-            IsDone = true;
-
-            networkListener.ReturnMessage(message);
+            if (world.RobotArm.Holding)
+            {
+                world.Drop();
+                robotArm.Drop();
+            }
+            else
+            {
+                robotArm.PretendDrop();
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Assets.Scripts.View
 
         public void InitNeedle()
         {
-            CreateSpeedMeter(GameObject.Find("RobotArm").transform);
+            CreateSpeedMeter(GameObject.Find("Robot").transform);
 
             needle = GameObject.Find("Needle");
 
@@ -43,7 +43,7 @@ namespace Assets.Scripts.View
             meter.transform.parent = parent;
 
             // reset the rotations, to fix issues with blender -> unity
-            meter.transform.position = new Vector3(parent.position.x, parent.position.y + 2.5f, 0);
+            meter.transform.position = new Vector3(parent.position.x, parent.position.y + 1.5f, 0);
             foreach (Transform child in meter.transform)
             {
                 child.rotation = Quaternion.identity;

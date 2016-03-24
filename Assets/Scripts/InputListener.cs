@@ -43,43 +43,43 @@ public class InputListener : MonoBehaviour
         // for testing purposes
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            commandRunner.Add(new SpeedCommand(1));
+            commandRunner.Add(new SpeedCommand(10));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            commandRunner.Add(new SpeedCommand(2));
+            commandRunner.Add(new SpeedCommand(20));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            commandRunner.Add(new SpeedCommand(3));
+            commandRunner.Add(new SpeedCommand(30));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            commandRunner.Add(new SpeedCommand(4));
+            commandRunner.Add(new SpeedCommand(40));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            commandRunner.Add(new SpeedCommand(5));
+            commandRunner.Add(new SpeedCommand(50));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            commandRunner.Add(new SpeedCommand(6));
+            commandRunner.Add(new SpeedCommand(60));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            commandRunner.Add(new SpeedCommand(7));
+            commandRunner.Add(new SpeedCommand(70));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            commandRunner.Add(new SpeedCommand(8));
+            commandRunner.Add(new SpeedCommand(80));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            commandRunner.Add(new SpeedCommand(9));
+            commandRunner.Add(new SpeedCommand(99));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            commandRunner.Add(new SpeedCommand(10));
+            commandRunner.Add(new SpeedCommand(100));
         }
     }
 }

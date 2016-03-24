@@ -17,8 +17,11 @@ namespace Assets.Scripts.View
 
         // Space between RobotArm and the heighest Block
         // Warning : DO NOT SET BELOW 1.0f or bad things will happen.
-        [Header("Never set below 1")]
+        [Header("Don't set below 1")]
         public float distanceToHighestStack = 2.0f;
+
+        [Header("Animation curves")]
+        public AnimationCurve animationCurveSpeed = new AnimationCurve();
 
         public void Start()
         {
@@ -50,6 +53,13 @@ namespace Assets.Scripts.View
 
         public void UpdateRobotHeight()
         {
+            if (_world == null)
+            {
+                // We're in the editor, or the robot arm hasn't been fully initialized
+                // yet, so we can ignore this call.
+                return;
+            }
+
             var position = transform.position;
             position.y = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
             transform.parent.transform.position = position;
@@ -138,12 +148,32 @@ namespace Assets.Scripts.View
 
         public void UpdateSpeed(int speed)
         {
-            float time = 0;
+            float tempCalc = (float)speed / 99f;
 
-            if (speed <= 100 && speed >= 0)
-            {
-                time = (100f - speed) / 100f;
-            }
+            float tempCalc2 = animationCurveSpeed.Evaluate(tempCalc);
+
+            float animatorSpeed = tempCalc2 * 30;
+
+            //animationCurveSpeed = speed / 99;
+            //float animatorSpeed;
+            // If the speed is higher than 100 everything to go instantly
+
+            // Else if its between 1-99 than we devide 99 (speed) through
+            // 30 (animator speed) because that is the animators maximum.
+
+            //float animatorSpeed = 1f;
+            //if (speed == 100)
+            //{
+            //    // everything needs to happen instantly
+            //}
+            //else if (speed > 0 && speed < 100)
+            //{
+            //    // 99 / 30  = 3.3 (deviding number)
+            //    // 3.3 / 99 = 30 (max animator speed)
+            //    animatorSpeed = speed / 3.3f;
+            //}
+
+            _animator.SetFloat("Speed", animatorSpeed);
 
             OnAnimationIsDone();
         }

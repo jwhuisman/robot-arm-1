@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System;
-using System.Linq;
 using Assets.Models.WorldData;
 
 namespace Assets.Scripts.WorldData
@@ -96,8 +95,8 @@ namespace Assets.Scripts.WorldData
         }
 
         private Random rnd = new Random();
-        private int stackMin = -50;
-        private int stackMax = 50;
+        private int stackMin = -10000;
+        private int stackMax = 10000;
         private int minCubes = 1;
         private int maxCubes = 6;
     }

@@ -1,8 +1,4 @@
-﻿using Assets.Models.WorldData;
-using Assets.Scripts.WorldData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Assets.Scripts.WorldData;
 using UnityEngine;
 
 namespace Assets.Scripts.View
@@ -66,8 +62,6 @@ namespace Assets.Scripts.View
         // privates
         private int sectionWidthTotal;
         private int sectionWidth;
-
-        private bool wasHolding = false;
 
         private GameObject     _view;
         private RobotArmData   _robotArmData;

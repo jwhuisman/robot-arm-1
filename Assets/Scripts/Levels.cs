@@ -27,6 +27,12 @@ namespace Assets.Scripts
 
         public List<BlockStack> LoadLevel(string name, out bool levelExists, bool changeLevelExists = true)
         {
+            if (name == "random")
+            {
+                levelExists = true;
+                return GenerateRandomLevel();
+            }
+
             currentLevel = name;
 
             levelExists = false;

@@ -31,7 +31,6 @@ namespace Assets.Scripts.View
         public void OnValidate()
         {
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-
             UpdateRobotHeight();
         }
 

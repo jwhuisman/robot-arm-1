@@ -26,10 +26,9 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
-
-            _globals = GameObject.FindWithTag("Scripts").GetComponent<Globals>();
+            _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
             _world = _globals.world;
-            _factory = GameObject.Find("Factory");
+            _factory = GameObject.Find(Tags.Factory);
 
             rnd = new System.Random();
 
@@ -38,12 +37,37 @@ namespace Assets.Scripts.View
             initialized = true;
         }
 
-        // creation
-        public void CreateStartSections()
+        // reload after load level
+        public void Reload()
         {
-            for (int i = -3; i < 3; i++)
+            // delete the factory
+            Transform factory = _factory.transform;
+            foreach (Transform child in factory.GetComponentInChildren<Transform>())
+            {
+                Destroy(child.gameObject);
+            }
+            instantiatedSections = new List<Section>();
+
+            // create the first few sections
+            CreateStartSections();
+
+            // set robot arm to x = 0
+            Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
+            robotArm.position = new Vector3(0, 0, robotArm.position.z);
+
+            // check what to render/create
+            CheckSectionsToCreate();
+            CheckSectionsToRender();
+        }
+
+
+        // creation
+        public void CreateStartSections(int currentSection = 0)
+        {
+            for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
                 CreateSection(i, 0);
+                CheckWallsToRender(i);
             }
         }
         public void CreateSection(int sectionId, int dir = 0)
@@ -89,11 +113,16 @@ namespace Assets.Scripts.View
         }
         public void GenerateBlocks(int stackX)
         {
-            Stack<Block> blocks = _world.Stacks.Where(c => c.Id == stackX).SingleOrDefault().Blocks;
-
-            foreach (Block block in blocks)
+            if (stackX >= -Levels.stackMax && stackX <= Levels.stackMax)
             {
-                InstantiateBlock(stackX, block);
+                Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
+                if (blocks.Count > 0)
+                {
+                    foreach (Block block in blocks)
+                    {
+                        InstantiateBlock(stackX, block);
+                    }
+                }
             }
         }
         public int GenerateWallType(int sectionId, int dir)
@@ -148,7 +177,7 @@ namespace Assets.Scripts.View
             GameObject assembly = Instantiate(assemblyLineModel);
             assembly.transform.parent = _currentSection.transform;
             assembly.name = "Assembly";
-            assembly.tag = "Assembly";
+            assembly.tag = Tags.Assembly;
             assembly.transform.position = new Vector3(x - .5f, -1.5f);
         }
         public void InstantiateFloor(int sectionId, float x, float z, float width, int amount = 1)
@@ -161,7 +190,7 @@ namespace Assets.Scripts.View
                 GameObject floor = Instantiate(floorModel);
                 floor.transform.parent = floorT.transform;
                 floor.name = "Floor_" + i;
-                floor.tag = "Floor";
+                floor.tag = Tags.Floor;
                 floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
         }
@@ -176,7 +205,7 @@ namespace Assets.Scripts.View
             else
             {
                 _currentSection = GameObject.Find("Section_" + sectionId);
-                wallT = _currentSection.transform.Find("Wall").gameObject;
+                wallT = _currentSection.transform.Find(Tags.Wall).gameObject;
                 wallT.transform.parent = _currentSection.transform;
             }
 
@@ -189,7 +218,7 @@ namespace Assets.Scripts.View
 
                 wall.transform.parent = wallT.transform;
                 wall.name = useOriginalTransform ? "Wall_" + type + "_" + (i + 1) : "Wall_" + type + "_" + i;
-                wall.tag = "Wall";
+                wall.tag = Tags.Wall;
                 wall.transform.position = useOriginalTransform ? new Vector3(x - .5f, (y * (i+1)) - .5f, z) : new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
@@ -200,7 +229,7 @@ namespace Assets.Scripts.View
             float x = (spacing * (float)stackX);
 
             block.name = "Block-" + blockData.Id;
-            block.tag = "Block";
+            block.tag = Tags.Block;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
 
@@ -259,7 +288,7 @@ namespace Assets.Scripts.View
         }
         public void CheckSectionsToRender()
         {
-            GameObject[] sections = GameObject.FindGameObjectsWithTag("Section");
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
 
             foreach (GameObject section in sections)
             {
@@ -293,12 +322,12 @@ namespace Assets.Scripts.View
         }
         public void CheckWallsToRender(int sectionId)
         {
-            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find("Wall");
+            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
             List<GameObject> walls = new List<GameObject>();
 
             foreach (Transform child in _wall)
             {
-                if (child.tag == "Wall" && child.gameObject != null)
+                if (child.tag == Tags.Wall && child.gameObject != null)
                 {
                     walls.Add(child.gameObject);
                 }
@@ -323,34 +352,6 @@ namespace Assets.Scripts.View
                         type, amount, offset, true);
                 }
             }
-
-
-            //foreach (GameObject wall in walls)
-            //{
-            //    float wallY = Camera.main.WorldToViewportPoint(wall.transform.position).y;
-            //    bool inView = wallY >= 0f && wallY <= 1f ? true : false;
-
-            //    if (inView)
-            //    {
-            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
-            //        {
-            //            if (!child.enabled)
-            //            {
-            //                child.enabled = true;
-            //            }
-            //        }
-            //    }
-            //    else if (!inView)
-            //    {
-            //        foreach (Renderer child in wall.GetComponentsInChildren<Renderer>())
-            //        {
-            //            if (child.enabled)
-            //            {
-            //                child.enabled = false;
-            //            }
-            //        }
-            //    }
-            //}
         }
 
         // set section size and spacing
@@ -368,21 +369,21 @@ namespace Assets.Scripts.View
             m[0] = new Material(originals[0]);
             m[1] = new Material(originals[1]);
 
-            switch (color)
+            switch (color.ToLower())
             {
-                case "Red":
+                case "red":
                     m[0].color = Color.red;
                     m[1].color = Color.red;
                     break;
-                case "Green":
+                case "green":
                     m[0].color = Color.green;
                     m[1].color = Color.green;
                     break;
-                case "Blue":
+                case "blue":
                     m[0].color = Color.blue;
                     m[1].color = Color.blue;
                     break;
-                case "White":
+                case "white":
                     m[0].color = Color.white;
                     m[1].color = Color.white;
                     break;

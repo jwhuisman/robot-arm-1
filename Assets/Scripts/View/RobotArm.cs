@@ -70,6 +70,8 @@ namespace Assets.Scripts.View
             targetPosition = new Vector3(transform.position.x - (blockWidth * _view.spacing), transform.position.y, transform.position.z);
 
             _animator.SetTrigger("Move Left");
+
+            _view.UpdateView();
         }
 
         public void MoveRight()
@@ -79,6 +81,8 @@ namespace Assets.Scripts.View
             targetPosition = new Vector3(transform.position.x - (-blockWidth * _view.spacing), transform.position.y, transform.position.z);
 
             _animator.SetTrigger("Move Right");
+
+            _view.UpdateView();
         }
 
         public void Grab()
@@ -97,9 +101,7 @@ namespace Assets.Scripts.View
             // Start the animation.
             _animator.SetTrigger("Grab");
 
-
-            // Start this animation in case the world.RobotArm is not holding a block
-            // this can occur when we hit the assemblyline.
+            _view.UpdateView();
         }
 
         public void Drop()
@@ -116,6 +118,8 @@ namespace Assets.Scripts.View
 
             // Start the animation.
             _animator.SetTrigger("Drop");
+
+            _view.UpdateView();
         }
 
         public void PretendGrab()
@@ -125,6 +129,8 @@ namespace Assets.Scripts.View
             targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             _animator.SetTrigger("Pretend Grab");
+
+            _view.UpdateView();
         }
 
         public void PretendDrop()
@@ -134,8 +140,10 @@ namespace Assets.Scripts.View
             targetPosition.y = stackHeight * blockHeight + blockHalf;
 
             _animator.SetTrigger("Pretend Drop");
+
+            _view.UpdateView();
         }
-        
+
         public void Scan()
         {
             if (_world.RobotArm.Holding)

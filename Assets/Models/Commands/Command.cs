@@ -12,6 +12,7 @@ namespace Assets.Models
         {
             networkListener = GameObject.FindWithTag("Scripts").GetComponent<NetworkListener>();
             world = GameObject.FindWithTag("Scripts").GetComponent<Globals>().world;
+
             message = "ok";
             IsDone = false;
         }

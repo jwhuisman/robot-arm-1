@@ -6,7 +6,7 @@ namespace Assets.Models
     {
         public Command BuildCommand(string data)
         {
-            string[] dataSplitted = new string[2];
+            string[] dataSplitted = new string[5];
             string instruction = "", parameter = "";
 
             if (data.IndexOf(' ') >= 0)
@@ -45,6 +45,10 @@ namespace Assets.Models
             else if (instruction == "scan")
             {
                 return new ScanCommand();
+            }
+            else if (instruction == "load")
+            {
+                return new LoadLevelCommand(parameter);
             }
             else
             {

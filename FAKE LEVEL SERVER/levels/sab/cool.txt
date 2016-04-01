@@ -1,0 +1,4 @@
+red white green blue
+blue red white green
+green blue red white
+white green blue red

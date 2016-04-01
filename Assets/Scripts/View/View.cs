@@ -31,12 +31,13 @@ namespace Assets.Scripts.View
         public void InitComponents()
         {
             _globals = GameObject.Find("Global Scripts").GetComponent<Globals>();
-            _view = GameObject.Find("View");
+            _view = GameObject.Find(Tags.View);
             _world = _globals.world;
 
             _robotArmData = _world.RobotArm;
             sectionBuilder = _view.GetComponent<SectionBuilder>();
         }
+
         public void InitSectionSize()
         {
             sectionWidthTotal = (int)sectionBuilder.assemblyLineModel.GetComponent<MeshRenderer>().bounds.size.x;
@@ -59,8 +60,6 @@ namespace Assets.Scripts.View
         // privates
         private int sectionWidthTotal;
         private int sectionWidth;
-
-        private bool wasHolding = false;
 
         private GameObject     _view;
         private RobotArmData   _robotArmData;

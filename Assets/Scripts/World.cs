@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 using System;
-using System.Linq;
 using Assets.Models.WorldData;
 
 namespace Assets.Scripts.WorldData
@@ -9,16 +8,15 @@ namespace Assets.Scripts.WorldData
     public class World
     {
         public List<BlockStack> Stacks = new List<BlockStack>();
+        public Levels levels = new Levels();
         public RobotArmData RobotArm;
 
         public World()
         {
-            for (int x = stackMin; x < stackMax; x++)
-            {
-                AddStack(x);
-            }
+            bool levelExists;
+            Stacks = levels.LoadLevel("random", out levelExists);
 
-            RobotArm = new RobotArmData(Stacks.Max(s => s.Blocks.Max(b => b.Y)) + 3);
+            RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
         }
 
         public int Height
@@ -37,22 +35,16 @@ namespace Assets.Scripts.WorldData
             }
         }
 
-        public void AddStack(int x)
+        public bool LoadLevel(string name)
         {
-            BlockStack stack = new BlockStack(x);
+            RobotArm.X = 0;
+            RobotArm.Holding = false;
+            RobotArm.HoldingBlock = new Block();
 
-            int cubesAmount = rnd.Next(minCubes, maxCubes + 1);
+            bool levelExists;
+            Stacks = levels.LoadLevel(name, out levelExists);
 
-            for (int i = 0; i < cubesAmount; i++)
-            {
-                string id = "(" + x + "/" + i + ")";
-                string color = ((ColorEnum.Colors)rnd.Next(0, 4)).ToString();
-                int y = stack.Blocks.Count();
-
-                stack.Blocks.Push(new Block(id, color, x, y));
-            }
-
-            Stacks.Add(stack);
+            return levelExists;
         }
 
         public void MoveLeft()
@@ -76,16 +68,20 @@ namespace Assets.Scripts.WorldData
                 }
             }
         }
+
         public void Drop()
         {
             if (RobotArm.Holding)
             {
                 int i = Stacks.FindIndex(s => s.Id == RobotArm.X);
 
-                RobotArm.HoldingBlock.Y = Stacks[i].Blocks.Count();
-                Stacks[i].Blocks.Push(RobotArm.HoldingBlock);
-
-                RobotArm.Holding = false;
+                if (i != -1)
+                {
+                    RobotArm.HoldingBlock.Y = Stacks[i].Blocks.Count();
+                    Stacks[i].Blocks.Push(RobotArm.HoldingBlock);
+                        
+                    RobotArm.Holding = false;
+                }
             }
         }
         public string Scan()
@@ -99,8 +95,8 @@ namespace Assets.Scripts.WorldData
         }
 
         private Random rnd = new Random();
-        private int stackMin = -50;
-        private int stackMax = 50;
+        private int stackMin = -10000;
+        private int stackMax = 10000;
         private int minCubes = 1;
         private int maxCubes = 6;
     }

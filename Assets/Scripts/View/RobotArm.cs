@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.WorldData;
 using System;
-using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.View
@@ -97,6 +96,10 @@ namespace Assets.Scripts.View
 
             // Start the animation.
             _animator.SetTrigger("Grab");
+
+
+            // Start this animation in case the world.RobotArm is not holding a block
+            // this can occur when we hit the assemblyline.
         }
 
         public void Drop()
@@ -147,31 +150,20 @@ namespace Assets.Scripts.View
 
         public void UpdateSpeed(int speed)
         {
-            float tempCalc = (float)speed / 99f;
+            // We want to devide our speed by 99, 
+            // that will be our maximum animation speed.
+            // If speed is 100 the animations shouldn't run
+            // and every command goes instantly
+            float normalizedSpeed = speed / 99f;
 
-            float tempCalc2 = animationCurveSpeed.Evaluate(tempCalc);
+            // float adjusted by the animationCurve
+            float curveNormalized = animationCurveSpeed.Evaluate(normalizedSpeed);
 
-            float animatorSpeed = tempCalc2 * 30;
+            // After the adjustion we multiply to a reasonable range
+            // for the animator to multiply the animation states.
+            float animatorSpeed = curveNormalized * 30;
 
-            //animationCurveSpeed = speed / 99;
-            //float animatorSpeed;
-            // If the speed is higher than 100 everything to go instantly
-
-            // Else if its between 1-99 than we devide 99 (speed) through
-            // 30 (animator speed) because that is the animators maximum.
-
-            //float animatorSpeed = 1f;
-            //if (speed == 100)
-            //{
-            //    // everything needs to happen instantly
-            //}
-            //else if (speed > 0 && speed < 100)
-            //{
-            //    // 99 / 30  = 3.3 (deviding number)
-            //    // 3.3 / 99 = 30 (max animator speed)
-            //    animatorSpeed = speed / 3.3f;
-            //}
-
+            // Update Needle
             _animator.SetFloat("Speed", animatorSpeed);
 
             OnAnimationIsDone();
@@ -195,7 +187,7 @@ namespace Assets.Scripts.View
 
             UpdateRobotHeight();
         }
-
+        
         internal Vector3 targetPosition;
         internal GameObject block;
 

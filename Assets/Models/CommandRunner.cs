@@ -7,6 +7,7 @@ namespace Assets.Models
     public class CommandRunner : MonoBehaviour
     {
         public RobotArm robotArm;
+        public SpeedMeter speedMeter;
 
         public CommandRunner()
         {
@@ -43,7 +44,7 @@ namespace Assets.Models
 
             currentCmd = Queue.Dequeue();
             robotArm.AnimationIsDone += currentCmd.AnimationFinished;
-            currentCmd.Do(robotArm);
+            currentCmd.Do(robotArm, speedMeter);
         }
 
         private bool firstCommand = true;

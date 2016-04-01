@@ -4,7 +4,7 @@ namespace Assets.Models.Commands
 {
     public class GrabCommand : Command
     {
-        public override void Do(RobotArm robotArm)
+        public override void Do(RobotArm robotArm, SpeedMeter speedMeter)
         {
             if (world.RobotArm.Holding)
             {
@@ -13,7 +13,15 @@ namespace Assets.Models.Commands
             else
             {
                 world.Grab();
-                robotArm.Grab();
+
+                if (world.RobotArm.Holding)
+                {
+                    robotArm.Grab();
+                }
+                else
+                {
+                    robotArm.PretendGrab();
+                }
             }
         }
     }

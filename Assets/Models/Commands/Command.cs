@@ -10,14 +10,13 @@ namespace Assets.Models
     {
         public Command()
         {
-            //EventManager.AnimationIsDone += AnimationFinished;
             networkListener = GameObject.FindWithTag("Scripts").GetComponent<NetworkListener>();
             world = GameObject.FindWithTag("Scripts").GetComponent<Globals>().world;
             message = "ok";
             IsDone = false;
         }
 
-        public virtual void Do(RobotArm robotArm) { }
+        public virtual void Do(RobotArm robotArm, SpeedMeter speedMeter) { }
 
         public void AnimationFinished(object sender, EventArgs e)
         {

@@ -15,6 +15,7 @@ TagManager:
   - Section
   - View
   - Scripts
+  - Needle
   layers:
   - Default
   - TransparentFX

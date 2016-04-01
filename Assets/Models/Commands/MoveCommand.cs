@@ -9,7 +9,7 @@ namespace Assets.Models.Commands
             Direction = dir;
         }
 
-        public override void Do(RobotArm robotArm)
+        public override void Do(RobotArm robotArm, SpeedMeter speedMeter)
         {
             if (Direction == "right")
             {

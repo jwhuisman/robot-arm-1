@@ -1,8 +1,4 @@
-﻿using Assets.Models.WorldData;
-using Assets.Scripts.WorldData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Assets.Scripts.WorldData;
 using UnityEngine;
 
 namespace Assets.Scripts.View
@@ -13,8 +9,8 @@ namespace Assets.Scripts.View
 
         // stuff the view knows
         public SectionBuilder sectionBuilder;
-        public GameObject robotArmHolder;
-        public SpeedMeter speedMeter;
+        public GameObject robotArm;
+        public GameObject speedMeter;
 
         // start
         public void Start()
@@ -39,8 +35,6 @@ namespace Assets.Scripts.View
             _world = _globals.world;
 
             _robotArmData = _world.RobotArm;
-
-            speedMeter = _view.GetComponent<SpeedMeter>();
             sectionBuilder = _view.GetComponent<SectionBuilder>();
         }
         public void InitSectionSize()

@@ -9,7 +9,7 @@ namespace Assets.Models.Commands
             Instruction = instruction;
         }
 
-        public override void Do(RobotArm robotArm)
+        public override void Do(RobotArm robotArm, SpeedMeter speedMeter)
         {
             message = "nope";
             IsDone = true;

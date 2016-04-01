@@ -4,14 +4,17 @@ namespace Assets.Models.Commands
 {
     public class SpeedCommand : Command
     {
+        
         public SpeedCommand(int speed)
         {
             Speed = speed;
+
         }
 
-        public override void Do(RobotArm robotArm)
+        public override void Do(RobotArm robotArm, SpeedMeter speedMeter)
         {
             robotArm.UpdateSpeed(Speed);
+            speedMeter.UpdateSpeed(Speed);
         }
 
         public int Speed { get; set; }

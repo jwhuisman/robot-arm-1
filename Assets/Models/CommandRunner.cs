@@ -10,6 +10,7 @@ namespace Assets.Models
     {
         public RobotArm robotArm;
         public SpeedMeter speedMeter;
+        public StatsCounter statsCounter;
 
         public CommandRunner()
         {
@@ -47,7 +48,7 @@ namespace Assets.Models
             currentCmd = Queue.Dequeue();
             robotArm.AnimationIsDone += currentCmd.AnimationFinished;
 
-            currentCmd.Do(robotArm, speedMeter);
+            currentCmd.Do(robotArm, speedMeter, statsCounter);
 
 
             if (currentCmd is LoadLevelCommand)

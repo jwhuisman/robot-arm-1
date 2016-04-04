@@ -17,7 +17,7 @@ namespace Assets.Models
             IsDone = false;
         }
 
-        public virtual void Do(RobotArm robotArm, SpeedMeter speedMeter) { }
+        public virtual void Do(RobotArm robotArm, SpeedMeter speedMeter, StatsCounter statsCounter) { }
 
         public void AnimationFinished(object sender, EventArgs e)
         {

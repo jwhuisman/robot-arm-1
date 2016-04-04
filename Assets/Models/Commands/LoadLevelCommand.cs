@@ -10,7 +10,7 @@ namespace Assets.Models.Commands
             LevelName = name;
         }
 
-        public override void Do(RobotArm robotArm, SpeedMeter speedMeter)
+        public override void Do(RobotArm robotArm, SpeedMeter speedMeter, StatsCounter statsCounter)
         {
             bool levelExists = world.LoadLevel(LevelName);
             GameObject.Find(Tags.View).GetComponent<SectionBuilder>().Reload();

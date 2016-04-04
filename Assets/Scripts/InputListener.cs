@@ -13,11 +13,6 @@ public class InputListener : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
-
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             commandRunner.Add(new DropCommand());

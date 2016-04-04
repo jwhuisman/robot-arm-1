@@ -356,6 +356,7 @@ GameObject:
   - 114: {fileID: 623548372}
   - 114: {fileID: 623548370}
   - 114: {fileID: 623548375}
+  - 114: {fileID: 623548371}
   m_Layer: 0
   m_Name: Global Scripts
   m_TagString: Scripts
@@ -376,6 +377,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   robotArm: {fileID: 913337112}
   speedMeter: {fileID: 951667423}
+--- !u!114 &623548371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 623548369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d68250eb6feaa545ab60e18aaf45f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guiTexture: {fileID: 2800000, guid: 10e8ed6263c62f94b818a766fcab497e, type: 3}
 --- !u!114 &623548372
 MonoBehaviour:
   m_ObjectHideFlags: 0

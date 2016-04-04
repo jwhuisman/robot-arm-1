@@ -10,7 +10,7 @@ namespace Assets.Scripts
         public Texture2D customButtonTexture;
 
         private Rect menuRect = new Rect(Screen.width / 2 - 100, 10, 200, 190);
-        private Rect statsRect = new Rect(Screen.width - 210, 10, 200, 200);
+        private Rect statsRect = new Rect(Screen.width - 210, 10, 200, 210);
 
         private bool menuOpen = false;
         private bool statsOpen = false;
@@ -91,7 +91,6 @@ namespace Assets.Scripts
                 GUI.skin.button.focused.background = customButtonTexture;
                 GUI.skin.button.hover.background = customButtonTexture;
                 GUI.skin.button.active.background = customButtonTexture;
-
             }
 
 

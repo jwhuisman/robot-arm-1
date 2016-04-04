@@ -36,12 +36,9 @@ namespace Assets.Scripts.View
         public void InitializeComponents()
         {
             // initializations of scripts
-            _globals = GetComponent<Globals>();
             _view = GameObject.Find("View").GetComponent<View>();
             _world = GameObject.Find("Global Scripts").GetComponent<Globals>().world;
             _animator = gameObject.GetComponentInChildren<Animator>();
-
-            _roboCubeDisposal = GameObject.Find("RobotArm-CubeDisposal");
 
             // Defining/Calculating offset and position
             blockHalf = blockHeight / 2;
@@ -199,10 +196,7 @@ namespace Assets.Scripts.View
         internal Vector3 targetPosition;
         internal GameObject block;
 
-        private GameObject _roboCubeDisposal;
-
         private Animator _animator;
-        private Globals _globals;
         private World _world;
         private View _view;
     }

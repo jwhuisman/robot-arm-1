@@ -30,11 +30,8 @@ namespace Assets.Scripts.View
         // Initialize
         public void InitComponents()
         {
-            _globals = GameObject.Find("Global Scripts").GetComponent<Globals>();
             _view = GameObject.Find(Tags.View);
-            _world = _globals.world;
 
-            _robotArmData = _world.RobotArm;
             sectionBuilder = _view.GetComponent<SectionBuilder>();
         }
 
@@ -62,8 +59,5 @@ namespace Assets.Scripts.View
         private int sectionWidth;
 
         private GameObject     _view;
-        private RobotArmData   _robotArmData;
-        private Globals        _globals;
-        private World          _world;
     }
 }

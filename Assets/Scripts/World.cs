@@ -68,7 +68,6 @@ namespace Assets.Scripts.WorldData
                 }
             }
         }
-
         public void Drop()
         {
             if (RobotArm.Holding)
@@ -93,11 +92,5 @@ namespace Assets.Scripts.WorldData
 
             return "none";
         }
-
-        private Random rnd = new Random();
-        private int stackMin = -10000;
-        private int stackMax = 10000;
-        private int minCubes = 1;
-        private int maxCubes = 6;
     }
 }

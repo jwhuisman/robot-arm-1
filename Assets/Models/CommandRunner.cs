@@ -19,6 +19,11 @@ namespace Assets.Models
 
         public void Update()
         {
+            if (statsCounter.Queued != Queue.Count)
+            {
+                statsCounter.Queued = Queue.Count;
+            }
+
             if (currentCmd != null && currentCmd.IsDone)
             {
                 if (Queue.Count != 0)

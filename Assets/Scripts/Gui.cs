@@ -9,12 +9,6 @@ namespace Assets.Scripts
         public Texture2D customGuiTexture;
         public Texture2D customButtonTexture;
 
-        private Rect menuRect = new Rect(Screen.width / 2 - 100, 10, 200, 190);
-        private Rect statsRect = new Rect(Screen.width - 210, 10, 200, 210);
-
-        private bool menuOpen = false;
-        private bool statsOpen = false;
-
 
         void Update()
         {
@@ -41,23 +35,30 @@ namespace Assets.Scripts
             int offset = 20;
             int width = 200 - (offset * 2);
 
-            if (GUI.Button(new Rect(offset, height * 1 + spacing * 1, width, height), "Close menu (Esc)"))
+            int btnAmount = 4;
+            Rect[] rects = new Rect[btnAmount];
+            for (int i = 0; i < btnAmount; i++)
+            {
+                rects[i] = new Rect(offset, height * (i+1) + spacing * (i+1), width, height);
+            }
+
+            if (GUI.Button(rects[0], "Close menu (Esc)"))
             {
                 menuOpen = !menuOpen;
             }
 
-            if (GUI.Button(new Rect(offset, height * 2 + spacing * 2, width, height), "Fullscreen (F)"))
+            if (GUI.Button(rects[1], "Fullscreen (F)"))
             {
                 Screen.fullScreen = !Screen.fullScreen;
             }
 
-            if (GUI.Button(new Rect(offset, height * 3 + spacing * 3, width, height), "Enable stats (S)"))
+            if (GUI.Button(rects[2], "Enable stats (S)"))
             {
                 statsOpen = !statsOpen;
                 GUI.BringWindowToFront(0);
             }
 
-            if (GUI.Button(new Rect(offset, height * 4 + spacing * 4, width, height), "Quit"))
+            if (GUI.Button(rects[3], "Quit"))
             {
                 Application.Quit();
             }
@@ -65,27 +66,110 @@ namespace Assets.Scripts
 
         void StatsWindow(int windowID) 
         {
-            int spacing = 0;
-            int height = 25;
-            int offset = 20;
-            int width = 200 - (offset * 2);
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
 
-            GUI.Label(new Rect(offset, height * 1 + spacing * 1, width, height), "Moves left: " + statsCounter.MovesLeft);
-            GUI.Label(new Rect(offset, height * 2 + spacing * 2, width, height), "Moves right: " + statsCounter.MovesRight);
-            GUI.Label(new Rect(offset, height * 3 + spacing * 3, width, height), "Blocks grabbed: " + statsCounter.Grabs);
-            GUI.Label(new Rect(offset, height * 4 + spacing * 4, width, height), "Failed grabs: " + statsCounter.PretendGrabs);
-            GUI.Label(new Rect(offset, height * 5 + spacing * 5, width, height), "Blocks dropped: " + statsCounter.Drops);
-            GUI.Label(new Rect(offset, height * 6 + spacing * 6, width, height), "Failed drops: " + statsCounter.PretendDrops);
-            GUI.Label(new Rect(offset, height * 7 + spacing * 7, width, height), "Blocks scanned: " + statsCounter.Scans);
+            // total
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Executed commands: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.Total);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // queued
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Queued commands: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.Queued);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // left
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Moves left: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.MovesLeft);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // right
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Moves right: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.MovesRight);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // grabs
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Blocks grabbed: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.Grabs);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // failed grabs
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Failed grabs: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.PretendGrabs);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // drops
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Blocks dropped: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.Drops);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // failed drops
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Failed drops: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.PretendDrops);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+            // scan
+            GUILayout.BeginHorizontal();
+            {
+                GUILayout.Label("Blocks scanned: ");
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperRight;
+                GUILayout.Label("" + statsCounter.Scans);
+                GUI.skin.GetStyle("Label").alignment = TextAnchor.UpperLeft;
+            }
+            GUILayout.EndHorizontal();
+
+
+            GUILayout.EndScrollView();
         }
 
         void OnGUI()
         {
             if (menuOpen || statsOpen)
             {
-                GUI.skin.box.normal.background = customGuiTexture;
-
+                GUI.skin.window.normal.background = customGuiTexture;
                 GUI.skin.window.active.background = customGuiTexture;
+                GUI.skin.window.focused.background = customGuiTexture;
+                GUI.skin.window.hover.textColor = Color.white;
 
                 GUI.skin.button.normal.background = customButtonTexture;
                 GUI.skin.button.focused.background = customButtonTexture;
@@ -104,5 +188,14 @@ namespace Assets.Scripts
                 statsRect = GUI.Window(1, statsRect, StatsWindow, "Stats");
             }
         }
+
+
+        private Rect menuRect = new Rect(Screen.width / 2 - 100, 10, 200, 190);
+        private Rect statsRect = new Rect(Screen.width - 260, 10, 250, (Screen.height / 4 * 3) - 10);
+
+        private Vector2 scrollPosition = Vector2.zero;
+
+        private bool menuOpen = false;
+        private bool statsOpen = false;
     }
 }

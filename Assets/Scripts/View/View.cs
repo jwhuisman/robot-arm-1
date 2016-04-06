@@ -59,5 +59,6 @@ namespace Assets.Scripts.View
         private int sectionWidth;
 
         private GameObject     _view;
+        
     }
 }

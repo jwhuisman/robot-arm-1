@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Linq;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     void Start()
     {
+        perspectiveSwitcher = GetComponent<PerspectiveSwitcher>();
         robotArm = GameObject.Find(Tags.RobotArm);
         roboStartY = robotArm.transform.position.y;
         camStartY = transform.position.y;
@@ -23,12 +23,24 @@ public class CameraController : MonoBehaviour
 
         newCam.x = armPos.x;
         newCam.z = (armPos.y > roboStartY) ? camStartZ - zDiff : camStartZ;
-        newCam.y = (newCam.z < camStartZ) ? camStartY + yDiff : camStartY;
+
+        if (!perspectiveSwitcher.orthoOn)
+        {
+            newCam.y = (newCam.z < camStartZ) ? camStartY + yDiff : camStartY;
+        } else {
+            newCam.y = robotArm.transform.position.y / 2 + 1f;
+        }
+
+        if (perspectiveSwitcher.orthoOn)
+        {
+            GetComponent<Camera>().orthographicSize = Mathf.Lerp(GetComponent<Camera>().orthographicSize, perspectiveSwitcher.GetNewOrthoSize(), 1f * Time.deltaTime);
+        }
 
         transform.position = Vector3.Lerp(cam, newCam, smooth * Time.deltaTime);
     }
 
 
+    private PerspectiveSwitcher perspectiveSwitcher;
     private GameObject robotArm;
     private float roboStartY;
     private float camStartY;

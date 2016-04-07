@@ -10,4 +10,5 @@
     public static string Assembly = "Assembly";
     public static string Section = "Section";
     public static string Scripts = "Global Scripts";
+    public static string Light = "Directional Light";
 }

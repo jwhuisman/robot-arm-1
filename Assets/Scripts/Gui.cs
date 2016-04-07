@@ -9,6 +9,10 @@ namespace Assets.Scripts
         public Texture2D customGuiTexture;
         public Texture2D customButtonTexture;
 
+        void Start()
+        {
+            _perspectiveSwitcher = Camera.main.GetComponent<PerspectiveSwitcher>();
+        }
 
         void Update()
         {
@@ -35,7 +39,7 @@ namespace Assets.Scripts
             int offset = 20;
             int width = 200 - (offset * 2);
 
-            int btnAmount = 4;
+            int btnAmount = 5;
             Rect[] rects = new Rect[btnAmount];
             for (int i = 0; i < btnAmount; i++)
             {
@@ -58,7 +62,12 @@ namespace Assets.Scripts
                 GUI.BringWindowToFront(0);
             }
 
-            if (GUI.Button(rects[3], "Quit"))
+            if (GUI.Button(rects[3], "3D"))
+            {
+                _perspectiveSwitcher.Switch();
+            }
+
+            if (GUI.Button(rects[4], "Quit"))
             {
                 Application.Quit();
             }
@@ -66,7 +75,7 @@ namespace Assets.Scripts
 
         void StatsWindow(int windowID) 
         {
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            scrollPositionStats = GUILayout.BeginScrollView(scrollPositionStats);
 
             // total
             GUILayout.BeginHorizontal();
@@ -190,10 +199,12 @@ namespace Assets.Scripts
         }
 
 
-        private Rect menuRect = new Rect(Screen.width / 2 - 100, 10, 200, 190);
-        private Rect statsRect = new Rect(Screen.width - 260, 10, 250, (Screen.height / 4 * 3) - 10);
+        // these Rect's controls the size and position of the menus
+        private Rect menuRect = new Rect(Screen.width / 2 - 100, 10, 200, 220);
+        private Rect statsRect = new Rect(Screen.width - 260, 10, 250, 190);
 
-        private Vector2 scrollPosition = Vector2.zero;
+        private Vector2 scrollPositionStats = Vector2.zero;
+        private PerspectiveSwitcher _perspectiveSwitcher;
 
         private bool menuOpen = false;
         private bool statsOpen = false;

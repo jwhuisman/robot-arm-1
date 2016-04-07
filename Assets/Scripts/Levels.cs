@@ -23,7 +23,7 @@ namespace Assets.Scripts
         // so the stack amount = stackMax * 2 + 1
         // public static because the section builder needs this data too
         public static int stackMax;
-        public string currentLevel;
+        public string currentLevel = "";
 
         public List<BlockStack> LoadLevel(string name, out bool levelExists, bool changeLevelExists = true)
         {
@@ -171,14 +171,17 @@ namespace Assets.Scripts
 
         public void DownloadAgain()
         {
-            string[] nSplit = currentLevel.Split('/');
-            string user = nSplit.Length > 1 ? nSplit[0] : "_default";
-            string file = user == "_default" ? user + "/" + currentLevel + ".txt" : currentLevel + ".txt";
+            if (currentLevel != "")
+            {
+                string[] nSplit = currentLevel.Split('/');
+                string user = nSplit.Length > 1 ? nSplit[0] : "_default";
+                string file = user == "_default" ? user + "/" + currentLevel + ".txt" : currentLevel + ".txt";
 
-            string uri = levelUri + file;
-            string pathToWrite = Path.Combine(levelPath, file);
+                string uri = levelUri + file;
+                string pathToWrite = Path.Combine(levelPath, file);
 
-            DownloadLevel(uri, pathToWrite, user);
+                DownloadLevel(uri, pathToWrite, user);
+            }
         }
 
         private List<BlockStack> GenerateRandomLevel()

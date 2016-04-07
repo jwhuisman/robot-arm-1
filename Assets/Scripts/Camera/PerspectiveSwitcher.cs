@@ -20,11 +20,11 @@ public class PerspectiveSwitcher : MonoBehaviour
         if (orthoOn)
         {
             ortho = CalcNewOrtho();
-            blender.BlendToMatrix(ortho, 1f);
+            blender.BlendToMatrix(ortho, 2f);
         }
         else
         {
-            blender.BlendToMatrix(perspective, 1f);
+            blender.BlendToMatrix(perspective, 2f);
         }
     }
 
@@ -44,7 +44,7 @@ public class PerspectiveSwitcher : MonoBehaviour
             size = height - ((height/60) * height);
         }
 
-        return size;
+        return Mathf.Abs(size);
     }
 
     private Camera _cam;

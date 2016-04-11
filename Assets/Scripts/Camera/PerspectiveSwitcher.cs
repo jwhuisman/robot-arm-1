@@ -4,6 +4,7 @@ using UnityEngine;
 public class PerspectiveSwitcher : MonoBehaviour
 {
     public bool orthoOn;
+    public float transitionSpeed = 1f;
 
     void Start()
     {
@@ -20,11 +21,11 @@ public class PerspectiveSwitcher : MonoBehaviour
         if (orthoOn)
         {
             ortho = CalcNewOrtho();
-            blender.BlendToMatrix(ortho, 2f);
+            blender.BlendToMatrix(ortho, transitionSpeed);
         }
         else
         {
-            blender.BlendToMatrix(perspective, 2f);
+            blender.BlendToMatrix(perspective, transitionSpeed);
         }
     }
 

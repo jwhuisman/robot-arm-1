@@ -428,7 +428,6 @@ namespace Assets.Scripts.View
         private float spacing;
 
         private bool initialized = false;
-        private GameObject _robotArm;
 
         private GameObject _factory;
         private Globals _globals;

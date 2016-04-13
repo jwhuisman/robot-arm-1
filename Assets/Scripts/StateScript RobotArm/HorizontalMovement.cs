@@ -10,7 +10,7 @@ public class HorizontalMovement : StateMachineBehaviour
         _robotArmHolder = animator.gameObject.transform.parent.transform;
 
         _target = new Vector3(animator.GetComponent<RobotArm>().targetPosition.x, _robotArmHolder.transform.position.y, _robotArmHolder.transform.position.z);
-        _speed = 2f * animator.GetFloat("Speed");
+        _speed = 2f * animator.GetFloat("CurvedSpeed");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

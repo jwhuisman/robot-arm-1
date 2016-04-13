@@ -13,67 +13,73 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: ReadyScan
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Next
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: AnimationIsDone
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Speed
+    m_Type: 3
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: CurvedSpeed
     m_Type: 1
     m_DefaultFloat: 30
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Grab
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Drop
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Move Left
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Move Right
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Pretend Grab
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: Pretend Drop
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -1509,7 +1515,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 6d36c2b506bfd9a47a7067966ccf3903, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110217604
@@ -1557,7 +1563,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 116fc28d484aa7447b6733aed9c1bd4b, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110225240
@@ -1581,7 +1587,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 116fc28d484aa7447b6733aed9c1bd4b, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110226320
@@ -1654,7 +1660,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 1b495841bf4924544bda5c0fa143e3d9, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110231752
@@ -1678,7 +1684,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 116fc28d484aa7447b6733aed9c1bd4b, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110235086
@@ -1702,7 +1708,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 116fc28d484aa7447b6733aed9c1bd4b, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110237152
@@ -1749,7 +1755,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 905c611d77569cf4f832ea75b319e189, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110245190
@@ -1830,7 +1836,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 0}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110257506
@@ -1952,7 +1958,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 905c611d77569cf4f832ea75b319e189, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110285462
@@ -2023,7 +2029,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: ff9c229694c283f41bf4208b1b3144b3, type: 2}
   m_Tag: 
-  m_SpeedParameter: Speed
+  m_SpeedParameter: CurvedSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110288664

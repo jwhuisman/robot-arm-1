@@ -43,6 +43,10 @@ namespace Assets.Scripts.View
             // Defining/Calculating offset and position
             blockHalf = blockHeight / 2;
 
+            // At the start of the program the speed starts at 50%
+            UpdateSpeed(50);
+
+            // At the start of the program the robotarm starts above the highest block
             UpdateRobotHeight();
         }
 
@@ -59,27 +63,39 @@ namespace Assets.Scripts.View
             position.y = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
             transform.parent.transform.position = position;
         }
-        
+
         public void MoveLeft()
         {
-            // Calculates with the width and spacing between blocks
-            // how far it needs to travel to the block at the left.
+            // Calculates with the width and spacing between blocks.
+            // So that we stand above the next block to the left.
             targetPosition = new Vector3(transform.position.x - (blockWidth * _view.spacing), transform.position.y, transform.position.z);
 
-            _animator.SetTrigger("Move Left");
-
+            if (_animator.GetInteger("Speed") <= 99)
+            {
+                _animator.SetTrigger("Move Left");
+            }
+            else
+            {
+                OnAnimationIsDone();
+            }
             _view.UpdateView();
         }
 
         public void MoveRight()
         {
-            // Calculates with the width and spacing between blocks
-            // how far it needs to travel to the block at the right.
+            // Calculates with the width and spacing between blocks.
+            // So that we stand above the next block to the right.
             targetPosition = new Vector3(transform.position.x - (-blockWidth * _view.spacing), transform.position.y, transform.position.z);
 
-            _animator.SetTrigger("Move Right");
-
-            _view.UpdateView();
+            if (_animator.GetInteger("Speed") <= 99)
+            {
+                _animator.SetTrigger("Move Right");
+                _view.UpdateView();
+            }
+            else
+            {
+                OnAnimationIsDone();
+            }
         }
 
         public void Grab()
@@ -141,6 +157,14 @@ namespace Assets.Scripts.View
             _view.UpdateView();
         }
 
+        public void SetTargetPosition()
+        {
+            // Sets the holders position
+            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
+
+            OnAnimationIsDone();
+        }
+
         public void Scan()
         {
             if (_world.RobotArm.Holding)
@@ -155,6 +179,10 @@ namespace Assets.Scripts.View
 
         public void UpdateSpeed(int speed)
         {
+            // Sets the original speed
+            _animator.SetInteger("Speed", speed);
+            originalSpeed = speed;
+
             // We want to devide our speed by 99, 
             // that will be our maximum animation speed.
             // If speed is 100 the animations shouldn't run
@@ -169,7 +197,7 @@ namespace Assets.Scripts.View
             float animatorSpeed = curveNormalized * 30;
 
             // Update Needle
-            _animator.SetFloat("Speed", animatorSpeed);
+            _animator.SetFloat("CurvedSpeed", animatorSpeed);
 
             OnAnimationIsDone();
         }
@@ -195,6 +223,7 @@ namespace Assets.Scripts.View
         
         internal Vector3 targetPosition;
         internal GameObject block;
+        internal int originalSpeed;
 
         private Animator _animator;
         private World _world;

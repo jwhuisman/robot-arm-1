@@ -57,7 +57,6 @@ namespace Assets.Scripts.View
 
             // check what to render/create
             CheckSectionsToCreate();
-            CheckSectionsToRender();
         }
 
 
@@ -286,37 +285,21 @@ namespace Assets.Scripts.View
                 }
             }
         }
-        public void CheckSectionsToRender()
+        public void DestroyNotVisibleSections()
         {
             GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
 
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool inView = sectionX >= -1f && sectionX <= 2f ? true : false;
+                bool outsideView = sectionX < -1f || sectionX > 2f ? true : false;
 
-                if (inView)
+                if (outsideView)
                 {
-                    int sectionId = int.Parse(section.name.Split('_')[1]);
-                    CheckWallsToRender(sectionId);
+                    int sectionId = GetSectionId(section);
 
-                    foreach (Renderer child in section.GetComponentsInChildren<Renderer>())
-                    {
-                        if (!child.enabled)
-                        {
-                            child.enabled = true;
-                        }
-                    }
-                }
-                else if (!inView)
-                {
-                    foreach (Renderer child in section.GetComponentsInChildren<Renderer>())
-                    {
-                        if (child.enabled)
-                        {
-                            child.enabled = false;
-                        }
-                    }
+                    instantiatedSections.Remove(instantiatedSections.Where(s => s.Id == sectionId).SingleOrDefault());
+                    Destroy(section);
                 }
             }
         }
@@ -363,6 +346,10 @@ namespace Assets.Scripts.View
         }
 
         // misc
+        public int GetSectionId(GameObject section)
+        {
+            return int.Parse(section.name.Split('_')[1]);
+        }
         public Material[] SetColors(Material[] originals, string color)
         {
             Material[] m = new Material[2];

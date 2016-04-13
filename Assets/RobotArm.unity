@@ -147,8 +147,8 @@ MonoBehaviour:
   assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
-  wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
-  wallExtendModel: {fileID: 100000, guid: 871db1ba5aebe704295917761bccce2f, type: 3}
+  wallModel: {fileID: 100000, guid: 7f7fb1a2d8df1704e8aa121390e7c940, type: 3}
+  wallExtendModel: {fileID: 100000, guid: 4e263134ad101564c85c108f586d9c18, type: 3}
   wallInsetModel: {fileID: 100000, guid: 0273a2bda2221d948978e83bca214f3b, type: 3}
   wallInsetExtendModel: {fileID: 100000, guid: 493b358f081c04148ad47b4f56e124b1, type: 3}
   wallInsetLeftModel: {fileID: 100000, guid: 4493d8fa93488194785305cdef5cfd2f, type: 3}

@@ -23,8 +23,8 @@ namespace Assets.Scripts.View
         // update
         public void UpdateView()
         {
+            sectionBuilder.DestroyNotVisibleSections();
             sectionBuilder.CheckSectionsToCreate();
-            sectionBuilder.CheckSectionsToRender();
         }
 
         // Initialize

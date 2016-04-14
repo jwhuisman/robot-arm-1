@@ -146,7 +146,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
-  blockModel: {fileID: 100000, guid: e5489d114e3dac44089cb6170743bc07, type: 3}
+  redBlockModel: {fileID: 100000, guid: 18413a687a7920c4b95851b47587b612, type: 3}
+  greenBlockModel: {fileID: 100000, guid: af98bcb3578c3df49b21e20b33e73ae5, type: 3}
+  blueBlockModel: {fileID: 100000, guid: e9d9725d4e6ecbf46bbcedbf1685bf2b, type: 3}
+  whiteBlockModel: {fileID: 100000, guid: 0d24607f99e92994897804d6065b8003, type: 3}
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
   wallExtendModel: {fileID: 100000, guid: 871db1ba5aebe704295917761bccce2f, type: 3}
   wallInsetModel: {fileID: 100000, guid: 0273a2bda2221d948978e83bca214f3b, type: 3}

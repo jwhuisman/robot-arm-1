@@ -12,7 +12,11 @@ namespace Assets.Scripts.View
         // models
         public GameObject assemblyLineModel;
         public GameObject floorModel;
-        public GameObject blockModel;
+
+        public GameObject redBlockModel;
+        public GameObject greenBlockModel;
+        public GameObject blueBlockModel;
+        public GameObject whiteBlockModel;
 
         public GameObject wallModel;
         public GameObject wallExtendModel;
@@ -114,7 +118,7 @@ namespace Assets.Scripts.View
         {
             if (stackX >= -Levels.stackMax && stackX <= Levels.stackMax)
             {
-                Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
+                Stack<Block> blocks = _world.Stacks[Levels.stackMax + stackX].Blocks;
                 if (blocks.Count > 0)
                 {
                     foreach (Block block in blocks)
@@ -223,7 +227,23 @@ namespace Assets.Scripts.View
         }
         public void InstantiateBlock(int stackX, Block blockData)
         {
-            GameObject block = Instantiate(blockModel);
+            GameObject block;
+            if (blockData.Color.ToLower() == "red")
+            {
+                block = Instantiate(redBlockModel);
+            }
+            else if (blockData.Color.ToLower() == "green")
+            {
+                block = Instantiate(greenBlockModel);
+            }
+            else if (blockData.Color.ToLower() == "blue")
+            {
+                block = Instantiate(blueBlockModel);
+            }
+            else
+            {
+                block = Instantiate(whiteBlockModel);
+            }
 
             float x = (spacing * (float)stackX);
 
@@ -231,9 +251,6 @@ namespace Assets.Scripts.View
             block.tag = Tags.Block;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
-
-            Renderer renderer = block.GetComponent<Renderer>();
-            renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
         // check for generating/rendering new section
@@ -349,38 +366,6 @@ namespace Assets.Scripts.View
         public int GetSectionId(GameObject section)
         {
             return int.Parse(section.name.Split('_')[1]);
-        }
-        public Material[] SetColors(Material[] originals, string color)
-        {
-            Material[] m = new Material[2];
-            m[0] = new Material(originals[0]);
-            m[1] = new Material(originals[1]);
-
-            switch (color.ToLower())
-            {
-                case "red":
-                    m[0].color = Color.red;
-                    m[1].color = Color.red;
-                    break;
-                case "green":
-                    m[0].color = Color.green;
-                    m[1].color = Color.green;
-                    break;
-                case "blue":
-                    m[0].color = Color.blue;
-                    m[1].color = Color.blue;
-                    break;
-                case "white":
-                    m[0].color = Color.white;
-                    m[1].color = Color.white;
-                    break;
-                default:
-                    m[0].color = Color.white;
-                    m[1].color = Color.white;
-                    break;
-            }
-
-            return m;
         }
         public int GetSectionFromX(int x)
         {

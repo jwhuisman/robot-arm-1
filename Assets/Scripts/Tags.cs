@@ -2,6 +2,10 @@
 {
     public static string RobotArm = "Robot";
     public static string Block = "Block";
+    public static string RedBlock = "red";
+    public static string GreenBlock = "green";
+    public static string BlueBlock = "blue";
+    public static string WhiteBlock = "white";
     public static string BlockDisposal = "BlockDisposal";
     public static string BlockPool = "BlockPool";
     public static string Factory = "Factory";

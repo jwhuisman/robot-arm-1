@@ -231,25 +231,24 @@ namespace Assets.Scripts.View
             GameObject block;
             if (blockData.Color == "Red")
             {
-                block = _pool.GetObjectForType("block_red");
+                block = _pool.GetBlock(Tags.RedBlock);
             }
             else if (blockData.Color == "Green")
             {
-                block = _pool.GetObjectForType("block_green");
+                block = _pool.GetBlock(Tags.GreenBlock);
             }
             else if (blockData.Color == "Blue")
             {
-                block = _pool.GetObjectForType("block_blue");
+                block = _pool.GetBlock(Tags.BlueBlock);
             }
             else
             {
-                block = _pool.GetObjectForType("block_white");
+                block = _pool.GetBlock(Tags.WhiteBlock);
             }
 
             float x = (spacing * (float)stackX);
 
-            //block.name = "Block-" + blockData.Id;
-            block.tag = Tags.Block;
+            block.name = "Block-" + blockData.Id;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
         }

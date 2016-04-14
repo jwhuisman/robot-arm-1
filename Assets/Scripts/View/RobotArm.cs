@@ -7,6 +7,7 @@ namespace Assets.Scripts.View
     public class RobotArm : MonoBehaviour
     {
         public GameObject cubeDisposal;
+        public GameObject cubeHolder;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -21,6 +22,7 @@ namespace Assets.Scripts.View
 
         [Header("Animation curves")]
         public AnimationCurve animationCurveSpeed = new AnimationCurve();
+
 
         public void Start()
         {
@@ -50,6 +52,15 @@ namespace Assets.Scripts.View
             UpdateRobotHeight();
         }
 
+        public void Update()
+        {
+            //Debug.Log(targetPosition);
+            if (Input.GetKeyDown(KeyCode.V))
+            {
+                MaxSpeedUpdates();
+            }
+        }
+
         public void UpdateRobotHeight()
         {
             if (_world == null)
@@ -68,16 +79,19 @@ namespace Assets.Scripts.View
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the left.
-            targetPosition = new Vector3(transform.position.x - (blockWidth * _view.spacing), transform.position.y, transform.position.z);
+            targetPosition = new Vector3(targetPosition.x - (blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
 
-            if (_animator.GetInteger("Speed") <= 99)
+            if (_animator.GetInteger("Speed") == 100)
             {
-                _animator.SetTrigger("Move Left");
-            }
-            else
-            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
                 OnAnimationIsDone();
+                return;
             }
+
+            // Start the animation.
+            _animator.SetTrigger("Move Left");
+
             _view.UpdateView();
         }
 
@@ -85,21 +99,58 @@ namespace Assets.Scripts.View
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the right.
-            targetPosition = new Vector3(transform.position.x - (-blockWidth * _view.spacing), transform.position.y, transform.position.z);
+            targetPosition = new Vector3(targetPosition.x - (-blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
 
-            if (_animator.GetInteger("Speed") <= 99)
+            if (_animator.GetInteger("Speed") == 100)
             {
-                _animator.SetTrigger("Move Right");
-                _view.UpdateView();
-            }
-            else
-            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
                 OnAnimationIsDone();
+                return;
             }
+
+            // Start the animation.
+            _animator.SetTrigger("Move Right");
+
+            _view.UpdateView();
+        }
+
+        public void MaxSpeedUpdates()
+        {
+            // Sets the holders position
+            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
+
+            if (_world.RobotArm.Holding)
+            {
+                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
+                block.transform.parent = cubeHolder.transform;
+                block.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else if (!_world.RobotArm.Holding && cubeHolder.transform.childCount > 0)
+            {
+                foreach (Transform child in cubeHolder.transform)
+                {
+                    child.transform.parent = cubeDisposal.transform;
+                    child.transform.position = new Vector3();
+
+                }
+            }
+
+            _view.UpdateView();
+
+            OnAnimationIsDone();
         }
 
         public void Grab()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             // Calculate the position the robot hand needs to move to in order to grab the top
             // block. Note that the top block has already been grabbed in the world, so we need
             // to add 1 to the height of the stack to compensate.
@@ -119,6 +170,13 @@ namespace Assets.Scripts.View
 
         public void Drop()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
             // Calculate the position the robot hand needs to move to in order to drop the block
             // on the stap. Note that the block has already been dropped in the world, so we need
             // to subtract 1 from the height of the stack to compensate.
@@ -137,6 +195,14 @@ namespace Assets.Scripts.View
 
         public void PretendGrab()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
@@ -148,6 +214,14 @@ namespace Assets.Scripts.View
 
         public void PretendDrop()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
@@ -155,14 +229,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Drop");
 
             _view.UpdateView();
-        }
-
-        public void SetTargetPosition()
-        {
-            // Sets the holders position
-            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
-
-            OnAnimationIsDone();
         }
 
         public void Scan()

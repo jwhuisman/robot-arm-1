@@ -19,13 +19,6 @@ namespace Assets.Models
 
         public void Update()
         {
-            if (robotArm.originalSpeed == 100)
-            {
-                // When the world finishes the last command he needs to update
-                // the current position it needs to be at.
-                robotArm.SetTargetPosition();
-            }
-
             if (statsCounter.Queued != Queue.Count)
             {
                 statsCounter.Queued = Queue.Count;
@@ -52,7 +45,6 @@ namespace Assets.Models
         }
         public void Next()
         {
-
             if (currentCmd != null)
             {
                 robotArm.AnimationIsDone -= currentCmd.AnimationFinished;
@@ -60,11 +52,8 @@ namespace Assets.Models
 
             currentCmd = Queue.Dequeue();
             robotArm.AnimationIsDone += currentCmd.AnimationFinished;
-            if (robotArm.originalSpeed <= 100)
-            {
-                currentCmd.Do(robotArm, speedMeter, statsCounter);
-            }
 
+            currentCmd.Do(robotArm, speedMeter, statsCounter);
 
             if (currentCmd is LoadLevelCommand)
             {

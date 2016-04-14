@@ -58,6 +58,6 @@ namespace Assets.Scripts.View
         private int sectionWidthTotal;
         private int sectionWidth;
 
-        private GameObject     _view;
+        private GameObject _view;
     }
 }

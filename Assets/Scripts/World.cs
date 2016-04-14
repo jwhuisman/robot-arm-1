@@ -33,7 +33,7 @@ namespace Assets.Scripts.WorldData
         {
             get
             {
-                return Stacks.Single(s => s.Id == RobotArm.X);
+                return Stacks[Levels.stackMax + RobotArm.X];
             }
         }
 

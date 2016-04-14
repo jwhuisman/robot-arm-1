@@ -30,6 +30,7 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
+            _pool = GameObject.Find(Tags.BlockPool).GetComponent<BlockPool>();
             _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
             _world = _globals.world;
             _factory = GameObject.Find(Tags.Factory);
@@ -228,26 +229,26 @@ namespace Assets.Scripts.View
         public void InstantiateBlock(int stackX, Block blockData)
         {
             GameObject block;
-            if (blockData.Color.ToLower() == "red")
+            if (blockData.Color == "Red")
             {
-                block = Instantiate(redBlockModel);
+                block = _pool.GetObjectForType("block_red");
             }
-            else if (blockData.Color.ToLower() == "green")
+            else if (blockData.Color == "Green")
             {
-                block = Instantiate(greenBlockModel);
+                block = _pool.GetObjectForType("block_green");
             }
-            else if (blockData.Color.ToLower() == "blue")
+            else if (blockData.Color == "Blue")
             {
-                block = Instantiate(blueBlockModel);
+                block = _pool.GetObjectForType("block_blue");
             }
             else
             {
-                block = Instantiate(whiteBlockModel);
+                block = _pool.GetObjectForType("block_white");
             }
 
             float x = (spacing * (float)stackX);
 
-            block.name = "Block-" + blockData.Id;
+            //block.name = "Block-" + blockData.Id;
             block.tag = Tags.Block;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
@@ -402,6 +403,7 @@ namespace Assets.Scripts.View
         private bool initialized = false;
 
         private GameObject _factory;
+        private BlockPool _pool;
         private Globals _globals;
         private World _world;
     }

@@ -16,6 +16,7 @@ TagManager:
   - View
   - Scripts
   - Needle
+  - RobotHolder
   layers:
   - Default
   - TransparentFX

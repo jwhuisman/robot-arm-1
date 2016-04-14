@@ -6,7 +6,7 @@ namespace Assets.Scripts.View
 {
     public class RobotArm : MonoBehaviour
     {
-        public GameObject cubeDisposal;
+        public GameObject blockDisposal;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -26,7 +26,25 @@ namespace Assets.Scripts.View
         {
             InitializeComponents();
         }
-        
+
+        public void InitializeComponents()
+        {
+            // initializations of scripts
+            _view = GameObject.Find(Tags.View).GetComponent<View>();
+            _world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
+            _animator = gameObject.GetComponentInChildren<Animator>();
+
+            // Defining/Calculating offset and position
+            blockHalf = blockHeight / 2;
+
+            // At the start of the program the speed starts at 50%
+            UpdateSpeed(50);
+
+            // At the start of the program the robotarm starts above the highest block
+            UpdateRobotHeight();
+        }
+
+
         public int OriginalSpeed
         {
             get
@@ -52,7 +70,7 @@ namespace Assets.Scripts.View
         {
             if (makeCameraChild)
             {
-                Camera.main.transform.SetParent(transform);
+                Camera.main.transform.SetParent(GameObject.FindGameObjectWithTag(Tags.RobotHolder).transform);
                 Camera.main.GetComponent<CameraController>().enabled = false;
             }
             else
@@ -66,23 +84,6 @@ namespace Assets.Scripts.View
         {
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
             //UpdateRobotHeight();
-        }
-
-        public void InitializeComponents()
-        {
-            // initializations of scripts
-            _view = GameObject.Find(Tags.View).GetComponent<View>();
-            _world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
-            _animator = gameObject.GetComponentInChildren<Animator>();
-
-            // Defining/Calculating offset and position
-            blockHalf = blockHeight / 2;
-
-            // At the start of the program the speed starts at 50%
-            UpdateSpeed(50);
-
-            // At the start of the program the robotarm starts above the highest block
-            UpdateRobotHeight();
         }
 
         public void UpdateRobotHeight()

@@ -155,9 +155,9 @@ namespace Assets.Scripts.View
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
 
-            if (cubeHolder.transform.childCount > 0)
+            if (blockHolder.transform.childCount > 0)
             {
-                foreach (Transform child in cubeHolder.transform)
+                foreach (Transform child in blockHolder.transform)
                 {
                     Destroy(child.gameObject);
                 }

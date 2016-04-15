@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using System;
 using Assets.Models.WorldData;
 
 namespace Assets.Scripts.WorldData
@@ -16,7 +15,10 @@ namespace Assets.Scripts.WorldData
             bool levelExists;
             Stacks = levels.LoadLevel("random", out levelExists);
 
-            RobotArm = new RobotArmData(Stacks.Where(s => s.Blocks.Count > 0).Max(s => s.Blocks.Max(b => b.Y)) + 3);
+            highestBlock = Stacks.Max(s => s.Blocks.Count);
+
+
+            RobotArm = new RobotArmData(Height + 3);
         }
 
         public int Height
@@ -31,7 +33,7 @@ namespace Assets.Scripts.WorldData
         {
             get
             {
-                return Stacks.Single(s => s.Id == RobotArm.X);
+                return Stacks[Levels.stackMax + RobotArm.X];
             }
         }
 
@@ -92,5 +94,7 @@ namespace Assets.Scripts.WorldData
 
             return "none";
         }
+
+        private int highestBlock;
     }
 }

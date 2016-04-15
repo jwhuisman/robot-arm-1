@@ -25,12 +25,12 @@ namespace Assets.Scripts
         public static int stackMax;
         public string currentLevel = "";
 
-        public List<BlockStack> LoadLevel(string name, out bool levelExists, bool changeLevelExists = true)
+        public List<BlockStack> LoadLevel(string name, out bool levelExists)
         {
-            if (name == "random")
+            if (name == "random" || name == "empty")
             {
                 levelExists = true;
-                return GenerateRandomLevel();
+                return GenerateLevel(name);
             }
 
             currentLevel = name;
@@ -45,8 +45,7 @@ namespace Assets.Scripts
 
             if (File.Exists(filePath))
             {
-                if (changeLevelExists)
-                    levelExists = true;
+                levelExists = true;
                 return ParseFile(filePath);
             }
             else
@@ -57,25 +56,13 @@ namespace Assets.Scripts
                 {
                     DownloadLevel(uri, pathToWrite, user);
 
-                    if (changeLevelExists)
-                        levelExists = true;
+                    levelExists = true;
 
                     return ParseFile(pathToWrite);
                 }
 
                 // level does not exist. Load new one and keep levelExists to false (third parameter)
-                return LoadLevel("empty", out levelExists, false);
-            }
-        }
-        private void DownloadLevel(string uri, string pathToWrite, string user)
-        {
-            Directory.CreateDirectory(levelPath + "/" + user);
-
-            WebRequest webRequest = WebRequest.Create(uri);
-            using (WebResponse resp = webRequest.GetResponse())
-            {
-                string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                File.WriteAllText(pathToWrite, data);
+                return LoadLevel("empty", out levelExists);
             }
         }
         private List<BlockStack> ParseFile(string path)
@@ -128,7 +115,7 @@ namespace Assets.Scripts
                         int min = data.Length > 1 ? int.Parse(data[1]) : 1;
                         int max = data.Length > 2 ? int.Parse(data[2]) : data.Length > 1 ? min : 1;
 
-                        stack = GenerateStack(c, min, max);
+                        stack = GenerateRandomStack(c, min, max);
                     }
 
                     stacks.Add(stack);
@@ -149,6 +136,31 @@ namespace Assets.Scripts
             return stacks;
         }
 
+        private void DownloadLevel(string uri, string pathToWrite, string user)
+        {
+            Directory.CreateDirectory(levelPath + "/" + user);
+
+            WebRequest webRequest = WebRequest.Create(uri);
+            using (WebResponse resp = webRequest.GetResponse())
+            {
+                string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                File.WriteAllText(pathToWrite, data);
+            }
+        }
+        public void DownloadAgain()
+        {
+            if (currentLevel != "")
+            {
+                string[] nSplit = currentLevel.Split('/');
+                string user = nSplit.Length > 1 ? nSplit[0] : "_default";
+                string file = user == "_default" ? user + "/" + currentLevel + ".txt" : currentLevel + ".txt";
+
+                string uri = levelUri + file;
+                string pathToWrite = Path.Combine(levelPath, file);
+
+                DownloadLevel(uri, pathToWrite, user);
+            }
+        }
         private bool Ping(string url)
         {
             try
@@ -169,34 +181,30 @@ namespace Assets.Scripts
             }
         }
 
-        public void DownloadAgain()
-        {
-            if (currentLevel != "")
-            {
-                string[] nSplit = currentLevel.Split('/');
-                string user = nSplit.Length > 1 ? nSplit[0] : "_default";
-                string file = user == "_default" ? user + "/" + currentLevel + ".txt" : currentLevel + ".txt";
 
-                string uri = levelUri + file;
-                string pathToWrite = Path.Combine(levelPath, file);
-
-                DownloadLevel(uri, pathToWrite, user);
-            }
-        }
-
-        private List<BlockStack> GenerateRandomLevel()
+        private List<BlockStack> GenerateLevel(string name)
         {
             stackMax = defaultStackMax;
 
             List<BlockStack> stacks = new List<BlockStack>();
-            for (int x = -stackMax; x <= stackMax; x++)
+            if (name == "random")
             {
-                stacks.Add(GenerateStack(x, minCubes, maxCubes));
+                for (int x = -stackMax; x <= stackMax; x++)
+                {
+                    stacks.Add(GenerateRandomStack(x, minCubes, maxCubes));
+                }
+            }
+            else if (name == "empty")
+            {
+                for (int x = -stackMax; x <= stackMax; x++)
+                {
+                    stacks.Add(new BlockStack(x));
+                }
             }
 
             return stacks;
         }
-        private BlockStack GenerateStack(int x, int min, int max)
+        private BlockStack GenerateRandomStack(int x, int min, int max)
         {
             BlockStack stack = new BlockStack(x);
 
@@ -216,7 +224,6 @@ namespace Assets.Scripts
 
             return stack;
         }
-
 
 
         private string levelPath = Path.GetFullPath(".") + "\\Levels\\";

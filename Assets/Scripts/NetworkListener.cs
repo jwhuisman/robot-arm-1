@@ -18,7 +18,6 @@ public class NetworkListener : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("NetworkListener.cs is used!");
         Application.runInBackground = true;
 
         IPAddress localhost = IPAddress.Parse("127.0.0.1");
@@ -37,7 +36,6 @@ public class NetworkListener : MonoBehaviour
             if (data != "")
             {
                 AddCommand(data);
-                Debug.Log(string.Format("Data received: \n{0}", data));
             }
         }
     }
@@ -70,8 +68,6 @@ public class NetworkListener : MonoBehaviour
     {
         _server.Start();
         _server.BeginAcceptTcpClient(new AsyncCallback(OnAcceptTcpClient), _server);
-
-        Debug.Log("Started listening..");
     }
 
     public bool IsConnected
@@ -126,7 +122,6 @@ public class NetworkListener : MonoBehaviour
         _client = ((TcpListener)result.AsyncState).EndAcceptTcpClient(result);
 
         ReturnMessage("hello");
-        Debug.Log("Client connected.");
 
         // start listening for a new client
         StartListening();
@@ -143,8 +138,6 @@ public class NetworkListener : MonoBehaviour
 
             _client.GetStream().Close();
             _client.Close();
-
-            Debug.Log("Client disconnected!");
         }
     }
 

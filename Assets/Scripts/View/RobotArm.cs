@@ -6,8 +6,8 @@ namespace Assets.Scripts.View
 {
     public class RobotArm : MonoBehaviour
     {
-        public GameObject cubeDisposal;
-        public GameObject cubeHolder;
+        public GameObject blockHolder;
+        public GameObject blockDisposal;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -28,18 +28,12 @@ namespace Assets.Scripts.View
         {
             InitializeComponents();
         }
-        
-        public void OnValidate()
-        {
-            distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-            UpdateRobotHeight();
-        }
 
         public void InitializeComponents()
         {
             // initializations of scripts
-            _view = GameObject.Find("View").GetComponent<View>();
-            _world = GameObject.Find("Global Scripts").GetComponent<Globals>().world;
+            _view = GameObject.Find(Tags.View).GetComponent<View>();
+            _world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
             _animator = gameObject.GetComponentInChildren<Animator>();
 
             // Defining/Calculating offset and position
@@ -59,6 +53,47 @@ namespace Assets.Scripts.View
             {
                 MaxSpeedUpdates();
             }
+        }
+
+        public int OriginalSpeed
+        {
+            get
+            {
+                return _originalSpeed;
+            }
+            set
+            {
+                if (value == 100)
+                {
+                    ParentCamera(true);
+                }
+                else
+                {
+                    ParentCamera(false);
+                }
+
+                _originalSpeed = value;
+            }
+        }
+
+        public void ParentCamera(bool makeCameraChild)
+        {
+            if (makeCameraChild)
+            {
+                Camera.main.transform.SetParent(GameObject.FindGameObjectWithTag(Tags.RobotHolder).transform);
+                Camera.main.GetComponent<CameraController>().enabled = false;
+            }
+            else
+            {
+                Camera.main.transform.SetParent(null);
+                Camera.main.GetComponent<CameraController>().enabled = true;
+            }
+        }
+
+        public void OnValidate()
+        {
+            distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
+            //UpdateRobotHeight();
         }
 
         public void UpdateRobotHeight()
@@ -123,12 +158,12 @@ namespace Assets.Scripts.View
             if (_world.RobotArm.Holding)
             {
                 block = FindBlock(_world.RobotArm.HoldingBlock.Id);
-                block.transform.parent = cubeHolder.transform;
+                block.transform.parent = blockHolder.transform;
                 block.transform.localPosition = new Vector3(0, 0, 0);
             }
-            else if (!_world.RobotArm.Holding && cubeHolder.transform.childCount > 0)
+            else if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
             {
-                foreach (Transform child in cubeHolder.transform)
+                foreach (Transform child in blockHolder.transform)
                 {
                     Destroy(child.gameObject);
                 }
@@ -164,6 +199,7 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Grab");
 
             _view.UpdateView();
+            UpdateRobotHeight();
         }
 
         public void Drop()
@@ -189,6 +225,7 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Drop");
 
             _view.UpdateView();
+            UpdateRobotHeight();
         }
 
         public void PretendGrab()
@@ -208,6 +245,7 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Grab");
 
             _view.UpdateView();
+            UpdateRobotHeight();
         }
 
         public void PretendDrop()
@@ -227,6 +265,7 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Drop");
 
             _view.UpdateView();
+            UpdateRobotHeight();
         }
 
         public void Scan()
@@ -245,7 +284,7 @@ namespace Assets.Scripts.View
         {
             // Sets the original speed
             _animator.SetInteger("Speed", speed);
-            originalSpeed = speed;
+            OriginalSpeed = speed;
 
             // We want to devide our speed by 99, 
             // that will be our maximum animation speed.
@@ -281,13 +320,11 @@ namespace Assets.Scripts.View
             {
                 AnimationIsDone(this, EventArgs.Empty);
             }
-
-            UpdateRobotHeight();
         }
         
         internal Vector3 targetPosition;
         internal GameObject block;
-        internal int originalSpeed;
+        internal int _originalSpeed;
 
         private Animator _animator;
         private World _world;

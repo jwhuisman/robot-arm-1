@@ -12,7 +12,11 @@ namespace Assets.Scripts.View
         // models
         public GameObject assemblyLineModel;
         public GameObject floorModel;
-        public GameObject blockModel;
+
+        public GameObject redBlockModel;
+        public GameObject greenBlockModel;
+        public GameObject blueBlockModel;
+        public GameObject whiteBlockModel;
 
         public GameObject wallModel;
         public GameObject wallExtendModel;
@@ -26,6 +30,7 @@ namespace Assets.Scripts.View
         // start
         public void Start()
         {
+            _pool = GameObject.Find(Tags.BlockPool).GetComponent<BlockPool>();
             _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
             _world = _globals.world;
             _factory = GameObject.Find(Tags.Factory);
@@ -57,7 +62,6 @@ namespace Assets.Scripts.View
 
             // check what to render/create
             CheckSectionsToCreate();
-            CheckSectionsToRender();
         }
 
 
@@ -115,7 +119,7 @@ namespace Assets.Scripts.View
         {
             if (stackX >= -Levels.stackMax && stackX <= Levels.stackMax)
             {
-                Stack<Block> blocks = _world.Stacks.Where(stack => stack.Id == stackX).SingleOrDefault().Blocks;
+                Stack<Block> blocks = _world.Stacks[Levels.stackMax + stackX].Blocks;
                 if (blocks.Count > 0)
                 {
                     foreach (Block block in blocks)
@@ -224,17 +228,29 @@ namespace Assets.Scripts.View
         }
         public void InstantiateBlock(int stackX, Block blockData)
         {
-            GameObject block = Instantiate(blockModel);
+            GameObject block;
+            if (blockData.Color == "Red")
+            {
+                block = _pool.GetBlock(Tags.RedBlock);
+            }
+            else if (blockData.Color == "Green")
+            {
+                block = _pool.GetBlock(Tags.GreenBlock);
+            }
+            else if (blockData.Color == "Blue")
+            {
+                block = _pool.GetBlock(Tags.BlueBlock);
+            }
+            else
+            {
+                block = _pool.GetBlock(Tags.WhiteBlock);
+            }
 
             float x = (spacing * (float)stackX);
 
             block.name = "Block-" + blockData.Id;
-            block.tag = Tags.Block;
             block.transform.parent = _currentBlocks.transform;
             block.transform.position = new Vector3(x, blockData.Y, 0);
-
-            Renderer renderer = block.GetComponent<Renderer>();
-            renderer.materials = SetColors(renderer.materials, blockData.Color);
         }
 
         // check for generating/rendering new section
@@ -286,37 +302,21 @@ namespace Assets.Scripts.View
                 }
             }
         }
-        public void CheckSectionsToRender()
+        public void DestroyNotVisibleSections()
         {
             GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
 
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool inView = sectionX >= -1f && sectionX <= 2f ? true : false;
+                bool outsideView = sectionX < -1f || sectionX > 2f ? true : false;
 
-                if (inView)
+                if (outsideView)
                 {
-                    int sectionId = int.Parse(section.name.Split('_')[1]);
-                    CheckWallsToRender(sectionId);
+                    int sectionId = GetSectionId(section);
 
-                    foreach (Renderer child in section.GetComponentsInChildren<Renderer>())
-                    {
-                        if (!child.enabled)
-                        {
-                            child.enabled = true;
-                        }
-                    }
-                }
-                else if (!inView)
-                {
-                    foreach (Renderer child in section.GetComponentsInChildren<Renderer>())
-                    {
-                        if (child.enabled)
-                        {
-                            child.enabled = false;
-                        }
-                    }
+                    instantiatedSections.Remove(instantiatedSections.Where(s => s.Id == sectionId).SingleOrDefault());
+                    Destroy(section);
                 }
             }
         }
@@ -363,37 +363,9 @@ namespace Assets.Scripts.View
         }
 
         // misc
-        public Material[] SetColors(Material[] originals, string color)
+        public int GetSectionId(GameObject section)
         {
-            Material[] m = new Material[2];
-            m[0] = new Material(originals[0]);
-            m[1] = new Material(originals[1]);
-
-            switch (color.ToLower())
-            {
-                case "red":
-                    m[0].color = Color.red;
-                    m[1].color = Color.red;
-                    break;
-                case "green":
-                    m[0].color = Color.green;
-                    m[1].color = Color.green;
-                    break;
-                case "blue":
-                    m[0].color = Color.blue;
-                    m[1].color = Color.blue;
-                    break;
-                case "white":
-                    m[0].color = Color.white;
-                    m[1].color = Color.white;
-                    break;
-                default:
-                    m[0].color = Color.white;
-                    m[1].color = Color.white;
-                    break;
-            }
-
-            return m;
+            return int.Parse(section.name.Split('_')[1]);
         }
         public int GetSectionFromX(int x)
         {
@@ -430,6 +402,7 @@ namespace Assets.Scripts.View
         private bool initialized = false;
 
         private GameObject _factory;
+        private BlockPool _pool;
         private Globals _globals;
         private World _world;
     }

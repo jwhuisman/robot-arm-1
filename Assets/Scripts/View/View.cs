@@ -23,8 +23,8 @@ namespace Assets.Scripts.View
         // update
         public void UpdateView()
         {
+            sectionBuilder.DestroyNotVisibleSections();
             sectionBuilder.CheckSectionsToCreate();
-            sectionBuilder.CheckSectionsToRender();
         }
 
         // Initialize
@@ -58,6 +58,6 @@ namespace Assets.Scripts.View
         private int sectionWidthTotal;
         private int sectionWidth;
 
-        private GameObject     _view;
+        private GameObject _view;
     }
 }

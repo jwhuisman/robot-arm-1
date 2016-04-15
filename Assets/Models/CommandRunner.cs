@@ -55,6 +55,13 @@ namespace Assets.Models
 
             currentCmd.Do(robotArm, speedMeter, statsCounter);
 
+            if (robotArm._originalSpeed == 100)
+            {
+                // When the world finishes the last command he needs to update
+                // the current position it needs to be at.
+                robotArm.SetTargetPosition();
+            }
+
             if (currentCmd is LoadLevelCommand)
             {
                 Levels levels = GameObject.Find(Tags.Globals).GetComponent<Globals>().world.levels;

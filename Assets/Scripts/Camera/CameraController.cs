@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Assets.Scripts.View;
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public RobotArm robotArmScript;
+
     void Start()
     {
         perspectiveSwitcher = GetComponent<PerspectiveSwitcher>();
@@ -24,15 +27,13 @@ public class CameraController : MonoBehaviour
         newCam.x = armPos.x;
         newCam.z = (armPos.y > roboStartY) ? camStartZ - zDiff : camStartZ;
 
-        if (!perspectiveSwitcher.orthoOn)
-        {
+        if (!perspectiveSwitcher.orthoOn) {
             newCam.y = (newCam.z < camStartZ) ? camStartY + yDiff : camStartY;
         } else {
             newCam.y = robotArm.transform.position.y / 2 + 1f;
         }
 
-        if (perspectiveSwitcher.orthoOn)
-        {
+        if (perspectiveSwitcher.orthoOn) {
             GetComponent<Camera>().orthographicSize = Mathf.Lerp(GetComponent<Camera>().orthographicSize, perspectiveSwitcher.GetNewOrthoSize(), 1f * Time.deltaTime);
         }
 

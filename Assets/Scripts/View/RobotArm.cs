@@ -130,9 +130,7 @@ namespace Assets.Scripts.View
             {
                 foreach (Transform child in cubeHolder.transform)
                 {
-                    child.transform.parent = cubeDisposal.transform;
-                    child.transform.position = new Vector3();
-
+                    Destroy(child.gameObject);
                 }
             }
 

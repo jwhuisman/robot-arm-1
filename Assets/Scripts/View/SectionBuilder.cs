@@ -37,9 +37,17 @@ namespace Assets.Scripts.View
 
             rnd = new System.Random();
 
-            CreateStartSections();
+            CreateSectionsAt(0);
 
             initialized = true;
+        }
+
+        public int CurrentSection
+        {
+            get
+            {
+                return GetSectionFromX(_world.RobotArm.X);
+            }
         }
 
         // reload after load level
@@ -54,7 +62,7 @@ namespace Assets.Scripts.View
             instantiatedSections = new List<Section>();
 
             // create the first few sections
-            CreateStartSections();
+            CreateSectionsAt(0);
 
             // set robot arm to x = 0
             Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
@@ -66,13 +74,18 @@ namespace Assets.Scripts.View
 
 
         // creation
-        public void CreateStartSections(int currentSection = 0)
+        public void CreateSectionsAt(int currentSection)
         {
             for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
-                CreateSection(i, 0);
+                CreateSection(i);
                 CheckWallsToRender(i);
             }
+        }
+        public void ReloadSectionsAtCurrent()
+        {
+            DestroyAllSections();
+            CreateSectionsAt(CurrentSection);
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -315,9 +328,25 @@ namespace Assets.Scripts.View
                 {
                     int sectionId = GetSectionId(section);
 
-                    instantiatedSections.Remove(instantiatedSections.Where(s => s.Id == sectionId).SingleOrDefault());
+                    Section sectionToRemove = instantiatedSections.Single(s => s.Id == sectionId);
+                    if (instantiatedSections.Contains(sectionToRemove))
+                    {
+                        instantiatedSections.Remove(sectionToRemove);
+                    }
                     Destroy(section);
                 }
+            }
+        }
+        public void DestroyAllSections()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+
+            foreach (GameObject section in sections)
+            {
+                int sectionId = GetSectionId(section);
+
+                instantiatedSections.Remove(instantiatedSections.Single(s => s.Id == sectionId));
+                Destroy(section);
             }
         }
         public void CheckWallsToRender(int sectionId)

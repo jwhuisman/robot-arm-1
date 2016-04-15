@@ -35,6 +35,7 @@ namespace Assets.Scripts.View
             _view = GameObject.Find(Tags.View).GetComponent<View>();
             _world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
             _animator = gameObject.GetComponentInChildren<Animator>();
+            _sectionBuilder = _view.GetComponent<SectionBuilder>();
 
             // Defining/Calculating offset and position
             blockHalf = blockHeight / 2;
@@ -169,7 +170,7 @@ namespace Assets.Scripts.View
                 }
             }
 
-            _view.UpdateView();
+            _sectionBuilder.ReloadSectionsAtCurrent();
 
             OnAnimationIsDone();
         }
@@ -326,6 +327,7 @@ namespace Assets.Scripts.View
         internal GameObject block;
         internal int _originalSpeed;
 
+        private SectionBuilder _sectionBuilder;
         private Animator _animator;
         private World _world;
         private View _view;

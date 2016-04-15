@@ -120,18 +120,25 @@ namespace Assets.Scripts.View
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
 
-            if (_world.RobotArm.Holding)
-            {
-                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
-                block.transform.parent = cubeHolder.transform;
-                block.transform.localPosition = new Vector3(0, 0, 0);
-            }
-            else if (!_world.RobotArm.Holding && cubeHolder.transform.childCount > 0)
+            if (cubeHolder.transform.childCount > 0)
             {
                 foreach (Transform child in cubeHolder.transform)
                 {
                     Destroy(child.gameObject);
                 }
+            }
+
+            if (_world.RobotArm.Holding)
+            {
+                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
+                block.transform.parent = cubeHolder.transform;
+                block.transform.localPosition = new Vector3(0, 0, 0);
+
+                _animator.SetTrigger("MSEP Open");
+            }
+            else
+            {
+                _animator.SetTrigger("MSEP Close");
             }
 
             _view.UpdateView();

@@ -43,11 +43,18 @@ namespace Assets.Scripts.View
             initialized = true;
         }
 
-        public int CurrentSectionId
+        public int NearestSection
         {
             get
             {
                 return GetSectionId(GetCurrentSection());
+            }
+        }
+        public int CurrentSection
+        {
+            get
+            {
+                return GetSectionFromX(_world.RobotArm.X);
             }
         }
 
@@ -86,7 +93,7 @@ namespace Assets.Scripts.View
         public void ReloadSectionsAtCurrent()
         {
             DestroyAllSections();
-            CreateSectionsAt(CurrentSectionId);
+            CreateSectionsAt(CurrentSection);
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -240,7 +247,7 @@ namespace Assets.Scripts.View
                 wall.transform.position = useOriginalTransform ? new Vector3(x - .5f, (y * (i+1)) - .5f, z) : new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
-        public void InstantiateBlock(int stackX, Block blockData)
+        public void InstantiateBlock(int stackX, Block blockData, bool robotArmHoldsBlock=false)
         {
             GameObject block;
             if (blockData.Color == "Red")
@@ -263,8 +270,17 @@ namespace Assets.Scripts.View
             float x = (spacing * (float)stackX);
 
             block.name = "Block-" + blockData.Id;
-            block.transform.parent = _currentBlocks.transform;
-            block.transform.position = new Vector3(x, blockData.Y, 0);
+
+            if (robotArmHoldsBlock)
+            {
+                block.transform.parent = GameObject.Find(Tags.BlockHolder).transform;
+                block.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                block.transform.parent = _currentBlocks.transform;
+                block.transform.position = new Vector3(x, blockData.Y, 0);
+            }
         }
 
         // check for generating/rendering new section

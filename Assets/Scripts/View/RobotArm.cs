@@ -152,6 +152,8 @@ namespace Assets.Scripts.View
 
         public void MaxSpeedUpdates()
         {
+            _sectionBuilder.ReloadSectionsAtCurrent();
+            
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
 
@@ -165,9 +167,10 @@ namespace Assets.Scripts.View
 
             if (_world.RobotArm.Holding)
             {
-                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
-                block.transform.parent = blockHolder.transform;
-                block.transform.localPosition = new Vector3(0, 0, 0);
+                if (blockHolder.transform.childCount == 0)
+                {
+                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
+                }
 
                 _animator.SetTrigger("MSEP Open");
             }
@@ -175,8 +178,6 @@ namespace Assets.Scripts.View
             {
                 _animator.SetTrigger("MSEP Close");
             }
-
-            _sectionBuilder.ReloadSectionsAtCurrent();
 
             OnAnimationIsDone();
         }

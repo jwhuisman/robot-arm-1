@@ -566,6 +566,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  timeBetweenUpdate: 0.5
 --- !u!1 &951667419 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100014, guid: 966dd05d435b4794991af942cd32baba, type: 3}

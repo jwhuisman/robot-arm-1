@@ -23,6 +23,8 @@ namespace Assets.Scripts.View
         [Header("Animation curves")]
         public AnimationCurve animationCurveSpeed = new AnimationCurve();
 
+        [Header("Time(only for max speed)")]
+        public float timeBetweenUpdate;
 
         public void Start()
         {
@@ -45,13 +47,22 @@ namespace Assets.Scripts.View
 
             // At the start of the program the robotarm starts above the highest block
             UpdateRobotHeight();
+
+            _startTime = Time.fixedDeltaTime;
         }
 
-        public void Update()
+        public void FixedUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.V))
+            if (_originalSpeed == 100)
             {
-                MaxSpeedUpdates();
+                // Updates the view on the highest speed, after a certaint given number.(timeBetweenUpdate)
+                _counterTime = _startTime + _counterTime + Time.fixedDeltaTime;
+                if (_counterTime >= timeBetweenUpdate)
+                {
+                    MaxSpeedUpdates();
+
+                    _counterTime = 0;
+                }
             }
         }
 
@@ -92,8 +103,10 @@ namespace Assets.Scripts.View
 
         public void OnValidate()
         {
+            // Prevents the developer to set a value below a certaint point
+            // to avoid bugs or illogical numbers.
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-            //UpdateRobotHeight();
+            //timeBetweenUpdate = (timeBetweenUpdate <= 1) ? 10 : timeBetweenUpdate;
         }
 
         public void UpdateRobotHeight()
@@ -163,6 +176,8 @@ namespace Assets.Scripts.View
                 {
                     Destroy(child.gameObject);
                 }
+
+                holding = false;
             }
 
             if (_world.RobotArm.Holding)
@@ -170,8 +185,8 @@ namespace Assets.Scripts.View
                 if (blockHolder.transform.childCount == 0)
                 {
                     _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
+                    holding = true;
                 }
-
                 _animator.SetTrigger("MSEP Open");
             }
             else
@@ -179,7 +194,7 @@ namespace Assets.Scripts.View
                 _animator.SetTrigger("MSEP Close");
             }
 
-            OnAnimationIsDone();
+            UpdateRobotHeight();
         }
 
         public void Grab()
@@ -333,6 +348,10 @@ namespace Assets.Scripts.View
         internal Vector3 targetPosition;
         internal GameObject block;
         internal int _originalSpeed;
+
+        private bool holding;
+        private float _startTime;
+        private float _counterTime;
 
         private SectionBuilder _sectionBuilder;
         private Animator _animator;

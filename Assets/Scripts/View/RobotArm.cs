@@ -6,8 +6,8 @@ namespace Assets.Scripts.View
 {
     public class RobotArm : MonoBehaviour
     {
-        public GameObject blockHolder;
         public GameObject blockDisposal;
+        public GameObject blockHolder;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -49,7 +49,6 @@ namespace Assets.Scripts.View
 
         public void Update()
         {
-            //Debug.Log(targetPosition);
             if (Input.GetKeyDown(KeyCode.V))
             {
                 MaxSpeedUpdates();
@@ -156,18 +155,25 @@ namespace Assets.Scripts.View
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
 
-            if (_world.RobotArm.Holding)
-            {
-                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
-                block.transform.parent = blockHolder.transform;
-                block.transform.localPosition = new Vector3(0, 0, 0);
-            }
-            else if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
+            if (blockHolder.transform.childCount > 0)
             {
                 foreach (Transform child in blockHolder.transform)
                 {
                     Destroy(child.gameObject);
                 }
+            }
+
+            if (_world.RobotArm.Holding)
+            {
+                block = FindBlock(_world.RobotArm.HoldingBlock.Id);
+                block.transform.parent = blockHolder.transform;
+                block.transform.localPosition = new Vector3(0, 0, 0);
+
+                _animator.SetTrigger("MSEP Open");
+            }
+            else
+            {
+                _animator.SetTrigger("MSEP Close");
             }
 
             _sectionBuilder.ReloadSectionsAtCurrent();

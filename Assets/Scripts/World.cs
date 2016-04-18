@@ -15,9 +15,6 @@ namespace Assets.Scripts.WorldData
             bool levelExists;
             Stacks = levels.LoadLevel("random", out levelExists);
 
-            highestBlock = Stacks.Max(s => s.Blocks.Count);
-
-
             RobotArm = new RobotArmData(Height + 3);
         }
 
@@ -94,7 +91,5 @@ namespace Assets.Scripts.WorldData
 
             return "none";
         }
-
-        private int highestBlock;
     }
 }

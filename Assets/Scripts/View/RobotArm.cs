@@ -155,7 +155,7 @@ namespace Assets.Scripts.View
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
 
-            if (blockHolder.transform.childCount > 0)
+            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
             {
                 foreach (Transform child in blockHolder.transform)
                 {

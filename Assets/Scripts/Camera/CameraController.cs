@@ -25,21 +25,32 @@ public class CameraController : MonoBehaviour
         float yDiff = Math.Abs(cam.z - camStartZ) / 1.8f;
 
         newCam.x = armPos.x;
-        newCam.z = (armPos.y > roboStartY) ? camStartZ - zDiff : camStartZ;
 
         if (!perspectiveSwitcher.orthoOn) {
             newCam.y = (newCam.z < camStartZ) ? camStartY + yDiff : camStartY;
-        } else {
+            newCam.z = (armPos.y > roboStartY) ? camStartZ - zDiff : camStartZ;
+        } else
+        {
             newCam.y = robotArm.transform.position.y / 2 + 1f;
-        }
-
-        if (perspectiveSwitcher.orthoOn) {
             GetComponent<Camera>().orthographicSize = Mathf.Lerp(GetComponent<Camera>().orthographicSize, perspectiveSwitcher.GetNewOrthoSize(), 1f * Time.deltaTime);
         }
 
         transform.position = Vector3.Lerp(cam, newCam, smooth * Time.deltaTime);
     }
 
+    public void ParentCamera(bool makeCameraChild)
+    {
+        if (makeCameraChild)
+        {
+            transform.SetParent(GameObject.FindGameObjectWithTag(Tags.RobotHolder).transform);
+            //GetComponent<CameraController>().enabled = false;
+        }
+        else
+        {
+            transform.SetParent(null);
+            //GetComponent<CameraController>().enabled = true;
+        }
+    }
 
     private PerspectiveSwitcher perspectiveSwitcher;
     private GameObject robotArm;

@@ -379,6 +379,14 @@ namespace Assets.Scripts.View
                     InstantiateWall(sectionId,
                         wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z,
                         type, amount, offset, true);
+
+                    // if the wall is rendered but there is still a new wall needed above the new wall
+                    Vector3 highestWallPoint = new Vector3(0, wall.transform.position.y + sectionWidthTotal - .5f);
+                    float onScreenY = Camera.main.WorldToViewportPoint(highestWallPoint).y;
+                    if (onScreenY < 1f)
+                    {
+                        RenderWallsInSection(sectionId);
+                    }
                 }
             }
         }

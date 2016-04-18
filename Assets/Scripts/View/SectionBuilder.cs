@@ -32,8 +32,9 @@ namespace Assets.Scripts.View
         {
             _pool = GameObject.Find(Tags.BlockPool).GetComponent<BlockPool>();
             _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
-            _world = _globals.world;
+            _robotArm = GameObject.Find(Tags.RobotArm);
             _factory = GameObject.Find(Tags.Factory);
+            _world = _globals.world;
 
             rnd = new System.Random();
 
@@ -42,11 +43,11 @@ namespace Assets.Scripts.View
             initialized = true;
         }
 
-        public int CurrentSection
+        public int CurrentSectionId
         {
             get
             {
-                return GetSectionFromX(_world.RobotArm.X);
+                return GetSectionId(GetCurrentSection());
             }
         }
 
@@ -85,7 +86,7 @@ namespace Assets.Scripts.View
         public void ReloadSectionsAtCurrent()
         {
             DestroyAllSections();
-            CreateSectionsAt(CurrentSection);
+            CreateSectionsAt(CurrentSectionId);
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -392,6 +393,24 @@ namespace Assets.Scripts.View
         }
 
         // misc
+        public GameObject GetCurrentSection()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+            GameObject closedSection = sections[0];
+            foreach (GameObject section in sections)
+            {
+                if (!closedSection)
+                {
+                    closedSection = section;
+                }
+                //compares distances
+                if (Vector3.Distance(_robotArm.transform.position, section.transform.position) <= Vector3.Distance(_robotArm.transform.position, closedSection.transform.position))
+                {
+                    closedSection = section;
+                }
+            }
+            return closedSection;
+        }
         public int GetSectionId(GameObject section)
         {
             return int.Parse(section.name.Split('_')[1]);
@@ -425,12 +444,13 @@ namespace Assets.Scripts.View
         private System.Random rnd;
 
         private int sectionWidthTotal;
-        private int sectionWidth;
         private float spacing;
+        private int sectionWidth;
 
         private bool initialized = false;
 
         private GameObject _factory;
+        private GameObject _robotArm;
         private BlockPool _pool;
         private Globals _globals;
         private World _world;

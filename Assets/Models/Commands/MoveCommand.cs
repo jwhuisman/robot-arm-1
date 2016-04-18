@@ -16,6 +16,7 @@ namespace Assets.Models.Commands
                 statsCounter.MovesRight++;
                 world.MoveRight();
                 robotArm.MoveRight();
+                
             }
             else if (Direction == "left")
             {

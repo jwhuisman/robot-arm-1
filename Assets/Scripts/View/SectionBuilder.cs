@@ -79,22 +79,21 @@ namespace Assets.Scripts.View
             // check what to render/create
             CheckSectionsToCreate();
         }
-
-
+        
         // creation
         public void CreateSectionsAt(int currentSection)
         {
             for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
                 CreateSection(i);
+                RenderWallsInSection(i);
             }
-
-            CheckWallsToRender();
         }
         public void ReloadSectionsAtCurrent()
         {
             DestroyAllSections();
             CreateSectionsAt(CurrentSection);
+            CheckWallsToRender();
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -136,6 +135,7 @@ namespace Assets.Scripts.View
             InstantiateAssemblyLine(sectionId, posX);
             InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
             InstantiateWall(sectionId, posX, posY, posWallZ, type, amountW);
+            CheckWallsToRender();
         }
         public void GenerateBlocks(int stackX)
         {

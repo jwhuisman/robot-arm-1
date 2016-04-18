@@ -92,7 +92,7 @@ namespace Assets.Scripts.View
             // Prevents the developer to set a value below a certaint point
             // to avoid bugs or illogical numbers.
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-            //timeBetweenUpdate = (timeBetweenUpdate <= 1) ? 10 : timeBetweenUpdate;
+            timeBetweenUpdate = (timeBetweenUpdate <= 0.01) ? 1 : timeBetweenUpdate;
         }
 
         public void UpdateRobotHeight()
@@ -162,8 +162,6 @@ namespace Assets.Scripts.View
                 {
                     Destroy(child.gameObject);
                 }
-
-                holding = false;
             }
 
             if (_world.RobotArm.Holding)
@@ -172,7 +170,6 @@ namespace Assets.Scripts.View
                 {
                     // add a block in the robotarm-holder, because the block is in the world.robotArm
                     _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
-                    holding = true;
                 }
                 _animator.SetTrigger("MSEP Open");
             }
@@ -280,7 +277,7 @@ namespace Assets.Scripts.View
 
         public void Scan()
         {
-            if (_world.RobotArm.Holding)
+            if (_world.RobotArm.Holding && _originalSpeed < 100)
             {
                 _animator.SetTrigger("Scan animation");
             }
@@ -336,7 +333,6 @@ namespace Assets.Scripts.View
         internal GameObject block;
         internal int _originalSpeed;
 
-        private bool holding;
         private float _startTime;
         private float _counterTime;
 

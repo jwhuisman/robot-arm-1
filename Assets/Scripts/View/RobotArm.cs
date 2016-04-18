@@ -76,28 +76,14 @@ namespace Assets.Scripts.View
             {
                 if (value == 100)
                 {
-                    ParentCamera(true);
+                    Camera.main.GetComponent<CameraController>().ParentCamera(true);
                 }
                 else
                 {
-                    ParentCamera(false);
+                    Camera.main.GetComponent<CameraController>().ParentCamera(false);
                 }
 
                 _originalSpeed = value;
-            }
-        }
-
-        public void ParentCamera(bool makeCameraChild)
-        {
-            if (makeCameraChild)
-            {
-                Camera.main.transform.SetParent(GameObject.FindGameObjectWithTag(Tags.RobotHolder).transform);
-                Camera.main.GetComponent<CameraController>().enabled = false;
-            }
-            else
-            {
-                Camera.main.transform.SetParent(null);
-                Camera.main.GetComponent<CameraController>().enabled = true;
             }
         }
 
@@ -184,6 +170,7 @@ namespace Assets.Scripts.View
             {
                 if (blockHolder.transform.childCount == 0)
                 {
+                    // add a block in the robotarm-holder, because the block is in the world.robotArm
                     _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
                     holding = true;
                 }

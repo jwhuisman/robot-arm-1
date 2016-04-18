@@ -87,8 +87,9 @@ namespace Assets.Scripts.View
             for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
                 CreateSection(i);
-                CheckWallsToRender(i);
             }
+
+            CheckWallsToRender();
         }
         public void ReloadSectionsAtCurrent()
         {
@@ -331,6 +332,55 @@ namespace Assets.Scripts.View
                     CreateSection(newSectionIdRight, check.DirRight);
                 }
             }
+
+            CheckWallsToRender();
+        }
+        public void CheckWallsToRender()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+            foreach (GameObject section in sections)
+            {
+                float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
+                bool insideView = sectionX > -1f || sectionX < 2f ? true : false;
+
+                if (insideView)
+                {
+                    RenderWallsInSection(GetSectionId(section));
+                }
+            }
+        }
+        public void RenderWallsInSection(int sectionId)
+        {
+            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
+            List<GameObject> walls = new List<GameObject>();
+
+            foreach (Transform child in _wall)
+            {
+                if (child.tag == Tags.Wall && child.gameObject != null)
+                {
+                    walls.Add(child.gameObject);
+                }
+            }
+
+            if (walls.Count > 0)
+            {
+                float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, walls.Max(w => w.transform.position.y))).y;
+                bool maxWallInView = maxWallY >= 0f && maxWallY <= 1f ? true : false;
+
+                if (maxWallInView)
+                {
+                    GameObject wall = walls.Where(w => w.transform.position.y == walls.Max(ww => ww.transform.position.y)).SingleOrDefault();
+
+                    string[] wallName = wall.name.Split('_');
+                    int type = int.Parse(wallName[1]);
+                    int amount = 1;
+                    int offset = int.Parse(wallName[2]);
+
+                    InstantiateWall(sectionId,
+                        wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z,
+                        type, amount, offset, true);
+                }
+            }
         }
         public void DestroyNotVisibleSections()
         {
@@ -364,39 +414,6 @@ namespace Assets.Scripts.View
 
                 instantiatedSections.Remove(instantiatedSections.Single(s => s.Id == sectionId));
                 Destroy(section);
-            }
-        }
-        public void CheckWallsToRender(int sectionId)
-        {
-            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
-            List<GameObject> walls = new List<GameObject>();
-
-            foreach (Transform child in _wall)
-            {
-                if (child.tag == Tags.Wall && child.gameObject != null)
-                {
-                    walls.Add(child.gameObject);
-                }
-            }
-
-            if (walls.Count > 0)
-            {
-                float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, walls.Max(w => w.transform.position.y))).y;
-                bool maxWallInView = maxWallY >= 0f && maxWallY <= 1f ? true : false;
-
-                if (maxWallInView)
-                {
-                    GameObject wall = walls.Where(w => w.transform.position.y == walls.Max(ww => ww.transform.position.y)).SingleOrDefault();
-
-                    string[] wallName = wall.name.Split('_');
-                    int type = int.Parse(wallName[1]);
-                    int amount = 1;
-                    int offset = int.Parse(wallName[2]);
-
-                    InstantiateWall(sectionId, 
-                        wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z, 
-                        type, amount, offset, true);
-                }
             }
         }
 

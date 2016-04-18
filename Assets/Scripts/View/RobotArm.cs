@@ -169,6 +169,7 @@ namespace Assets.Scripts.View
             {
                 if (blockHolder.transform.childCount == 0)
                 {
+                    // add a block in the robotarm-holder, because the block is in the world.robotArm
                     _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
                 }
 
@@ -179,6 +180,7 @@ namespace Assets.Scripts.View
                 _animator.SetTrigger("MSEP Close");
             }
 
+            UpdateRobotHeight();
             OnAnimationIsDone();
         }
 

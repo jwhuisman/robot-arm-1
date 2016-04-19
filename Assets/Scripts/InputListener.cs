@@ -66,19 +66,19 @@ public class InputListener : MonoBehaviour
 
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            commandRunner.Add(new SpeedCommand(10));
+            commandRunner.Add(new SpeedCommand(0));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            commandRunner.Add(new SpeedCommand(20));
+            commandRunner.Add(new SpeedCommand(1));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            commandRunner.Add(new SpeedCommand(30));
+            commandRunner.Add(new SpeedCommand(10));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            commandRunner.Add(new SpeedCommand(40));
+            commandRunner.Add(new SpeedCommand(20));
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {

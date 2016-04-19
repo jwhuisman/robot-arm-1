@@ -44,7 +44,6 @@ namespace Assets.Scripts.View
             UpdateRobotHeight();
         }
 
-
         public int OriginalSpeed
         {
             get
@@ -234,7 +233,7 @@ namespace Assets.Scripts.View
 
             // After the adjustion we multiply to a reasonable range
             // for the animator to multiply the animation states.
-            float animatorSpeed = curveNormalized * 30;
+            float animatorSpeed = curveNormalized * 500;
 
             // Update Needle
             _animator.SetFloat("CurvedSpeed", animatorSpeed);

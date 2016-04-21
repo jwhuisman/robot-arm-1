@@ -32,14 +32,30 @@ namespace Assets.Scripts.View
         {
             _pool = GameObject.Find(Tags.BlockPool).GetComponent<BlockPool>();
             _globals = GameObject.Find(Tags.Globals).GetComponent<Globals>();
-            _world = _globals.world;
+            _robotArm = GameObject.Find(Tags.RobotArm);
             _factory = GameObject.Find(Tags.Factory);
+            _world = _globals.world;
 
             rnd = new System.Random();
 
-            CreateStartSections();
+            CreateSectionsAt(0);
 
             initialized = true;
+        }
+
+        public int NearestSection
+        {
+            get
+            {
+                return GetSectionId(GetCurrentSection());
+            }
+        }
+        public int CurrentSection
+        {
+            get
+            {
+                return GetSectionFromX(_world.RobotArm.X);
+            }
         }
 
         // reload after load level
@@ -54,7 +70,7 @@ namespace Assets.Scripts.View
             instantiatedSections = new List<Section>();
 
             // create the first few sections
-            CreateStartSections();
+            CreateSectionsAt(0);
 
             // set robot arm to x = 0
             Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
@@ -63,16 +79,21 @@ namespace Assets.Scripts.View
             // check what to render/create
             CheckSectionsToCreate();
         }
-
-
+        
         // creation
-        public void CreateStartSections(int currentSection = 0)
+        public void CreateSectionsAt(int currentSection)
         {
             for (int i = currentSection - 3; i <= currentSection + 3; i++)
             {
-                CreateSection(i, 0);
-                CheckWallsToRender(i);
+                CreateSection(i);
+                RenderWallsInSection(i);
             }
+        }
+        public void ReloadSectionsAtCurrent()
+        {
+            DestroyAllSections();
+            CreateSectionsAt(CurrentSection);
+            CheckWallsToRender();
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -114,6 +135,7 @@ namespace Assets.Scripts.View
             InstantiateAssemblyLine(sectionId, posX);
             InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
             InstantiateWall(sectionId, posX, posY, posWallZ, type, amountW);
+            CheckWallsToRender();
         }
         public void GenerateBlocks(int stackX)
         {
@@ -226,7 +248,7 @@ namespace Assets.Scripts.View
                 wall.transform.position = useOriginalTransform ? new Vector3(x - .5f, (y * (i+1)) - .5f, z) : new Vector3(x - .5f, (y * i) - .5f, z);
             }
         }
-        public void InstantiateBlock(int stackX, Block blockData)
+        public void InstantiateBlock(int stackX, Block blockData, bool robotArmHoldsBlock=false)
         {
             GameObject block;
             if (blockData.Color == "Red")
@@ -249,8 +271,17 @@ namespace Assets.Scripts.View
             float x = (spacing * (float)stackX);
 
             block.name = "Block-" + blockData.Id;
-            block.transform.parent = _currentBlocks.transform;
-            block.transform.position = new Vector3(x, blockData.Y, 0);
+
+            if (robotArmHoldsBlock)
+            {
+                block.transform.parent = GameObject.Find(Tags.BlockHolder).transform;
+                block.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                block.transform.parent = _currentBlocks.transform;
+                block.transform.position = new Vector3(x, blockData.Y, 0);
+            }
         }
 
         // check for generating/rendering new section
@@ -301,26 +332,24 @@ namespace Assets.Scripts.View
                     CreateSection(newSectionIdRight, check.DirRight);
                 }
             }
+
+            CheckWallsToRender();
         }
-        public void DestroyNotVisibleSections()
+        public void CheckWallsToRender()
         {
             GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
-
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool outsideView = sectionX < -1f || sectionX > 2f ? true : false;
+                bool insideView = sectionX > -1f || sectionX < 2f ? true : false;
 
-                if (outsideView)
+                if (insideView)
                 {
-                    int sectionId = GetSectionId(section);
-
-                    instantiatedSections.Remove(instantiatedSections.Where(s => s.Id == sectionId).SingleOrDefault());
-                    Destroy(section);
+                    RenderWallsInSection(GetSectionId(section));
                 }
             }
         }
-        public void CheckWallsToRender(int sectionId)
+        public void RenderWallsInSection(int sectionId)
         {
             Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
             List<GameObject> walls = new List<GameObject>();
@@ -347,10 +376,52 @@ namespace Assets.Scripts.View
                     int amount = 1;
                     int offset = int.Parse(wallName[2]);
 
-                    InstantiateWall(sectionId, 
-                        wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z, 
+                    InstantiateWall(sectionId,
+                        wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z,
                         type, amount, offset, true);
+
+                    // if the wall is rendered but there is still a new wall needed above the new wall
+                    Vector3 highestWallPoint = new Vector3(0, wall.transform.position.y + sectionWidthTotal - .5f);
+                    float onScreenY = Camera.main.WorldToViewportPoint(highestWallPoint).y;
+                    if (onScreenY < 1f)
+                    {
+                        RenderWallsInSection(sectionId);
+                    }
                 }
+            }
+        }
+        public void DestroyNotVisibleSections()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+
+            foreach (GameObject section in sections)
+            {
+                float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
+                bool outsideView = sectionX < -1f || sectionX > 2f ? true : false;
+
+                if (outsideView)
+                {
+                    int sectionId = GetSectionId(section);
+
+                    Section sectionToRemove = instantiatedSections.Single(s => s.Id == sectionId);
+                    if (instantiatedSections.Contains(sectionToRemove))
+                    {
+                        instantiatedSections.Remove(sectionToRemove);
+                    }
+                    Destroy(section);
+                }
+            }
+        }
+        public void DestroyAllSections()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+
+            foreach (GameObject section in sections)
+            {
+                int sectionId = GetSectionId(section);
+
+                instantiatedSections.Remove(instantiatedSections.Single(s => s.Id == sectionId));
+                Destroy(section);
             }
         }
 
@@ -363,6 +434,24 @@ namespace Assets.Scripts.View
         }
 
         // misc
+        public GameObject GetCurrentSection()
+        {
+            GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
+            GameObject closedSection = sections[0];
+            foreach (GameObject section in sections)
+            {
+                if (!closedSection)
+                {
+                    closedSection = section;
+                }
+                //compares distances
+                if (Vector3.Distance(_robotArm.transform.position, section.transform.position) <= Vector3.Distance(_robotArm.transform.position, closedSection.transform.position))
+                {
+                    closedSection = section;
+                }
+            }
+            return closedSection;
+        }
         public int GetSectionId(GameObject section)
         {
             return int.Parse(section.name.Split('_')[1]);
@@ -396,12 +485,13 @@ namespace Assets.Scripts.View
         private System.Random rnd;
 
         private int sectionWidthTotal;
-        private int sectionWidth;
         private float spacing;
+        private int sectionWidth;
 
         private bool initialized = false;
 
         private GameObject _factory;
+        private GameObject _robotArm;
         private BlockPool _pool;
         private Globals _globals;
         private World _world;

@@ -18,4 +18,5 @@
     public static string Scripts = "Global Scripts";
     public static string Light = "Directional Light";
     public static string RobotHolder = "RobotHolder";
+    public static string BlockHolder = "BlockHolder";
 }

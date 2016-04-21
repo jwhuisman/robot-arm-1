@@ -7,6 +7,7 @@ namespace Assets.Scripts.View
     public class RobotArm : MonoBehaviour
     {
         public GameObject blockDisposal;
+        public GameObject blockHolder;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -23,6 +24,9 @@ namespace Assets.Scripts.View
         public AnimationCurve animationCurveSpeed = new AnimationCurve();
         public int _originalSpeed;
 
+        [Header("Time")]
+        public float timeBetweenUpdate;
+
         public void Start()
         {
             InitializeComponents();
@@ -34,6 +38,7 @@ namespace Assets.Scripts.View
             _view = GameObject.Find(Tags.View).GetComponent<View>();
             _world = GameObject.Find(Tags.Globals).GetComponent<Globals>().world;
             _animator = gameObject.GetComponentInChildren<Animator>();
+            _sectionBuilder = _view.GetComponent<SectionBuilder>();
 
             // Defining/Calculating offset and position
             blockHalf = blockHeight / 2;
@@ -43,6 +48,23 @@ namespace Assets.Scripts.View
 
             // At the start of the program the robotarm starts above the highest block
             UpdateRobotHeight();
+
+            _startTime = Time.fixedDeltaTime;
+        }
+
+        public void FixedUpdate()
+        {
+            if (_originalSpeed == 100)
+            {
+                // Updates the view on the highest speed, after a certaint given number.(timeBetweenUpdate)
+                _counterTime = _startTime + _counterTime + Time.fixedDeltaTime;
+                if (_counterTime >= timeBetweenUpdate)
+                {
+                    MaxSpeedUpdates();
+
+                    _counterTime = 0;
+                }
+            }
         }
 
         public int OriginalSpeed
@@ -55,38 +77,29 @@ namespace Assets.Scripts.View
             {
                 if (value == 100)
                 {
-                    ParentCamera(true);
+                    Camera.main.GetComponent<CameraController>().ParentCamera(true);
                 }
                 else
                 {
-                    ParentCamera(false);
+                    Camera.main.GetComponent<CameraController>().ParentCamera(false);
                 }
 
                 _originalSpeed = value;
             }
         }
 
-        public void ParentCamera(bool makeCameraChild)
-        {
-            if (makeCameraChild)
-            {
-                Camera.main.transform.SetParent(GameObject.FindGameObjectWithTag(Tags.RobotHolder).transform);
-                Camera.main.GetComponent<CameraController>().enabled = false;
-            }
-            else
-            {
-                Camera.main.transform.SetParent(null);
-                Camera.main.GetComponent<CameraController>().enabled = true;
-            }
-        }
-
         public void OnValidate()
         {
+            // Prevents the developer to set a value below a certaint point
+            // to avoid bugs or illogical numbers.
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
+            timeBetweenUpdate = (timeBetweenUpdate <= 0.01 >= 60) ? 1 : timeBetweenUpdate;
+
             if (_animator != null && _originalSpeed != _animator.GetInteger("Speed"))
             {
                 UpdateSpeed(_originalSpeed);
             }
+
         }
 
         public void UpdateRobotHeight()
@@ -107,16 +120,19 @@ namespace Assets.Scripts.View
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the left.
-            targetPosition = new Vector3(transform.position.x - (blockWidth * _view.spacing), transform.position.y, transform.position.z);
+            targetPosition = new Vector3(targetPosition.x - (blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
 
-            if (_animator.GetInteger("Speed") <= 99)
+            if (_animator.GetInteger("Speed") == 100)
             {
-                _animator.SetTrigger("Move Left");
-            }
-            else
-            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
                 OnAnimationIsDone();
+                return;
             }
+
+            // Start the animation.
+            _animator.SetTrigger("Move Left");
+
             _view.UpdateView();
         }
 
@@ -124,21 +140,64 @@ namespace Assets.Scripts.View
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the right.
-            targetPosition = new Vector3(transform.position.x - (-blockWidth * _view.spacing), transform.position.y, transform.position.z);
+            targetPosition = new Vector3(targetPosition.x - (-blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
 
-            if (_animator.GetInteger("Speed") <= 99)
+            if (_animator.GetInteger("Speed") == 100)
             {
-                _animator.SetTrigger("Move Right");
-                _view.UpdateView();
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
+            // Start the animation.
+            _animator.SetTrigger("Move Right");
+
+            _view.UpdateView();
+        }
+
+        public void MaxSpeedUpdates()
+        {
+            _sectionBuilder.ReloadSectionsAtCurrent();
+            
+            // Sets the holders position
+            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
+
+            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
+            {
+                foreach (Transform child in blockHolder.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
+            if (_world.RobotArm.Holding)
+            {
+                if (blockHolder.transform.childCount == 0)
+                {
+                    // add a block in the robotarm-holder, because the block is in the world.robotArm
+                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
+                }
+                _animator.SetTrigger("MSEP Open");
             }
             else
             {
-                OnAnimationIsDone();
+                _animator.SetTrigger("MSEP Close");
             }
+
+            UpdateRobotHeight();
         }
 
         public void Grab()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             // Calculate the position the robot hand needs to move to in order to grab the top
             // block. Note that the top block has already been grabbed in the world, so we need
             // to add 1 to the height of the stack to compensate.
@@ -159,6 +218,13 @@ namespace Assets.Scripts.View
 
         public void Drop()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
             // Calculate the position the robot hand needs to move to in order to drop the block
             // on the stap. Note that the block has already been dropped in the world, so we need
             // to subtract 1 from the height of the stack to compensate.
@@ -178,6 +244,14 @@ namespace Assets.Scripts.View
 
         public void PretendGrab()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
@@ -190,6 +264,14 @@ namespace Assets.Scripts.View
 
         public void PretendDrop()
         {
+            if (_animator.GetInteger("Speed") == 100)
+            {
+                // When the speed is 100 we want everything 
+                // to go instantly so without animations.
+                OnAnimationIsDone();
+                return;
+            }
+
             int stackHeight = _world.CurrentStack.Blocks.Count + 1;
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
@@ -200,17 +282,9 @@ namespace Assets.Scripts.View
             UpdateRobotHeight();
         }
 
-        public void SetTargetPosition()
-        {
-            // Sets the holders position
-            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
-
-            OnAnimationIsDone();
-        }
-
         public void Scan()
         {
-            if (_world.RobotArm.Holding)
+            if (_world.RobotArm.Holding && _originalSpeed < 100)
             {
                 _animator.SetTrigger("Scan animation");
             }
@@ -265,6 +339,10 @@ namespace Assets.Scripts.View
         internal Vector3 targetPosition;
         internal GameObject block;
 
+        private float _startTime;
+        private float _counterTime;
+
+        private SectionBuilder _sectionBuilder;
         private Animator _animator;
         private World _world;
         private View _view;

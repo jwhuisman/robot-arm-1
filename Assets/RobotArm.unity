@@ -149,8 +149,8 @@ MonoBehaviour:
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   redBlockModel: {fileID: 155638, guid: 5adb16dbcbc13244c86e7c244e9532c5, type: 2}
   greenBlockModel: {fileID: 102988, guid: 0956194145d4d564a8e10dbaddd4c622, type: 2}
-  blueBlockModel: {fileID: 132794, guid: e341a5d6b94284343a2802e6f38f90b7, type: 2}
-  whiteBlockModel: {fileID: 183084, guid: dba305a5a2f580346977c398592c5873, type: 2}
+  blueBlockModel: {fileID: 100000, guid: e9d9725d4e6ecbf46bbcedbf1685bf2b, type: 3}
+  whiteBlockModel: {fileID: 100000, guid: 0d24607f99e92994897804d6065b8003, type: 3}
   wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
   wallExtendModel: {fileID: 100000, guid: 871db1ba5aebe704295917761bccce2f, type: 3}
   wallInsetModel: {fileID: 100000, guid: 0273a2bda2221d948978e83bca214f3b, type: 3}
@@ -544,6 +544,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockDisposal: {fileID: 1246093162}
+  blockHolder: {fileID: 1181576496}
   blockHeight: 1
   blockWidth: 1
   robotArmHeight: 1
@@ -580,6 +581,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  timeBetweenUpdate: 0.8
 --- !u!1 &951667419 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100014, guid: 966dd05d435b4794991af942cd32baba, type: 3}
@@ -627,6 +629,33 @@ Transform:
   m_Children: []
   m_Father: {fileID: 159257697}
   m_RootOrder: 0
+--- !u!1 &1181576496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1181576497}
+  m_Layer: 0
+  m_Name: BlockHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1181576497
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1181576496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -3.295874, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 432783515}
+  m_RootOrder: 3
 --- !u!1001 &1196696923
 Prefab:
   m_ObjectHideFlags: 0
@@ -989,7 +1018,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99ee61e026b41034aae0d4cdbf4e882a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotArmScript: {fileID: 913337112}
+  robotArmScript: {fileID: 0}
 --- !u!222 &2052329902
 CanvasRenderer:
   m_ObjectHideFlags: 0

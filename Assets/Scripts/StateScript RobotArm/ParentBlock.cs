@@ -6,6 +6,6 @@ public class ParentBlock : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GameObject block = animator.GetComponentInParent<RobotArm>().block;
-        block.transform.parent = animator.transform;
+        block.transform.parent = animator.GetComponent<RobotArm>().blockHolder.transform;
     }
 }

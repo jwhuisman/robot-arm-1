@@ -59,9 +59,9 @@ namespace Assets.Models
 
             currentCmd = Queue.Dequeue();
             robotArm.AnimationIsDone += currentCmd.AnimationFinished;
-            
+
             currentCmd.Do(robotArm, speedMeter, statsCounter);
-            
+
             if (currentCmd is LoadLevelCommand)
             {
                 Levels levels = GameObject.Find(Tags.Globals).GetComponent<Globals>().world.levels;

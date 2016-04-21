@@ -6,11 +6,20 @@ ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Wall_A_04
+    100004: Wall_A_Post_02
     400000: //RootNode
+    400002: Wall_A_04
+    400004: Wall_A_Post_02
     2300000: //RootNode
+    2300002: Wall_A_04
+    2300004: Wall_A_Post_02
     3300000: //RootNode
+    3300002: Wall_A_04
+    3300004: Wall_A_Post_02
     4300000: Wall_A_04
     4300002: Wall_B_03
+    4300004: Wall_A_Post_02
     7400000: Default Take
     9500000: //RootNode
   materials:

@@ -138,11 +138,12 @@ namespace Assets.Scripts.View
 
         public void MaxSpeedUpdates()
         {
-            _sectionBuilder.ReloadSectionsAtCurrent();
-            
             // Sets the holders position
             transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
+            UpdateRobotHeight();
 
+            _sectionBuilder.ReloadSectionsAtCurrent();
+            
             if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
             {
                 foreach (Transform child in blockHolder.transform)
@@ -166,7 +167,6 @@ namespace Assets.Scripts.View
                 _animator.SetTrigger("MSEP Close");
             }
 
-            UpdateRobotHeight();
             OnAnimationIsDone();
         }
 

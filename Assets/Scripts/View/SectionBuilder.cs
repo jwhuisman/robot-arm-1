@@ -39,17 +39,8 @@ namespace Assets.Scripts.View
             rnd = new System.Random();
 
             CreateSectionsAt(0);
-
-            initialized = true;
         }
 
-        public int NearestSection
-        {
-            get
-            {
-                return GetSectionId(GetCurrentSection());
-            }
-        }
         public int CurrentSection
         {
             get
@@ -80,21 +71,17 @@ namespace Assets.Scripts.View
             CheckSectionsToCreate();
         }
 
-
         // creation
-        public void CreateSectionsAt(int currentSection)
-        {
-            for (int i = currentSection - 3; i <= currentSection + 3; i++)
-            {
-                CreateSection(i);
-            }
-
-            CheckWallsToRender();
-        }
         public void ReloadSectionsAtCurrent()
         {
             DestroyAllSections();
             CreateSectionsAt(CurrentSection);
+        }
+        public void CreateSectionsAt(int currentSection)
+        {
+            CreateSection(currentSection);
+
+            DoINeedMoreSections();
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -116,8 +103,32 @@ namespace Assets.Scripts.View
                 GenerateBlocks(x);
             }
 
-            instantiatedSections.Add(new Section(sectionId, type));
+            CreateWallsInSection(sectionId);
+
+            Section section = new Section(sectionId, type);
+            instantiatedSections.Add(section);
+
+            if (sectionTypes.Where(s => s.Id == sectionId).SingleOrDefault() == null)
+            {
+                sectionTypes.Add(section);
+            }
+
             _currentSection = null;
+        }
+        public void DoINeedMoreSections()
+        {
+            SectionCheck check = NeedNewSection();
+            if (check.NeedNew)
+            {
+                CreateSection(check.Section + check.Dir, check.Dir);
+
+                if (check.BothWays)
+                {
+                    CreateSection(check.SectionRight + check.DirRight, check.DirRight);
+                }
+
+                DoINeedMoreSections();
+            }
         }
 
         // generation
@@ -158,6 +169,10 @@ namespace Assets.Scripts.View
             // 1 = inset
             // 2 = inset corner left
             // 3 = inset corner right
+
+            // if section has a type, return the type;
+            Section section = sectionTypes.Where(s => s.Id == sectionId).SingleOrDefault();
+            if (section != null) { return section.Type; }
 
             if (dir == 0) { return 0; }
 
@@ -296,8 +311,8 @@ namespace Assets.Scripts.View
             float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
             float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
 
-            bool minVisible = minX >= -1 && minX <= 2 ? true : false;
-            bool maxVisible = maxX >= -1 && maxX <= 2 ? true : false;
+            bool minVisible = minX >= leftRenderBorder && minX <= rightRenderBorder ? true : false;
+            bool maxVisible = maxX >= leftRenderBorder && maxX <= rightRenderBorder ? true : false;
 
             if (minVisible && maxVisible)
             {
@@ -317,7 +332,7 @@ namespace Assets.Scripts.View
         public void CheckSectionsToCreate()
         {
             SectionCheck check = NeedNewSection();
-            if (initialized && check.NeedNew)
+            if (check.NeedNew)
             {
                 int newSectionId = check.Section + check.Dir;
                 int newSectionIdRight = check.SectionRight + check.DirRight;
@@ -331,34 +346,31 @@ namespace Assets.Scripts.View
                 {
                     CreateSection(newSectionIdRight, check.DirRight);
                 }
-            }
 
-            CheckWallsToRender();
+                CheckSectionsToCreate();
+            }
         }
-        public void CheckWallsToRender()
+        public void CheckWallsToCreate()
         {
             GameObject[] sections = GameObject.FindGameObjectsWithTag(Tags.Section);
             foreach (GameObject section in sections)
             {
-                float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool insideView = sectionX > -1f || sectionX < 2f ? true : false;
-
-                if (insideView)
-                {
-                    RenderWallsInSection(GetSectionId(section));
-                }
+                CreateWallsInSection(GetSectionId(section));
             }
         }
-        public void RenderWallsInSection(int sectionId)
+        public void CreateWallsInSection(int sectionId)
         {
             Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
             List<GameObject> walls = new List<GameObject>();
 
-            foreach (Transform child in _wall)
+            if (_wall != null)
             {
-                if (child.tag == Tags.Wall && child.gameObject != null)
+                foreach (Transform child in _wall)
                 {
-                    walls.Add(child.gameObject);
+                    if (child.tag == Tags.Wall && child.gameObject != null)
+                    {
+                        walls.Add(child.gameObject);
+                    }
                 }
             }
 
@@ -385,7 +397,7 @@ namespace Assets.Scripts.View
                     float onScreenY = Camera.main.WorldToViewportPoint(highestWallPoint).y;
                     if (onScreenY < 1f)
                     {
-                        RenderWallsInSection(sectionId);
+                        CreateWallsInSection(sectionId);
                     }
                 }
             }
@@ -397,7 +409,7 @@ namespace Assets.Scripts.View
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool outsideView = sectionX < -1f || sectionX > 2f ? true : false;
+                bool outsideView = sectionX < leftRenderBorder || sectionX > rightRenderBorder ? true : false;
 
                 if (outsideView)
                 {
@@ -452,6 +464,10 @@ namespace Assets.Scripts.View
             }
             return closedSection;
         }
+        public GameObject GetSection(int sectionId)
+        {
+            return GameObject.Find("Section_" + sectionId);
+        }
         public int GetSectionId(GameObject section)
         {
             return int.Parse(section.name.Split('_')[1]);
@@ -480,15 +496,17 @@ namespace Assets.Scripts.View
 
         // privates
         private List<Section> instantiatedSections = new List<Section>();
+        private List<Section> sectionTypes = new List<Section>();
         private GameObject _currentSection;
         private GameObject _currentBlocks;
         private System.Random rnd;
 
+        private float leftRenderBorder =  -.4f;
+        private float rightRenderBorder = 1.4f;
+
         private int sectionWidthTotal;
         private float spacing;
         private int sectionWidth;
-
-        private bool initialized = false;
 
         private GameObject _factory;
         private GameObject _robotArm;

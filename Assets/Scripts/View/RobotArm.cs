@@ -93,7 +93,7 @@ namespace Assets.Scripts.View
             // Prevents the developer to set a value below a certaint point
             // to avoid bugs or illogical numbers.
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-            timeBetweenUpdate = (timeBetweenUpdate <= 0.01 >= 60) ? 1 : timeBetweenUpdate;
+            timeBetweenUpdate = (timeBetweenUpdate <= 0.01 && timeBetweenUpdate >= 60) ? 1 : timeBetweenUpdate;
 
             if (_animator != null && _originalSpeed != _animator.GetInteger("Speed"))
             {

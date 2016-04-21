@@ -581,6 +581,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
+  _originalSpeed: 0
   timeBetweenUpdate: 0.8
 --- !u!1 &951667419 stripped
 GameObject:

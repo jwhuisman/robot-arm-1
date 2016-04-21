@@ -21,6 +21,7 @@ namespace Assets.Scripts.View
 
         [Header("Animation curves")]
         public AnimationCurve animationCurveSpeed = new AnimationCurve();
+        public int _originalSpeed;
 
         public void Start()
         {
@@ -82,7 +83,10 @@ namespace Assets.Scripts.View
         public void OnValidate()
         {
             distanceToHighestStack = (distanceToHighestStack <= 1) ? 2 : distanceToHighestStack;
-            //UpdateRobotHeight();
+            if (_animator != null && _originalSpeed != _animator.GetInteger("Speed"))
+            {
+                UpdateSpeed(_originalSpeed);
+            }
         }
 
         public void UpdateRobotHeight()
@@ -260,7 +264,6 @@ namespace Assets.Scripts.View
         
         internal Vector3 targetPosition;
         internal GameObject block;
-        internal int _originalSpeed;
 
         private Animator _animator;
         private World _world;

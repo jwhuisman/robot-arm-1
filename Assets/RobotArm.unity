@@ -151,8 +151,8 @@ MonoBehaviour:
   greenBlockModel: {fileID: 102988, guid: 0956194145d4d564a8e10dbaddd4c622, type: 2}
   blueBlockModel: {fileID: 100000, guid: e9d9725d4e6ecbf46bbcedbf1685bf2b, type: 3}
   whiteBlockModel: {fileID: 100000, guid: 0d24607f99e92994897804d6065b8003, type: 3}
-  wallModel: {fileID: 100000, guid: 7f7fb1a2d8df1704e8aa121390e7c940, type: 3}
-  wallExtendModel: {fileID: 100000, guid: 4e263134ad101564c85c108f586d9c18, type: 3}
+  wallModel: {fileID: 100000, guid: 61cd50d59d919fb478725664f9fe5de1, type: 3}
+  wallExtendModel: {fileID: 100000, guid: 871db1ba5aebe704295917761bccce2f, type: 3}
   wallInsetModel: {fileID: 100000, guid: 0273a2bda2221d948978e83bca214f3b, type: 3}
   wallInsetExtendModel: {fileID: 100000, guid: 493b358f081c04148ad47b4f56e124b1, type: 3}
   wallInsetLeftModel: {fileID: 100000, guid: 4493d8fa93488194785305cdef5cfd2f, type: 3}

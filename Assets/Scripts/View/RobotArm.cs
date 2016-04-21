@@ -143,7 +143,7 @@ namespace Assets.Scripts.View
             UpdateRobotHeight();
 
             _sectionBuilder.ReloadSectionsAtCurrent();
-            
+
             if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
             {
                 foreach (Transform child in blockHolder.transform)

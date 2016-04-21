@@ -81,7 +81,7 @@ namespace Assets.Scripts.View
         {
             CreateSection(currentSection);
 
-            DoINeedMoreSections();
+            CheckSectionsToCreate();
         }
         public void CreateSection(int sectionId, int dir = 0)
         {
@@ -103,8 +103,6 @@ namespace Assets.Scripts.View
                 GenerateBlocks(x);
             }
 
-            CreateWallsInSection(sectionId);
-
             Section section = new Section(sectionId, type);
             instantiatedSections.Add(section);
 
@@ -115,38 +113,20 @@ namespace Assets.Scripts.View
 
             _currentSection = null;
         }
-        public void DoINeedMoreSections()
-        {
-            SectionCheck check = NeedNewSection();
-            if (check.NeedNew)
-            {
-                CreateSection(check.Section + check.Dir, check.Dir);
-
-                if (check.BothWays)
-                {
-                    CreateSection(check.SectionRight + check.DirRight, check.DirRight);
-                }
-
-                DoINeedMoreSections();
-            }
-        }
 
         // generation
         public void GenerateFactory(int sectionId, int type)
         {
-            float width = sectionWidthTotal;
-            float halfW = width / 2;
-            float posX = halfW + (sectionId * width);
-            float posY = width;
+            float size = sectionWidthTotal; // keep the walls/sections width/height ratio to 1:1
+            float halfW = size / 2;
+            float posX = halfW + (sectionId * size);
+            float posY = size;
             float posFloorZ = 0;
             float posWallZ = halfW;
 
-            int amountF = 2;
-            int amountW = 2;
-
             InstantiateAssemblyLine(sectionId, posX);
-            InstantiateFloor(sectionId, posX, posFloorZ, width, amountF);
-            InstantiateWall(sectionId, posX, posY, posWallZ, type, amountW);
+            InstantiateFloor(sectionId, posX, posFloorZ, size, 2);
+            InstantiateWall(sectionId, posX, posY, posWallZ, type, 2);
         }
         public void GenerateBlocks(int stackX)
         {
@@ -349,6 +329,8 @@ namespace Assets.Scripts.View
 
                 CheckSectionsToCreate();
             }
+
+            CheckWallsToCreate();
         }
         public void CheckWallsToCreate()
         {
@@ -360,7 +342,7 @@ namespace Assets.Scripts.View
         }
         public void CreateWallsInSection(int sectionId)
         {
-            Transform _wall = GameObject.Find("Section_" + sectionId).transform.Find(Tags.Wall);
+            Transform _wall = GameObject.Find("Section_"+sectionId).transform.Find(Tags.Wall);
             List<GameObject> walls = new List<GameObject>();
 
             if (_wall != null)
@@ -376,17 +358,18 @@ namespace Assets.Scripts.View
 
             if (walls.Count > 0)
             {
-                float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, walls.Max(w => w.transform.position.y))).y;
-                bool maxWallInView = maxWallY >= 0f && maxWallY <= 1f ? true : false;
+                float highestWallY = walls.Max(w => w.transform.position.y);
+                float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, highestWallY)).y;
+                bool maxWallInView = maxWallY >= bottomRenderBorder && maxWallY <= topRenderBorder ? true : false;
 
                 if (maxWallInView)
                 {
-                    GameObject wall = walls.Where(w => w.transform.position.y == walls.Max(ww => ww.transform.position.y)).SingleOrDefault();
+                    GameObject wall = walls.Where(w => w.transform.position.y == highestWallY).SingleOrDefault();
 
                     string[] wallName = wall.name.Split('_');
                     int type = int.Parse(wallName[1]);
-                    int amount = 1;
                     int offset = int.Parse(wallName[2]);
+                    int amount = 1;
 
                     InstantiateWall(sectionId,
                         wall.transform.position.x + .5f, sectionWidthTotal, wall.transform.position.z,
@@ -395,7 +378,7 @@ namespace Assets.Scripts.View
                     // if the wall is rendered but there is still a new wall needed above the new wall
                     Vector3 highestWallPoint = new Vector3(0, wall.transform.position.y + sectionWidthTotal - .5f);
                     float onScreenY = Camera.main.WorldToViewportPoint(highestWallPoint).y;
-                    if (onScreenY < 1f)
+                    if (onScreenY <= topRenderBorder)
                     {
                         CreateWallsInSection(sectionId);
                     }
@@ -409,7 +392,7 @@ namespace Assets.Scripts.View
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool outsideView = sectionX < leftRenderBorder || sectionX > rightRenderBorder ? true : false;
+                bool outsideView = sectionX < leftRenderBorder - 1f || sectionX > rightRenderBorder + 1f ? true : false;
 
                 if (outsideView)
                 {
@@ -501,8 +484,10 @@ namespace Assets.Scripts.View
         private GameObject _currentBlocks;
         private System.Random rnd;
 
-        private float leftRenderBorder =  -.4f;
-        private float rightRenderBorder = 1.4f;
+        private float bottomRenderBorder = -.4f;
+        private float topRenderBorder    = 1.4f;
+        private float leftRenderBorder   = -.4f;
+        private float rightRenderBorder  = 1.4f;
 
         private int sectionWidthTotal;
         private float spacing;

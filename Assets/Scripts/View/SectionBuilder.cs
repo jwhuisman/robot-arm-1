@@ -39,6 +39,8 @@ namespace Assets.Scripts.View
             rnd = new System.Random();
 
             CreateSectionsAt(0);
+
+            CheckWallsToCreate();
         }
 
         public int CurrentSection
@@ -48,6 +50,57 @@ namespace Assets.Scripts.View
                 return GetSectionFromX(_world.RobotArm.X);
             }
         }
+        private float LeftRenderBorder
+        {
+            get
+            {
+                float max = -.6f;
+                float mid = -.3f;
+                float min = -.1f;
+
+                float y = _robotArm.transform.position.y;
+                float r = y > 20f ? (y > 50f ? min : mid) : max;
+
+                return r;
+            }
+        }
+        private float RightRenderBorder
+        {
+            get
+            {
+                float max = 1.6f;
+                float mid = 1.3f;
+                float min = 1.1f;
+
+                float y = _robotArm.transform.position.y;
+                float r = y > 20f ? (y > 50f ? min : mid) : max;
+
+                return r;
+            }
+        }
+        private float TopRenderBorder
+        {
+            get
+            {
+                float max = 1.6f;
+                float mid = 1.3f;
+                float min = 1.1f;
+
+                float y = _robotArm.transform.position.y;
+                float r = y > 20f ? (y > 50f ? min : mid) : max;
+
+                return r;
+                return r;
+            }
+        }
+        private float BottomRenderBorder
+        {
+            get
+            {
+                return -.4f;
+            }
+        }
+
 
         // reload after load level
         public void Reload()
@@ -244,7 +297,7 @@ namespace Assets.Scripts.View
             Vector3 topWallPoint = new Vector3(0, h * (wAmount - 1));
             float onScreenY = Camera.main.WorldToViewportPoint(topWallPoint).y;
 
-            if (onScreenY < topRenderBorder)
+            if (onScreenY < TopRenderBorder)
             {
                 wAmount++;
                 GetNeededWallsAmount();
@@ -328,8 +381,8 @@ namespace Assets.Scripts.View
             float minX = Camera.main.WorldToViewportPoint(minSection.transform.position).x;
             float maxX = Camera.main.WorldToViewportPoint(maxSection.transform.position).x;
 
-            bool minVisible = minX >= leftRenderBorder && minX <= rightRenderBorder ? true : false;
-            bool maxVisible = maxX >= leftRenderBorder && maxX <= rightRenderBorder ? true : false;
+            bool minVisible = minX >= LeftRenderBorder && minX <= RightRenderBorder ? true : false;
+            bool maxVisible = maxX >= LeftRenderBorder && maxX <= RightRenderBorder ? true : false;
 
             if (minVisible && maxVisible)
             {
@@ -395,7 +448,7 @@ namespace Assets.Scripts.View
             {
                 float highestWallY = walls.Max(w => w.transform.position.y);
                 float maxWallY = Camera.main.WorldToViewportPoint(new Vector3(0, highestWallY)).y;
-                bool maxWallInView = maxWallY >= bottomRenderBorder && maxWallY <= topRenderBorder ? true : false;
+                bool maxWallInView = maxWallY >= BottomRenderBorder && maxWallY <= TopRenderBorder ? true : false;
 
                 if (maxWallInView)
                 {
@@ -413,7 +466,7 @@ namespace Assets.Scripts.View
                     // if the wall is rendered but there is still a new wall needed above the new wall
                     Vector3 highestWallPoint = new Vector3(0, wall.transform.position.y + sectionWidthTotal - .5f);
                     float onScreenY = Camera.main.WorldToViewportPoint(highestWallPoint).y;
-                    if (onScreenY <= topRenderBorder)
+                    if (onScreenY <= TopRenderBorder)
                     {
                         CreateWallsInSection(sectionId);
                     }
@@ -427,7 +480,7 @@ namespace Assets.Scripts.View
             foreach (GameObject section in sections)
             {
                 float sectionX = Camera.main.WorldToViewportPoint(section.transform.position).x;
-                bool outsideView = sectionX < leftRenderBorder - 1f || sectionX > rightRenderBorder + 1f ? true : false;
+                bool outsideView = sectionX < LeftRenderBorder - 1f || sectionX > RightRenderBorder + 1f ? true : false;
 
                 if (outsideView)
                 {
@@ -518,11 +571,6 @@ namespace Assets.Scripts.View
         private GameObject _currentSection;
         private GameObject _currentBlocks;
         private System.Random rnd;
-
-        private float bottomRenderBorder = -.4f;
-        private float topRenderBorder    = 1.4f;
-        private float leftRenderBorder   = -.4f;
-        private float rightRenderBorder  = 1.4f;
 
         private int wAmount = 1;
 

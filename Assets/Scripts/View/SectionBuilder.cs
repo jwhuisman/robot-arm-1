@@ -126,7 +126,8 @@ namespace Assets.Scripts.View
 
             InstantiateAssemblyLine(sectionId, posX);
             InstantiateFloor(sectionId, posX, posFloorZ, size, 2);
-            InstantiateWall(sectionId, posX, posY, posWallZ, type, 2);
+            InstantiateWalls(sectionId, posX, posY, posWallZ, type);
+            //InstantiateWall(sectionId, posX, posY, posWallZ, type, 2);
         }
         public void GenerateBlocks(int stackX)
         {
@@ -214,6 +215,42 @@ namespace Assets.Scripts.View
                 floor.tag = Tags.Floor;
                 floor.transform.position = new Vector3(x - .5f, -.5f, (i * -width));
             }
+        }
+        public void InstantiateWalls(int sectionId, float x, float y, float z, int type)
+        {
+            GameObject wallT = new GameObject("Wall");
+            wallT.transform.parent = _currentSection.transform;
+
+            int amount = GetNeededWallsAmount();
+            wAmount = 1;
+
+            for (int i = 0; i < amount; i++)
+            {
+                GameObject wall = (type == 1) ? ((i == 0) ? Instantiate(wallInsetModel) : Instantiate(wallInsetExtendModel)) :
+                       (type == 2) ? ((i == 0) ? Instantiate(wallInsetLeftModel) : Instantiate(wallInsetLeftExtendModel)) :
+                       (type == 3) ? ((i == 0) ? Instantiate(wallInsetRightModel) : Instantiate(wallInsetRightExtendModel)) :
+                       ((i == 0) ? Instantiate(wallModel) : Instantiate(wallExtendModel));
+
+                wall.transform.parent = wallT.transform;
+                wall.name = "Wall_" + type + "_" + i;
+                wall.tag = Tags.Wall;
+                wall.transform.position = new Vector3(x - .5f, (y * i) - .5f, z);
+            }
+        }
+        public int GetNeededWallsAmount()
+        {
+            int h = sectionWidthTotal;
+
+            Vector3 topWallPoint = new Vector3(0, h * (wAmount - 1));
+            float onScreenY = Camera.main.WorldToViewportPoint(topWallPoint).y;
+
+            if (onScreenY < topRenderBorder)
+            {
+                wAmount++;
+                GetNeededWallsAmount();
+            }
+
+            return wAmount - 1;
         }
         public void InstantiateWall(int sectionId, float x, float y, float z, int type, int amount = 1, int offset = 0, bool useOriginalTransform = false)
         {
@@ -329,8 +366,6 @@ namespace Assets.Scripts.View
 
                 CheckSectionsToCreate();
             }
-
-            CheckWallsToCreate();
         }
         public void CheckWallsToCreate()
         {
@@ -488,6 +523,8 @@ namespace Assets.Scripts.View
         private float topRenderBorder    = 1.4f;
         private float leftRenderBorder   = -.4f;
         private float rightRenderBorder  = 1.4f;
+
+        private int wAmount = 1;
 
         private int sectionWidthTotal;
         private float spacing;

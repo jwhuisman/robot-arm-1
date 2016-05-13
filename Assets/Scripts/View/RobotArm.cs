@@ -9,6 +9,7 @@ namespace Assets.Scripts.View
         public GameObject blockDisposal;
         public GameObject blockHolder;
 
+        [Space(20)]
         [Header("Scales")]
         public float blockHeight = 1f;
         public float blockWidth = 1f;
@@ -22,6 +23,7 @@ namespace Assets.Scripts.View
 
         [Header("Animation curves")]
         public AnimationCurve animationCurveSpeed = new AnimationCurve();
+        [Range(0,100)]
         public int _originalSpeed;
 
         [Header("Time")]
@@ -311,7 +313,7 @@ namespace Assets.Scripts.View
 
             // After the adjustion we multiply to a reasonable range
             // for the animator to multiply the animation states.
-            float animatorSpeed = curveNormalized * 500;
+            float animatorSpeed = curveNormalized * 250;
 
             // Update Needle
             _animator.SetFloat("CurvedSpeed", animatorSpeed);

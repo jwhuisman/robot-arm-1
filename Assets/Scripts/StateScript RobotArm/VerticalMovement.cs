@@ -9,7 +9,9 @@ public class VerticalMovement : StateMachineBehaviour {
         _robotArm = animator.gameObject.transform;
 
         _target = animator.GetComponent<RobotArm>().targetPosition;
-        _speed = 2f * animator.GetFloat("CurvedSpeed");
+
+        // the curved speed is multiplyed by the normalizable speed (so in ratio it moves with the same speed)
+        _speed = 3f * animator.GetFloat("CurvedSpeed");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

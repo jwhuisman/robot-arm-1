@@ -46,9 +46,6 @@ namespace Assets.Scripts.View
             // At the start of the program the speed starts at 50%
             UpdateSpeed(50);
 
-            // At the start of the program the robotarm starts above the highest block
-            UpdateRobotHeight();
-
             _startTime = Time.fixedDeltaTime;
         }
 
@@ -64,6 +61,12 @@ namespace Assets.Scripts.View
 
                     _counterTime = 0;
                 }
+            }
+
+            // Height changes
+            if (_world.Height != _worldHeight)
+            {
+                hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
             }
         }
 
@@ -110,10 +113,8 @@ namespace Assets.Scripts.View
                 // yet, so we can ignore this call.
                 return;
             }
-
-            var position = transform.position;
-            position.y = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
-            transform.parent.transform.position = position;
+            
+            
         }
 
         public void MoveLeft()
@@ -184,8 +185,6 @@ namespace Assets.Scripts.View
             {
                 _animator.SetTrigger("MSEP Close");
             }
-
-            UpdateRobotHeight();
         }
 
         public void Grab()
@@ -213,7 +212,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Grab");
 
             _view.UpdateView();
-            UpdateRobotHeight();
         }
 
         public void Drop()
@@ -239,7 +237,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Drop");
 
             _view.UpdateView();
-            UpdateRobotHeight();
         }
 
         public void PretendGrab()
@@ -259,7 +256,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Grab");
 
             _view.UpdateView();
-            UpdateRobotHeight();
         }
 
         public void PretendDrop()
@@ -279,7 +275,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Pretend Drop");
 
             _view.UpdateView();
-            UpdateRobotHeight();
         }
 
         public void Scan()
@@ -339,8 +334,11 @@ namespace Assets.Scripts.View
         internal Vector3 targetPosition;
         internal GameObject block;
 
+        internal float hangingHeight;
+
         private float _startTime;
         private float _counterTime;
+        private float _worldHeight;
 
         private SectionBuilder _sectionBuilder;
         private Animator _animator;

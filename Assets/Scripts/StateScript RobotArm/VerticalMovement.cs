@@ -7,7 +7,6 @@ public class VerticalMovement : StateMachineBehaviour {
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         _robotArm = animator.gameObject.transform;
-
         _target = animator.GetComponent<RobotArm>().targetPosition;
         _speed = 2f * animator.GetFloat("CurvedSpeed");
     }

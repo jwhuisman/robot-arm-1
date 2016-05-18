@@ -47,6 +47,10 @@ namespace Assets.Scripts.View
             UpdateSpeed(50);
 
             _startTime = Time.fixedDeltaTime;
+
+            // Set the height
+            UpdateRobotHeight();
+            gameObject.transform.parent.transform.position = new Vector3(gameObject.transform.parent.transform.position.x, hangingHeight, gameObject.transform.parent.transform.position.z);
         }
 
         public void FixedUpdate()
@@ -61,12 +65,6 @@ namespace Assets.Scripts.View
 
                     _counterTime = 0;
                 }
-            }
-
-            // Height changes
-            if (_world.Height != _worldHeight)
-            {
-                hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
             }
         }
 
@@ -113,8 +111,13 @@ namespace Assets.Scripts.View
                 // yet, so we can ignore this call.
                 return;
             }
-            
-            
+
+            // Height changes
+            if (_world.Height != _worldHeight)
+            {
+                hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
+                _worldHeight = _world.Height;
+            }
         }
 
         public void MoveLeft()

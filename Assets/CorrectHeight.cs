@@ -8,9 +8,18 @@ public class CorrectHeight : StateMachineBehaviour {
     {
         _robotArmHolder = animator.gameObject.transform.parent.transform;
 
-        _target = new Vector3(_robotArmHolder.position.x, animator.GetComponent<RobotArm>().hangingHeight, _robotArmHolder.position.z);
-        
         _speed = animator.GetFloat("CurvedSpeed");
+
+        animator.GetComponent<RobotArm>().UpdateRobotHeight();
+
+        if (_robotArmHolder.position.y != animator.GetComponent<RobotArm>().hangingHeight)
+        {
+            _target = new Vector3(animator.GetComponent<RobotArm>().targetPosition.x, animator.GetComponent<RobotArm>().hangingHeight, animator.GetComponent<RobotArm>().targetPosition.z);
+        }
+        else
+        {
+            _target = _robotArmHolder.position;
+        }
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

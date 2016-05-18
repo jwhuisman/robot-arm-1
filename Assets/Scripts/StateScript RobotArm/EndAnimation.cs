@@ -7,6 +7,6 @@ public class EndAnimation : StateMachineBehaviour
     {
         animator.GetComponent<RobotArm>().OnAnimationIsDone();
 
-        animator.SetTrigger("Correct height");
+        //animator.SetTrigger("Correct height");
     }
 }

@@ -15,6 +15,7 @@ public class VerticalMovement : StateMachineBehaviour {
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
      override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // the curved speed is multiplyed by the normalizable speed (so in ratio it moves with the same speed)
         _speed = _normalizableSpeed * animator.GetFloat("CurvedSpeed");
         
         // move towards the target

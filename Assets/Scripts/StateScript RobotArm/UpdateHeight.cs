@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Assets.Scripts.View;
 
-public class CorrectHeight : StateMachineBehaviour {
+public class UpdateHeight : StateMachineBehaviour {
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         _robotArmHolder = animator.gameObject.transform.parent.transform;
+        _robotArm = animator.GetComponent<RobotArm>();
 
-        _speed = animator.GetFloat("CurvedSpeed");
+        // update hangingHeight only
+        _robotArm.UpdateRobotHeight(false);
 
-        animator.GetComponent<RobotArm>().UpdateRobotHeight();
-
-        if (_robotArmHolder.position.y != animator.GetComponent<RobotArm>().hangingHeight)
+        if (_robotArmHolder.position.y != _robotArm.hangingHeight)
         {
-            _target = new Vector3(animator.GetComponent<RobotArm>().targetPosition.x, animator.GetComponent<RobotArm>().hangingHeight, animator.GetComponent<RobotArm>().targetPosition.z);
+            _target = new Vector3(_robotArm.targetPosition.x, _robotArm.hangingHeight);
         }
         else
         {
@@ -24,6 +23,9 @@ public class CorrectHeight : StateMachineBehaviour {
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        _speed = animator.GetFloat("CurvedSpeed");
+        
+        // move towards the target
         _robotArmHolder.position = Vector3.MoveTowards(_robotArmHolder.position, _target, _speed * Time.deltaTime);
 
         if (_target == _robotArmHolder.position)
@@ -36,4 +38,5 @@ public class CorrectHeight : StateMachineBehaviour {
 
     private Vector3 _target;
     private Transform _robotArmHolder;
+    private RobotArm _robotArm;
 }

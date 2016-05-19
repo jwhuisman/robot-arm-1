@@ -8,6 +8,7 @@ namespace Assets.Scripts.View
     {
         public GameObject blockDisposal;
         public GameObject blockHolder;
+        public Transform robotArmHolder;
 
         [Header("Scales")]
         public float blockHeight = 1f;
@@ -40,8 +41,10 @@ namespace Assets.Scripts.View
             _animator = gameObject.GetComponentInChildren<Animator>();
             _sectionBuilder = _view.GetComponent<SectionBuilder>();
 
-            // Defining/Calculating offset and position
+            // Defining/Calculating offsets, positions and transforms
             blockHalf = blockHeight / 2;
+            robotArmHolder = transform.parent.transform;
+
 
             // At the start of the program the speed starts at 50%
             UpdateSpeed(50);
@@ -49,8 +52,7 @@ namespace Assets.Scripts.View
             _startTime = Time.fixedDeltaTime;
 
             // Set the height
-            UpdateRobotHeight();
-            gameObject.transform.parent.transform.position = new Vector3(gameObject.transform.parent.transform.position.x, hangingHeight, gameObject.transform.parent.transform.position.z);
+            UpdateRobotHeight(true);
         }
 
         public void FixedUpdate()
@@ -103,7 +105,7 @@ namespace Assets.Scripts.View
 
         }
 
-        public void UpdateRobotHeight()
+        public void UpdateRobotHeight(bool set)
         {
             if (_world == null)
             {
@@ -118,13 +120,19 @@ namespace Assets.Scripts.View
                 hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
                 _worldHeight = _world.Height;
             }
+
+            if (set)
+            {
+                // sets the object on the correct Y position
+                robotArmHolder.position = new Vector3(robotArmHolder.position.x, hangingHeight);
+            }
         }
 
         public void MoveLeft()
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the left.
-            targetPosition = new Vector3(targetPosition.x - (blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
+            targetPosition = new Vector3(targetPosition.x - (blockWidth * _view.spacing), hangingHeight);
 
             if (_animator.GetInteger("Speed") == 100)
             {
@@ -144,7 +152,7 @@ namespace Assets.Scripts.View
         {
             // Calculates with the width and spacing between blocks.
             // So that we stand above the next block to the right.
-            targetPosition = new Vector3(targetPosition.x - (-blockWidth * _view.spacing), targetPosition.y, targetPosition.z);
+            targetPosition = new Vector3(targetPosition.x - (-blockWidth * _view.spacing), hangingHeight);
 
             if (_animator.GetInteger("Speed") == 100)
             {
@@ -158,36 +166,6 @@ namespace Assets.Scripts.View
             _animator.SetTrigger("Move Right");
 
             _view.UpdateView();
-        }
-
-        public void MaxSpeedUpdates()
-        {
-            _sectionBuilder.ReloadSectionsAtCurrent();
-            
-            // Sets the holders position
-            transform.parent.transform.position = new Vector3(targetPosition.x, transform.parent.transform.position.y);
-
-            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
-            {
-                foreach (Transform child in blockHolder.transform)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-
-            if (_world.RobotArm.Holding)
-            {
-                if (blockHolder.transform.childCount == 0)
-                {
-                    // add a block in the robotarm-holder, because the block is in the world.robotArm
-                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
-                }
-                _animator.SetTrigger("MSEP Open");
-            }
-            else
-            {
-                _animator.SetTrigger("MSEP Close");
-            }
         }
 
         public void Grab()
@@ -289,6 +267,38 @@ namespace Assets.Scripts.View
             else
             {
                 OnAnimationIsDone();
+            }
+        }
+
+        public void MaxSpeedUpdates()
+        {
+            _sectionBuilder.ReloadSectionsAtCurrent();
+
+            UpdateRobotHeight(false);
+
+            // sets the object on the correct X and Y position
+            robotArmHolder.position = new Vector3(targetPosition.x, hangingHeight);
+
+            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
+            {
+                foreach (Transform child in blockHolder.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
+            if (_world.RobotArm.Holding)
+            {
+                if (blockHolder.transform.childCount == 0)
+                {
+                    // add a block in the robotarm-holder, because the block is in the world.robotArm
+                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
+                }
+                _animator.SetTrigger("MSEP Open");
+            }
+            else
+            {
+                _animator.SetTrigger("MSEP Close");
             }
         }
 

@@ -120,6 +120,10 @@ namespace Assets.Scripts.View
             if (_world.Height != _worldHeight)
             {
                 hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
+                if (hangingHeight < 9)
+                {
+                    hangingHeight = 9;
+                }
                 _worldHeight = _world.Height;
             }
 

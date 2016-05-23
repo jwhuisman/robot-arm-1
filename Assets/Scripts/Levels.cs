@@ -86,7 +86,8 @@ namespace Assets.Scripts
             // add 'amount' empty stacks so you can place blocks there, 
             // because you cant place blocks on the ground if there is no stack
             int amount = 100;
-            int c = -stackMax - amount;
+            stackMax += amount;
+            int c = -stackMax;
             for (int i = 0; i < amount; i++)
             {
                 stacks.Add(new BlockStack(c));
@@ -138,13 +139,16 @@ namespace Assets.Scripts
 
         private void DownloadLevel(string uri, string pathToWrite, string user)
         {
-            Directory.CreateDirectory(levelPath + "/" + user);
-
-            WebRequest webRequest = WebRequest.Create(uri);
-            using (WebResponse resp = webRequest.GetResponse())
+            if (Ping(levelPath + "/" + user))
             {
-                string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
-                File.WriteAllText(pathToWrite, data);
+                Directory.CreateDirectory(levelPath + "/" + user);
+
+                WebRequest webRequest = WebRequest.Create(uri);
+                using (WebResponse resp = webRequest.GetResponse())
+                {
+                    string data = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                    File.WriteAllText(pathToWrite, data);
+                }
             }
         }
         public void DownloadAgain()

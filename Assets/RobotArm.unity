@@ -545,6 +545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockDisposal: {fileID: 1246093162}
   blockHolder: {fileID: 1181576496}
+  robotArmHolder: {fileID: 0}
   blockHeight: 1
   blockWidth: 1
   robotArmHeight: 1

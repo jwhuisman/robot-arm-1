@@ -27,6 +27,7 @@ public class HorizontalMovement : StateMachineBehaviour
     }
 
     private float _speed;
+    private float _normalizableSpeed;
 
     private Vector3 _target;
     private Transform _robotArmHolder;

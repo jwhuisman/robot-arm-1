@@ -75,7 +75,8 @@ namespace Assets.Scripts.View
             // set robot arm to x = 0
             Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
             robotArm.position = new Vector3(0, 0, robotArm.position.z);
-
+            GameObject.Find("robot-hand").GetComponent<RobotArm>().UpdateRobotHeight(true);
+        
             // check what to render/create
             CheckSectionsToCreate();
         }

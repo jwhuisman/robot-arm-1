@@ -35,27 +35,27 @@ public class InputListener : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.F2))
         {
-            commandRunner.Add(new LoadLevelCommand("bas/tower"));
+            commandRunner.Add(new LoadLevelCommand("oefening 2"));
         }
         else if (Input.GetKeyDown(KeyCode.F3))
         {
-            commandRunner.Add(new LoadLevelCommand("random"));
+            commandRunner.Add(new LoadLevelCommand("oefening 3"));
         }
         else if (Input.GetKeyDown(KeyCode.F4))
         {
-            commandRunner.Add(new LoadLevelCommand("empty"));
+            commandRunner.Add(new LoadLevelCommand("oefening 4"));
         }
         else if (Input.GetKeyDown(KeyCode.F5))
         {
-            commandRunner.Add(new LoadLevelCommand(""));
+            commandRunner.Add(new LoadLevelCommand("oefening 5"));
         }
         else if (Input.GetKeyDown(KeyCode.F6))
         {
-            commandRunner.Add(new LoadLevelCommand("doesnt/exist"));
+            commandRunner.Add(new LoadLevelCommand("oefening 6"));
         }
         else if (Input.GetKeyDown(KeyCode.F7))
         {
-            commandRunner.Add(new LoadLevelCommand("exist/even/less/than/others@#!@#$!615.nl.com"));
+            commandRunner.Add(new LoadLevelCommand("oefening 7"));
         }
 
 

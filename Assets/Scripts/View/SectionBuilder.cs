@@ -252,15 +252,15 @@ namespace Assets.Scripts.View
         public void InstantiateBlock(int stackX, Block blockData, bool robotArmHoldsBlock=false)
         {
             GameObject block;
-            if (blockData.Color == "Red")
+            if (blockData.Color.ToLower() == "red")
             {
                 block = _pool.GetBlock(Tags.RedBlock);
             }
-            else if (blockData.Color == "Green")
+            else if (blockData.Color.ToLower() == "green")
             {
                 block = _pool.GetBlock(Tags.GreenBlock);
             }
-            else if (blockData.Color == "Blue")
+            else if (blockData.Color.ToLower() == "blue")
             {
                 block = _pool.GetBlock(Tags.BlueBlock);
             }

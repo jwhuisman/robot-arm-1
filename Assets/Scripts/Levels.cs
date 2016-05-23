@@ -97,6 +97,8 @@ namespace Assets.Scripts
             using (StreamReader reader = new StreamReader(path))
             {
                 string line;
+                int lineLength = 0;
+
                 while ((line = reader.ReadLine()) != null)
                 {
                     BlockStack stack = new BlockStack(c);
@@ -120,6 +122,12 @@ namespace Assets.Scripts
                     }
 
                     stacks.Add(stack);
+                    lineLength++;
+                    c++;
+                }
+                for (int i = 0; i < (lineLength / 2); i++)
+                {
+                    stacks.Insert(0, new BlockStack(c));
                     c++;
                 }
             }

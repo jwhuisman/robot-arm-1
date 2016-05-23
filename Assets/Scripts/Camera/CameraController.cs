@@ -11,6 +11,10 @@ public class CameraController : MonoBehaviour
         perspectiveSwitcher = GetComponent<PerspectiveSwitcher>();
         robotArm = GameObject.Find(Tags.RobotArm);
         roboStartY = robotArm.transform.position.y;
+    }
+
+    void Awake()
+    {
         camStartY = transform.position.y;
         camStartZ = transform.position.z;
     }

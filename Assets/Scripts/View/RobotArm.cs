@@ -184,8 +184,18 @@ namespace Assets.Scripts.View
 
         public void Grab()
         {
+            // Find the GameObject that represents the block we're going to grab, so we can
+            // parent underneath the robot hand later.
+            block = FindBlock(_world.RobotArm.HoldingBlock.Id);
+
+
             if (_animator.GetInteger("Speed") == 100)
             {
+                block.transform.parent = blockHolder.transform;
+                block.transform.localPosition = new Vector3(0, 0, block.transform.position.z);
+
+                AbandonChildren();
+
                 // When the speed is 100 we want everything 
                 // to go instantly so without animations.
                 OnAnimationIsDone();
@@ -199,10 +209,6 @@ namespace Assets.Scripts.View
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
 
-            // Find the GameObject that represents the block we're going to grab, so we can
-            // parent underneath the robot hand later.
-            block = FindBlock(_world.RobotArm.HoldingBlock.Id);
-
             // Start the animation.
             _animator.SetTrigger("Grab");
 
@@ -211,8 +217,13 @@ namespace Assets.Scripts.View
 
         public void Drop()
         {
+            // We still know which block to set down, because it hasn't changed since last we
+            // called Grab().
+
             if (_animator.GetInteger("Speed") == 100)
             {
+                AbandonChildren();
+
                 // When the speed is 100 we want everything 
                 // to go instantly so without animations.
                 OnAnimationIsDone();
@@ -224,10 +235,7 @@ namespace Assets.Scripts.View
             int stackHeight = _world.CurrentStack.Blocks.Count;
             targetPosition = transform.position;
             targetPosition.y = stackHeight * blockHeight + blockHalf;
-
-            // We still know which block to set down, because it hasn't changed since last we
-            // called Grab().
-
+            
             // Start the animation.
             _animator.SetTrigger("Drop");
 
@@ -293,7 +301,7 @@ namespace Assets.Scripts.View
             // sets the object on the correct X and Y position
             robotArmHolder.position = new Vector3(targetPosition.x, hangingHeight);
 
-            abandonChildren();
+            AbandonChildren();
         }
 
         public void UpdateSpeed(int speed)
@@ -330,7 +338,7 @@ namespace Assets.Scripts.View
 
             UpdateRobotHeight(true);
 
-            abandonChildren();
+            AbandonChildren();
         }
 
         // Helpers and converters
@@ -339,7 +347,7 @@ namespace Assets.Scripts.View
             return GameObject.Find("Block-" + Id);
         }
 
-        public void abandonChildren()
+        public void AbandonChildren()
         {
             if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
             {
@@ -351,11 +359,6 @@ namespace Assets.Scripts.View
 
             if (_world.RobotArm.Holding)
             {
-                if (blockHolder.transform.childCount == 0)
-                {
-                    // add a block in the robotarm-holder, because the block is in the world.robotArm
-                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
-                }
                 _animator.SetTrigger("MSEP Open");
             }
             else

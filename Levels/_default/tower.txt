@@ -1,3 +1,0 @@
-red
-@random 20
-red

@@ -24,41 +24,35 @@ public class InputListener : MonoBehaviour
         {
             commandRunner.Add(new MoveCommand("right"));
         }
+        else if (Input.GetKeyDown(KeyCode.F1))
+        {
+            commandRunner.Add(new LoadLevelCommand("exercise 1"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F2))
+        {
+            commandRunner.Add(new LoadLevelCommand("exercise 2"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F3))
+        {
+            commandRunner.Add(new LoadLevelCommand("exercise 3"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F4))
+        {
+            commandRunner.Add(new LoadLevelCommand("exercise 4"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F5))
+        {
+            commandRunner.Add(new LoadLevelCommand("exercise 5"));
+        }
+        else if (Input.GetKeyDown(KeyCode.F6))
+        {
+            commandRunner.Add(new LoadLevelCommand("random"));
+        }
+
         else if (Input.GetKeyDown(KeyCode.S))
         {
             commandRunner.Add(new ScanCommand());
         }
-
-        else if (Input.GetKeyDown(KeyCode.F1))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 1"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F2))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 2"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F3))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 3"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F4))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 4"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F5))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 5"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F6))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 6"));
-        }
-        else if (Input.GetKeyDown(KeyCode.F7))
-        {
-            commandRunner.Add(new LoadLevelCommand("oefening 7"));
-        }
-
-
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             commandRunner.Add(new SpeedCommand(0));

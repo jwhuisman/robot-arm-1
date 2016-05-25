@@ -13,7 +13,7 @@ namespace Assets.Scripts.WorldData
         public World()
         {
             bool levelExists;
-            Stacks = levels.LoadLevel("random", out levelExists);
+            Stacks = levels.LoadLevel("empty", out levelExists);
 
             RobotArm = new RobotArmData(Height + 3);
         }

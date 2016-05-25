@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83a994c3dc93a1247abbccea9799c206, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  robotArm: {fileID: 913337110}
   assemblyLineModel: {fileID: 100000, guid: 3a7c34c6ac835c94abd071a2359ebf54, type: 3}
   floorModel: {fileID: 100002, guid: 201d592786e590549921a1755abc1988, type: 3}
   redBlockModel: {fileID: 155638, guid: 5adb16dbcbc13244c86e7c244e9532c5, type: 2}
@@ -183,7 +184,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 255703149}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 432783515}

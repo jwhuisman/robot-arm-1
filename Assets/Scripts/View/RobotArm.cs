@@ -117,14 +117,22 @@ namespace Assets.Scripts.View
             }
 
             // Height changes
-            if (_world.Height != _worldHeight)
+            if (_world.Height != _worldHeight || _worldHeight <= 9)
             {
                 hangingHeight = (_world.Height * blockHeight) + robotArmHeight + distanceToHighestStack;
-                if (hangingHeight < 9)
+                if (hangingHeight <= 9)
                 {
                     hangingHeight = 9;
                 }
-                _worldHeight = _world.Height;
+
+                if (_world.Height >= 9)
+                {
+                    _worldHeight = _world.Height;
+                }
+                else
+                {
+                    _worldHeight = 9;
+                }
             }
 
             if (set)
@@ -285,27 +293,7 @@ namespace Assets.Scripts.View
             // sets the object on the correct X and Y position
             robotArmHolder.position = new Vector3(targetPosition.x, hangingHeight);
 
-            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
-            {
-                foreach (Transform child in blockHolder.transform)
-                {
-                    Destroy(child.gameObject);
-                }
-            }
-
-            if (_world.RobotArm.Holding)
-            {
-                if (blockHolder.transform.childCount == 0)
-                {
-                    // add a block in the robotarm-holder, because the block is in the world.robotArm
-                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
-                }
-                _animator.SetTrigger("MSEP Open");
-            }
-            else
-            {
-                _animator.SetTrigger("MSEP Close");
-            }
+            abandonChildren();
         }
 
         public void UpdateSpeed(int speed)
@@ -333,10 +321,47 @@ namespace Assets.Scripts.View
             OnAnimationIsDone();
         }
 
+        public void ReloadRobotArm()
+        {
+            // Resets the position
+            targetPosition = new Vector3(0, 0, targetPosition.z);
+
+            robotArmHolder.position = targetPosition;
+
+            UpdateRobotHeight(true);
+
+            abandonChildren();
+        }
+
         // Helpers and converters
         public GameObject FindBlock(string Id)
         {
             return GameObject.Find("Block-" + Id);
+        }
+
+        public void abandonChildren()
+        {
+            if (!_world.RobotArm.Holding && blockHolder.transform.childCount > 0)
+            {
+                foreach (Transform child in blockHolder.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
+            if (_world.RobotArm.Holding)
+            {
+                if (blockHolder.transform.childCount == 0)
+                {
+                    // add a block in the robotarm-holder, because the block is in the world.robotArm
+                    _sectionBuilder.InstantiateBlock(_world.RobotArm.X, _world.RobotArm.HoldingBlock, true);
+                }
+                _animator.SetTrigger("MSEP Open");
+            }
+            else
+            {
+                _animator.SetTrigger("MSEP Close");
+            }
         }
 
         public event EventHandler AnimationIsDone;

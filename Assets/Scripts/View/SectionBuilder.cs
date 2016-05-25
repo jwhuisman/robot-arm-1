@@ -9,6 +9,9 @@ namespace Assets.Scripts.View
 {
     public class SectionBuilder : MonoBehaviour
     {
+        // robotarm
+        public GameObject robotArm;
+
         // models
         public GameObject assemblyLineModel;
         public GameObject floorModel;
@@ -115,10 +118,8 @@ namespace Assets.Scripts.View
             // create the first few sections
             CreateSectionsAt(0);
 
-            // set robot arm to x = 0
-            Transform robotArm = GameObject.Find(Tags.RobotArm).transform;
-            robotArm.position = new Vector3(0, 0, robotArm.position.z);
-            GameObject.Find("robot-hand").GetComponent<RobotArm>().UpdateRobotHeight(true);
+            // reload robotArm
+            robotArm.GetComponent<RobotArm>().ReloadRobotArm();
         
             // check what to render/create
             CheckSectionsToCreate();

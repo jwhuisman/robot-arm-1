@@ -11,7 +11,7 @@ namespace Assets.Models
 
             if (data.IndexOf(' ') >= 0)
             {
-                dataSplitted = data.Split(' ');
+                dataSplitted = data.Split(new char[] { ' ' } , 2);
                 instruction = dataSplitted[0];
                 parameter = dataSplitted[1];
             } else
